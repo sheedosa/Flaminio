@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Our Menu — Flaminio Italian Restaurant</title>
+<meta name="description" content="A carefully curated selection of Italian classics — soups, salads, pasta, risotto, steaks, seafood, pizza and more.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lustria&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-top">
+    <div class="header-icons">
+      <a href="tel:0910181666" aria-label="Call" class="icon-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#802a19" stroke-width="1.4"><rect x="4.5" y="1.5" width="7" height="13" rx="2"></rect><circle cx="8" cy="12" r=".8" fill="#802a19"></circle></svg>
+      </a>
+      <a href="index.html" aria-label="Home" class="icon-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#802a19" stroke-width="1.4"><line x1="2" y1="4" x2="14" y2="4"></line><line x1="2" y1="8" x2="14" y2="8"></line><line x1="2" y1="12" x2="14" y2="12"></line></svg>
+      </a>
+      <a href="index.html#contact" aria-label="Location" class="icon-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#802a19" stroke-width="1.4"><circle cx="8" cy="6.5" r="4.5"></circle><circle cx="8" cy="6.5" r="1.5"></circle><line x1="8" y1="11" x2="8" y2="15"></line></svg>
+      </a>
+    </div>
+    <a href="index.html" class="header-logo"><img src="img/logo-burgundy.png" alt="Flaminio Italian Restaurant"></a>
+    <div class="header-right">
+      <span class="lang-toggle">
+        <button type="button" class="lang-btn" data-lang-toggle title="Arabic — coming soon">عربي</button>
+        <span class="lang-note" data-lang-note>Arabic — coming soon · العربية قريباً</span>
+      </span>
+      <a href="tel:0910181666" class="reserve-btn">Call to Reserve</a>
+    </div>
+  </div>
+  <nav class="site-nav" id="site-nav"></nav>
+</header>
+
+<section class="menu-hero" data-screen-label="Menu">
+  <div class="menu-intro">
+    <div class="section-divider">
+      <span class="line"></span>
+      <img src="img/logo-gold.png" alt="">
+      <span class="line"></span>
+    </div>
+    <h1 class="serif menu-title">Our Menu</h1>
+    <p class="menu-subtitle">A carefully curated selection of Italian classics.</p>
+    <a href="assets/Flaminio-Menu.pdf" download="Flaminio-Menu.pdf" class="btn btn-sm btn-outline-gold" style="margin-top:24px">↓ Full Menu PDF</a>
+  </div>
+
+  <div role="tablist" class="menu-tabs" id="menu-tabs"></div>
+
+  <div class="menu-panel">
+    <div class="menu-list-wrap">
+      <div class="menu-cat-head">
+        <h2 class="serif menu-cat-title" id="menu-cat-title"></h2>
+      </div>
+      <div class="menu-items" id="menu-items"></div>
+    </div>
+    <figure class="menu-figure">
+      <img id="menu-cat-img" src="" alt="">
+      <figcaption id="menu-cat-caption"></figcaption>
+    </figure>
+  </div>
+  <p class="menu-note">Prices in Libyan Dinar. “—” = price on request.</p>
+</section>
+
+<footer class="site-footer">
+  <img src="img/logo-cream.png" alt="Flaminio Italian Restaurant" class="footer-logo">
+  <nav class="footer-nav" id="footer-nav"></nav>
+  <div class="footer-rule"></div>
+  <div class="footer-contact"><a href="tel:0910181666">091-0181666</a><br>Al-Hawari, Al-Markabat Street, near Asayel Resort, Benghazi, Libya</div>
+  <div class="footer-social">
+    <a href="https://www.facebook.com/flaminio.ly/" target="_blank" rel="noopener" aria-label="Facebook" class="social-btn">f</a>
+  </div>
+  <div class="footer-copy">© Flaminio Italian Restaurant</div>
+</footer>
+
+<script type="module" src="js/menu.js"></script>
+</body>
+</html>
