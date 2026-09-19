@@ -1,0 +1,14 @@
+{
+  "name": "Flaminio Italian Restaurant",
+  "short_name": "Flaminio",
+  "description": "Family-run Italian restaurant in Al-Hawari, Benghazi.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "browser",
+  "background_color": "#f4efe8",
+  "theme_color": "#802a19",
+  "icons": [
+    { "src": "img/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "img/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -16,14 +16,24 @@ Plain HTML, CSS and vanilla JavaScript (ES modules). No framework, no build step
 ```
 index.html          home page
 menu.html           menu page
+404.html            branded not-found page (served by GitHub Pages)
 css/style.css       all styles
 js/data.js          all content — copy, prices, photo paths, full menu
-js/common.js        nav, language note, fade-in on scroll
+js/common.js        nav, language note, fade-in on scroll, swipe helper
 js/home.js          hero carousel, gallery grid + lightbox, reservation form
 js/menu.js          menu category tabs
-img/                photography and logo variants
+img/                photography (JPEG + WebP), logo variants, og-image.jpg
+img/icons/          favicons and app icons generated from the logo mark
 assets/             downloadable menu PDF
+robots.txt, sitemap.xml, site.webmanifest, favicon.ico
 ```
+
+## Performance and SEO
+
+- Every photo ships as WebP with a JPEG fallback via `<picture>`; only the first hero slide loads up front, the rest are fetched just before they show.
+- Below-the-fold images are lazy-loaded; logos carry width/height to avoid layout shift.
+- Each page has a canonical URL, Open Graph and Twitter Card tags (sharing uses `img/og-image.jpg`), and JSON-LD structured data (`Restaurant` on the home page).
+- Mobile: compact sticky header, 16px form inputs (no iOS zoom-on-focus), swipe on the carousel and lightbox, 24px+ tap targets, `prefers-reduced-motion` respected.
 
 ## Editing content
 

@@ -1,10 +1,17 @@
 // Behaviour shared by index.html and menu.html: nav rendering, the
-// "Arabic — coming soon" note, and the fade-in-on-scroll effect.
+// "Arabic — coming soon" note, fade-in on scroll, and small helpers.
 import { NAV_LINKS } from './data.js';
+
+export const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+export const webp = src => src.replace(/\.(jpe?g|png)$/i, '.webp');
 
 export function renderNav(navEl, footerNavEl, page) {
   const key = page === 'menu' ? 'menu' : 'home';
-  const linksHtml = NAV_LINKS.map(n => `<a href="${n[key]}">${n.label}</a>`).join('');
+  const linksHtml = NAV_LINKS.map(n => {
+    const current = page === 'menu' && n.label === 'Menu' ? ' aria-current="page"' : '';
+    return `<a href="${n[key]}"${current}>${n.label}</a>`;
+  }).join('');
   if (navEl) navEl.innerHTML = linksHtml;
   if (footerNavEl) footerNavEl.innerHTML = linksHtml;
 }
@@ -23,7 +30,7 @@ export function initLangNote() {
 
 export function initReveal() {
   const targets = document.querySelectorAll('[data-reveal]');
-  if (!('IntersectionObserver' in window)) {
+  if (reducedMotion || !('IntersectionObserver' in window)) {
     targets.forEach(el => el.setAttribute('data-reveal', 'in'));
     return;
   }
@@ -36,4 +43,21 @@ export function initReveal() {
     });
   }, { threshold: 0.12 });
   targets.forEach(el => io.observe(el));
+}
+
+// Calls handler(1) on a leftward swipe and handler(-1) on a rightward one.
+export function onSwipe(el, handler, threshold = 40) {
+  let startX = null, startY = null;
+  el.addEventListener('touchstart', e => {
+    const t = e.changedTouches[0];
+    startX = t.clientX;
+    startY = t.clientY;
+  }, { passive: true });
+  el.addEventListener('touchend', e => {
+    if (startX === null) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - startX, dy = t.clientY - startY;
+    startX = startY = null;
+    if (Math.abs(dx) > threshold && Math.abs(dx) > Math.abs(dy)) handler(dx < 0 ? 1 : -1);
+  }, { passive: true });
 }
