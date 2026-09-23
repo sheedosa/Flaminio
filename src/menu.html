@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="{{lang}}" dir="{{t.dir}}">
+<head>
+{{> head}}
+</head>
+<body>
+{{> header}}
+
+<main id="main">
+<section class="menu-hero" aria-labelledby="menu-title">
+  <div class="menu-intro">
+    {{{divider}}}
+    <h1 class="serif menu-title" id="menu-title">{{t.menuHeading}}</h1>
+    <p class="menu-subtitle">{{t.menuIntro}}</p>
+    <a href="{{base}}assets/Flaminio-Menu.pdf" download="Flaminio-Menu.pdf" class="btn btn-sm btn-outline-gold menu-pdf">↓ {{t.pdf}} <span class="visually-hidden">({{pdfSize}} {{t.download}})</span></a>
+  </div>
+
+  <nav class="menu-tabs" id="menu-tabs" aria-label="{{t.tabsLabel}}">{{{menuTabs}}}</nav>
+
+  <div class="menu-panels">{{{menuPanels}}}</div>
+  <p class="menu-note">{{t.priceNote}}</p>
+</section>
+</main>
+
+{{> footer}}
+
+<script type="module" src="{{base}}js/menu.js"></script>
+</body>
+</html>

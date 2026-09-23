@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="{{lang}}" dir="{{t.dir}}">
+<head>
+{{> head}}
+</head>
+<body>
+{{> header}}
+
+<main id="main">
+
+<section id="hero" class="hero" aria-roledescription="carousel" aria-label="{{t.heroLabel}}">
+  {{{heroSlides}}}
+  <div class="hero-scrim"></div>
+  <div class="hero-content">
+    <div class="hero-vignette" aria-hidden="true"></div>
+    <h1 class="hero-title">{{t.heroTitle}}</h1>
+    <p class="hero-sub">{{t.heroSub}}</p>
+    <div class="hero-actions">
+      <a href="menu.html" class="btn btn-cream">{{t.viewMenu}}</a>
+      <a href="tel:{{contact.phoneTel}}" class="btn btn-outline-cream">{{t.callPhone}} <bdi dir="ltr">{{contact.phoneDisplay}}</bdi></a>
+    </div>
+  </div>
+  <button type="button" class="hero-arrow prev" aria-label="{{t.prevSlide}}" data-hero-prev>{{arrowPrev}}</button>
+  <button type="button" class="hero-arrow next" aria-label="{{t.nextSlide}}" data-hero-next>{{arrowNext}}</button>
+  <div class="hero-dots">{{{heroDots}}}</div>
+</section>
+<div class="trust-strip">{{{trust}}}</div>
+
+<section id="signature" class="section signature" aria-labelledby="signature-title">
+  <div class="signature-radial" aria-hidden="true"></div>
+  <picture><source type="image/webp" srcset="{{base}}img/logo-gold.webp"><img src="{{base}}img/logo-gold.png" alt="" aria-hidden="true" class="watermark top-left" loading="lazy" decoding="async"></picture>
+  <picture><source type="image/webp" srcset="{{base}}img/logo-gold.webp"><img src="{{base}}img/logo-gold.png" alt="" aria-hidden="true" class="watermark bottom-right" loading="lazy" decoding="async"></picture>
+  <div class="container signature-header" data-reveal>
+    {{{divider}}}
+    <div class="section-kicker">{{t.sigKicker}}</div>
+    <h2 class="serif signature-title" id="signature-title">{{t.sigTitle}}</h2>
+    <p class="signature-intro">{{t.sigIntro}}</p>
+  </div>
+  <div class="container signature-grid" data-reveal>{{{signatureCards}}}</div>
+  <div class="container signature-cta" data-reveal>
+    <a href="menu.html" class="btn btn-burgundy">{{t.viewMenu}}</a>
+  </div>
+</section>
+
+<section id="about" class="about" aria-labelledby="about-title">
+  <div class="container about-grid" data-reveal>
+    <div class="about-photo">
+      <picture><source type="image/webp" srcset="{{base}}img/interior-booth.webp"><img src="{{base}}img/interior-booth.jpg" alt="{{t.aboutAlt}}" width="720" height="1280" loading="lazy" decoding="async"></picture>
+      <picture><source type="image/webp" srcset="{{base}}img/logo-gold.webp"><img src="{{base}}img/logo-gold.png" alt="" aria-hidden="true" class="watermark" loading="lazy" decoding="async"></picture>
+    </div>
+    <div class="about-copy">
+      <div class="about-kicker"><span class="line"></span>{{t.storyKicker}}</div>
+      <h2 class="serif about-title" id="about-title">{{t.storyTitle}}</h2>
+      <p class="about-text">{{t.story}}</p>
+      <a href="menu.html" class="btn btn-outline-burgundy about-cta">{{t.viewMenu}}</a>
+    </div>
+  </div>
+  <div class="container stats-grid" data-reveal>{{{stats}}}</div>
+</section>
+
+<section id="why" class="why-section" aria-labelledby="why-title">
+  <div class="container" data-reveal>
+    {{{divider}}}
+    <h2 class="serif why-title" id="why-title">{{t.whyTitle}}</h2>
+    <div class="why-grid">{{{whyCards}}}</div>
+  </div>
+</section>
+
+<section id="gallery" class="section gallery-section" aria-labelledby="gallery-title">
+  <div class="gallery-radial" aria-hidden="true"></div>
+  <picture><source type="image/webp" srcset="{{base}}img/logo-gold.webp"><img src="{{base}}img/logo-gold.png" alt="" aria-hidden="true" class="watermark top-left" loading="lazy" decoding="async"></picture>
+  <div class="container" data-reveal>
+    <div class="gallery-header">
+      <div>
+        <h2 class="serif gallery-title" id="gallery-title">{{t.galleryTitle}}</h2>
+        <p class="gallery-intro">{{t.galleryIntro}}</p>
+      </div>
+      <button type="button" class="btn btn-outline-cream-on-burgundy gallery-toggle" id="gallery-toggle" aria-controls="gallery-grid" aria-expanded="false" data-more="{{t.viewAll}}" data-less="{{t.viewLess}}">{{t.viewAll}}</button>
+    </div>
+    <div class="gallery-grid" id="gallery-grid">{{{gallery}}}</div>
+  </div>
+</section>
+
+<section id="contact" class="contact-section" aria-labelledby="contact-title">
+  <div class="container" data-reveal>
+    <h2 class="serif contact-title" id="contact-title">{{t.contactTitle}}</h2>
+    <div class="contact-grid">
+      <div class="find-us">
+        <picture><source type="image/webp" srcset="{{base}}img/interior-table.webp"><img src="{{base}}img/interior-table.jpg" alt="" class="find-us-bg" loading="lazy" decoding="async"></picture>
+        <picture><source type="image/webp" srcset="{{base}}img/logo-gold.webp"><img src="{{base}}img/logo-gold.png" alt="" class="find-us-mark" width="56" height="40" loading="lazy" decoding="async"></picture>
+        <div class="find-us-kicker">{{t.findUs}}</div>
+        <p class="serif find-us-title">{{t.findTitle}}</p>
+        <p class="find-us-sub">{{t.findSub}}</p>
+        <a href="{{contact.maps}}" target="_blank" rel="noopener" class="btn btn-sm btn-cream">{{t.openMaps}}<span class="visually-hidden"> {{t.newTab}}</span></a>
+      </div>
+      <div class="contact-card">
+        <div><div class="contact-label">{{t.addressLabel}}</div><address class="contact-value">{{t.address}}</address></div>
+        <div><div class="contact-label">{{t.phoneLabel}}</div><a href="tel:{{contact.phoneTel}}" class="contact-phone"><bdi dir="ltr">{{contact.phoneDisplay}}</bdi></a></div>
+        <div><div class="contact-label">{{t.hoursLabel}}</div><div class="contact-value">{{t.hours}}</div></div>
+        <div class="contact-actions">
+          <a href="tel:{{contact.phoneTel}}" class="btn btn-sm btn-burgundy">{{t.callNow}}</a>
+          <a href="{{contact.whatsapp}}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-burgundy">{{t.whatsapp}}</a>
+          <a href="{{contact.maps}}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-burgundy-on-gold">{{t.directions}}</a>
+        </div>
+        <div class="reservation-form" id="reserve">
+          <h3 class="serif reservation-form-title" id="reservation-title">{{t.formTitle}}</h3>
+          <p class="reservation-intro">{{t.formIntro}}</p>
+          <form id="reservation-form" class="reservation-fields" aria-labelledby="reservation-title">
+            <div class="field span-2"><label for="res-name">{{t.fName}}</label><input id="res-name" required name="name" autocomplete="name"></div>
+            <div class="field span-2"><label for="res-phone">{{t.fPhone}}</label><input id="res-phone" required type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="09X-XXXXXXX" dir="ltr"></div>
+            <div class="field"><label for="res-date">{{t.fDate}}</label><input id="res-date" required type="date" name="date"></div>
+            <div class="field"><label for="res-time">{{t.fTime}}</label><input id="res-time" required type="time" name="time"></div>
+            <div class="field"><label for="res-guests">{{t.fGuests}}</label><input id="res-guests" required type="number" min="1" max="20" name="guests" inputmode="numeric" value="2"></div>
+            <div class="field field--submit"><button type="submit" class="btn btn-sm btn-burgundy">{{t.sendWhatsapp}}</button></div>
+          </form>
+          <p class="reservation-sent" id="reservation-sent" role="status" tabindex="-1" hidden>{{{sent}}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+{{> footer}}
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="{{t.photoViewer}}">
+  <figure class="lightbox-figure">
+    <picture>
+      <source id="lightbox-src" type="image/webp">
+      <img id="lightbox-img" src="data:," alt="">
+    </picture>
+    <figcaption id="lightbox-cap"></figcaption>
+  </figure>
+  <button type="button" class="lightbox-arrow prev" aria-label="{{t.prevPhoto}}" id="lightbox-prev">{{arrowPrev}}</button>
+  <button type="button" class="lightbox-arrow next" aria-label="{{t.nextPhoto}}" id="lightbox-next">{{arrowNext}}</button>
+  <button type="button" class="lightbox-close" aria-label="{{t.closeViewer}}" id="lightbox-close">×</button>
+</div>
+
+<script type="module" src="{{base}}js/home.js"></script>
+</body>
+</html>

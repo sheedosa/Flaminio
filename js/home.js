@@ -1,24 +1,17 @@
-import { GALLERY, WHATSAPP } from './data.js';
-import { renderNav, initLangNote, initReveal, onSwipe, reducedMotion, webp } from './common.js';
+import { CONTACT } from './data.js';
+import { t, rtl, initReveal, initLangSwitch, onSwipe, reducedMotion } from './common.js';
 
-renderNav(document.getElementById('site-nav'), document.getElementById('footer-nav'), 'home');
-initLangNote();
 initReveal();
+initLangSwitch();
 
 /* ---------- hero carousel ---------- */
 const hero = document.getElementById('hero');
-const slides = document.querySelectorAll('[data-hero-slide]');
-const dotsEl = document.getElementById('hero-dots');
+const slides = hero.querySelectorAll('[data-hero-slide]');
+const dots = hero.querySelectorAll('[data-dot]');
 let slide = 0;
 let heroTimer;
 
-dotsEl.innerHTML = Array.from(slides).map((_, i) =>
-  `<button type="button" class="hero-dot" aria-label="Show slide ${i + 1}" data-dot="${i}"></button>`
-).join('');
-const dots = dotsEl.querySelectorAll('[data-dot]');
-
-// Only the first slide ships with a src; the rest are fetched just before they
-// are needed so the initial page load stays light.
+// Only the first slide ships with a src; the rest load just before they show.
 function loadSlide(i) {
   const img = slides[(i + slides.length) % slides.length];
   if (!img.dataset.src) return;
@@ -43,36 +36,36 @@ function showSlide(i) {
 }
 function restartAutoplay() {
   clearInterval(heroTimer);
-  if (reducedMotion) return;
-  heroTimer = setInterval(() => showSlide(slide + 1), 6000);
+  if (!reducedMotion) heroTimer = setInterval(() => showSlide(slide + 1), 6000);
 }
-dots.forEach(el => el.addEventListener('click', () => { showSlide(Number(el.dataset.dot)); restartAutoplay(); }));
-document.querySelector('[data-hero-prev]').addEventListener('click', () => { showSlide(slide - 1); restartAutoplay(); });
-document.querySelector('[data-hero-next]').addEventListener('click', () => { showSlide(slide + 1); restartAutoplay(); });
-onSwipe(hero, dir => { showSlide(slide + dir); restartAutoplay(); });
+const go = i => { showSlide(i); restartAutoplay(); };
+dots.forEach(el => el.addEventListener('click', () => go(Number(el.dataset.dot))));
+hero.querySelector('[data-hero-prev]').addEventListener('click', () => go(slide - 1));
+hero.querySelector('[data-hero-next]').addEventListener('click', () => go(slide + 1));
+onSwipe(hero, d => go(slide + d));
 showSlide(0);
 restartAutoplay();
 window.addEventListener('load', () => loadSlide(1), { once: true });
 
-/* ---------- gallery: editorial dense grid + view all/less + lightbox ---------- */
+/* ---------- gallery: editorial dense grid + view all/less ---------- */
 const PREVIEW_COUNT = 8;
 const galleryGrid = document.getElementById('gallery-grid');
 const galleryToggle = document.getElementById('gallery-toggle');
+const figures = [...galleryGrid.querySelectorAll('.gallery-figure')];
 let galleryAll = false;
-let currentList = [];
-let renderedCols = 0;
+let visible = [];
+let layoutCols = 0;
 
-function desktopCols() {
-  return window.matchMedia('(min-width: 720px)').matches ? 4 : 2;
-}
+const columns = () => (window.matchMedia('(min-width: 720px)').matches ? 4 : 2);
 
-function renderGallery() {
-  const list = galleryAll ? GALLERY : GALLERY.slice(0, PREVIEW_COUNT);
-  currentList = list;
-  const cols = desktopCols();
-  renderedCols = cols;
-  const n = list.length;
-  galleryGrid.innerHTML = list.map((g, i) => {
+// Spans keep every row full: each block of 8 opens with a 2×2 tile and ends
+// with a 2-wide tile; a short final block stretches its last tile.
+function layoutGallery() {
+  visible = galleryAll ? figures : figures.slice(0, PREVIEW_COUNT);
+  const cols = layoutCols = columns();
+  const n = visible.length;
+  figures.forEach(f => { f.hidden = !visible.includes(f); });
+  visible.forEach((fig, i) => {
     let cs = 1, rs = 1;
     if (cols === 4) {
       const s = i - (i % 8), len = Math.min(8, n - s), gi = i % 8;
@@ -81,29 +74,16 @@ function renderGallery() {
     } else if (n % 2 && i === n - 1) {
       cs = 2;
     }
-    return `<figure class="gallery-figure" data-index="${i}" role="button" tabindex="0" aria-label="View photo: ${g.cap}" style="grid-column:span ${cs};grid-row:span ${rs}">
-      <picture>
-        <source type="image/webp" srcset="${webp(g.img)}">
-        <img src="${g.img}" alt="" loading="lazy" decoding="async">
-      </picture>
-      <figcaption>${g.cap}</figcaption>
-    </figure>`;
-  }).join('');
-  galleryToggle.textContent = galleryAll ? 'Show less' : 'View all';
-  galleryToggle.setAttribute('aria-expanded', String(galleryAll));
-  galleryGrid.querySelectorAll('.gallery-figure').forEach(fig => {
-    const open = () => openLightbox(Number(fig.dataset.index), fig);
-    fig.addEventListener('click', open);
-    fig.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
-    });
+    fig.style.gridColumn = `span ${cs}`;
+    fig.style.gridRow = `span ${rs}`;
   });
+  galleryToggle.textContent = galleryAll ? galleryToggle.dataset.less : galleryToggle.dataset.more;
+  galleryToggle.setAttribute('aria-expanded', String(galleryAll));
 }
-galleryToggle.addEventListener('click', () => { galleryAll = !galleryAll; renderGallery(); });
-// Mobile browsers fire resize when the URL bar collapses mid-scroll; only
-// rebuild the grid when the column count actually changes.
-window.addEventListener('resize', debounce(() => { if (desktopCols() !== renderedCols) renderGallery(); }, 150));
-renderGallery();
+galleryToggle.addEventListener('click', () => { galleryAll = !galleryAll; layoutGallery(); });
+// Mobile browsers fire resize as the URL bar collapses; only re-layout on a column change.
+window.addEventListener('resize', debounce(() => { if (columns() !== layoutCols) layoutGallery(); }, 150));
+layoutGallery();
 
 /* ---------- lightbox ---------- */
 const lightbox = document.getElementById('lightbox');
@@ -111,42 +91,50 @@ const lightboxSrc = document.getElementById('lightbox-src');
 const lightboxImg = document.getElementById('lightbox-img');
 const lightboxCap = document.getElementById('lightbox-cap');
 const lightboxClose = document.getElementById('lightbox-close');
+const lightboxPrev = document.getElementById('lightbox-prev');
+const lightboxNext = document.getElementById('lightbox-next');
+const lightboxControls = [lightboxClose, lightboxPrev, lightboxNext];
 let lightboxIndex = -1;
 let lightboxOpener = null;
 
-function openLightbox(i, opener) {
-  lightboxIndex = i;
-  lightboxOpener = opener || document.activeElement;
-  updateLightbox();
+function showInLightbox() {
+  const fig = visible[lightboxIndex];
+  const img = fig.querySelector('img');
+  lightboxSrc.srcset = fig.querySelector('source').srcset;
+  lightboxImg.src = img.getAttribute('src');
+  lightboxImg.alt = fig.querySelector('figcaption').textContent;
+  lightboxCap.textContent = lightboxImg.alt;
+}
+function openLightbox(fig) {
+  lightboxIndex = visible.indexOf(fig);
+  lightboxOpener = fig;
+  showInLightbox();
   lightbox.classList.add('is-open');
   document.body.classList.add('no-scroll');
   lightboxClose.focus();
 }
-function updateLightbox() {
-  const g = currentList[lightboxIndex];
-  if (!g) return;
-  lightboxSrc.srcset = webp(g.img);
-  lightboxImg.src = g.img;
-  lightboxImg.alt = g.cap;
-  lightboxCap.textContent = g.cap;
-}
 function stepLightbox(d) {
-  lightboxIndex = (lightboxIndex + d + currentList.length) % currentList.length;
-  updateLightbox();
+  lightboxIndex = (lightboxIndex + d + visible.length) % visible.length;
+  showInLightbox();
 }
 function closeLightbox() {
   lightbox.classList.remove('is-open');
   document.body.classList.remove('no-scroll');
-  if (lightboxOpener && document.contains(lightboxOpener)) lightboxOpener.focus();
+  if (lightboxOpener) lightboxOpener.focus();
 }
 
+figures.forEach(fig => {
+  fig.addEventListener('click', () => openLightbox(fig));
+  fig.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(fig); }
+  });
+});
 lightbox.addEventListener('click', closeLightbox);
-document.getElementById('lightbox-prev').addEventListener('click', e => { e.stopPropagation(); stepLightbox(-1); });
-document.getElementById('lightbox-next').addEventListener('click', e => { e.stopPropagation(); stepLightbox(1); });
+lightboxPrev.addEventListener('click', e => { e.stopPropagation(); stepLightbox(-1); });
+lightboxNext.addEventListener('click', e => { e.stopPropagation(); stepLightbox(1); });
 lightboxClose.addEventListener('click', e => { e.stopPropagation(); closeLightbox(); });
-document.querySelector('.lightbox-figure').addEventListener('click', e => e.stopPropagation());
+lightbox.querySelector('.lightbox-figure').addEventListener('click', e => e.stopPropagation());
 onSwipe(lightbox, stepLightbox);
-const lightboxControls = [lightboxClose, document.getElementById('lightbox-prev'), document.getElementById('lightbox-next')];
 window.addEventListener('keydown', e => {
   if (!lightbox.classList.contains('is-open')) return;
   if (e.key === 'Tab') {
@@ -155,37 +143,36 @@ window.addEventListener('keydown', e => {
     lightboxControls[(i + (e.shiftKey ? -1 : 1) + lightboxControls.length) % lightboxControls.length].focus();
   }
   if (e.key === 'Escape') closeLightbox();
-  if (e.key === 'ArrowRight') stepLightbox(1);
-  if (e.key === 'ArrowLeft') stepLightbox(-1);
+  if (e.key === 'ArrowRight') stepLightbox(rtl ? -1 : 1);
+  if (e.key === 'ArrowLeft') stepLightbox(rtl ? 1 : -1);
 });
 
 /* ---------- reservation form: hand off to WhatsApp ---------- */
 const form = document.getElementById('reservation-form');
 const sentMsg = document.getElementById('reservation-sent');
-const sentLink = document.getElementById('reservation-link');
-const dateInput = form.querySelector('input[type="date"]');
+const dateInput = document.getElementById('res-date');
 const today = new Date();
 dateInput.min = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, '0'), String(today.getDate()).padStart(2, '0')].join('-');
 
 function reservationMessage(data) {
   const [y, m, d] = data.get('date').split('-').map(Number);
-  const date = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+  const date = new Intl.DateTimeFormat(t.dateLocale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', numberingSystem: 'latn' })
     .format(new Date(y, m - 1, d));
   return [
-    "Hello Flaminio, I'd like to request a table.",
+    t.waHello,
     '',
-    `Name: ${data.get('name').trim()}`,
-    `Phone: ${data.get('phone').trim()}`,
-    `Date: ${date}`,
-    `Time: ${data.get('time')}`,
-    `Guests: ${data.get('guests')}`,
+    `${t.fName}: ${data.get('name').trim()}`,
+    `${t.fPhone}: ${data.get('phone').trim()}`,
+    `${t.fDate}: ${date}`,
+    `${t.fTime}: ${data.get('time')}`,
+    `${t.fGuests}: ${data.get('guests')}`,
   ].join('\n');
 }
 
 form.addEventListener('submit', e => {
   e.preventDefault();
-  const url = `${WHATSAPP}?text=${encodeURIComponent(reservationMessage(new FormData(form)))}`;
-  sentLink.href = url;
+  const url = `${CONTACT.whatsapp}?text=${encodeURIComponent(reservationMessage(new FormData(form)))}`;
+  document.getElementById('reservation-link').href = url;
   sentMsg.hidden = false;
   const win = window.open(url, '_blank');
   if (win) win.opener = null;
@@ -193,6 +180,6 @@ form.addEventListener('submit', e => {
 });
 
 function debounce(fn, ms) {
-  let t;
-  return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+  let timer;
+  return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), ms); };
 }
