@@ -2,8 +2,8 @@
 // on both pages — index.html and menu.html both import this module.
 
 export const PHONE_DISPLAY = '091-0181666';
-export const PHONE_TEL = 'tel:0910181666';
-export const WHATSAPP = 'https://wa.me/2180910181666';
+export const PHONE_TEL = 'tel:+218910181666';
+export const WHATSAPP = 'https://wa.me/218910181666';
 export const MAPS = 'https://www.google.com/maps/search/?api=1&query=Asayel+Resort+Al-Hawari+Benghazi';
 export const FACEBOOK = 'https://www.facebook.com/flaminio.ly/';
 export const ADDRESS = 'Al-Hawari, Al-Markabat Street, near Asayel Resort, Benghazi, Libya';
@@ -15,7 +15,7 @@ export const NAV_LINKS = [
   { label: 'Menu', home: 'menu.html', menu: 'menu.html' },
   { label: 'Gallery', home: '#gallery', menu: 'index.html#gallery' },
   { label: 'Contact', home: '#contact', menu: 'index.html#contact' },
-  { label: 'Reservations', home: '#reservations', menu: 'index.html#reservations' },
+  { label: 'Reservations', home: '#reserve', menu: 'index.html#reserve' },
 ];
 
 export const HERO_SLIDES = [

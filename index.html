@@ -35,7 +35,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="img/fillet-cheese.webp" type="image/webp" fetchpriority="high">
-<link href="https://fonts.googleapis.com/css2?family=Lustria&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lustria&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 
 <script type="application/ld+json">
@@ -287,32 +287,35 @@
   <div class="container" data-reveal>
     <h2 class="serif contact-title" id="contact-title">Location &amp; Contact</h2>
     <div class="contact-grid">
-      <a href="https://www.google.com/maps/search/?api=1&amp;query=Asayel+Resort+Al-Hawari+Benghazi" target="_blank" rel="noopener" class="map-placeholder">Embedded map placeholder — Al-Markabat St, Al-Hawari<span class="visually-hidden"> (opens Google Maps in a new tab)</span></a>
+      <div class="find-us">
+        <picture><source type="image/webp" srcset="img/interior-table.webp"><img src="img/interior-table.jpg" alt="" class="find-us-bg" loading="lazy" decoding="async"></picture>
+        <picture><source type="image/webp" srcset="img/logo-gold.webp"><img src="img/logo-gold.png" alt="" class="find-us-mark" width="56" height="40" loading="lazy" decoding="async"></picture>
+        <div class="find-us-kicker">Find us</div>
+        <p class="serif find-us-title">Al-Markabat Street, Al-Hawari</p>
+        <p class="find-us-sub">Near Asayel Resort · Benghazi</p>
+        <a href="https://www.google.com/maps/search/?api=1&amp;query=Asayel+Resort+Al-Hawari+Benghazi" target="_blank" rel="noopener" class="btn btn-sm btn-cream">Open in Google Maps<span class="visually-hidden"> (opens in a new tab)</span></a>
+      </div>
       <div class="contact-card">
         <div><div class="contact-label">Address</div><address class="contact-value" style="font-style:normal">Al-Hawari, Al-Markabat Street, near Asayel Resort, Benghazi, Libya</address></div>
         <div><div class="contact-label">Phone / WhatsApp</div><a href="tel:+218910181666" class="contact-phone">091-0181666</a></div>
-        <div><div class="contact-label">Opening hours</div><div class="contact-value">Daily 12:00 – 00:00 (placeholder)</div></div>
+        <div><div class="contact-label">Opening hours</div><div class="contact-value">Please call us for today&rsquo;s opening hours.</div></div>
         <div class="contact-actions">
           <a href="tel:+218910181666" class="btn btn-sm btn-burgundy">Call Now</a>
           <a href="https://wa.me/218910181666" target="_blank" rel="noopener" class="btn btn-sm btn-outline-burgundy">WhatsApp</a>
           <a href="https://www.google.com/maps/search/?api=1&amp;query=Asayel+Resort+Al-Hawari+Benghazi" target="_blank" rel="noopener" class="btn btn-sm btn-outline-burgundy-on-gold">Get Directions</a>
         </div>
-        <div class="reservation-form">
-          <h3 class="serif reservation-form-title" id="reservation-title" style="margin:0;font-weight:400">Request a table</h3>
-          <p class="reservation-sent" id="reservation-sent" role="status" tabindex="-1" hidden>Thank you — we will call you to confirm.</p>
+        <div class="reservation-form" id="reserve">
+          <h3 class="serif reservation-form-title" id="reservation-title">Request a table</h3>
+          <p class="reservation-intro">Fill this in and WhatsApp opens with your request ready to send.</p>
           <form id="reservation-form" class="reservation-fields" aria-labelledby="reservation-title">
-            <label for="res-name" class="visually-hidden">Name</label>
-            <input id="res-name" required placeholder="Name" class="span-2" name="name" autocomplete="name">
-            <label for="res-phone" class="visually-hidden">Phone</label>
-            <input id="res-phone" required type="tel" placeholder="Phone" class="span-2" name="phone" autocomplete="tel" inputmode="tel">
-            <label for="res-date" class="visually-hidden">Date</label>
-            <input id="res-date" required type="date" name="date">
-            <label for="res-time" class="visually-hidden">Time</label>
-            <input id="res-time" required type="time" name="time">
-            <label for="res-guests" class="visually-hidden">Number of guests</label>
-            <input id="res-guests" required type="number" min="1" max="20" placeholder="Guests" name="guests" inputmode="numeric">
-            <button type="submit" class="btn btn-sm btn-burgundy">Send request</button>
+            <div class="field span-2"><label for="res-name">Name</label><input id="res-name" required name="name" autocomplete="name"></div>
+            <div class="field span-2"><label for="res-phone">Phone</label><input id="res-phone" required type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="09X-XXXXXXX"></div>
+            <div class="field"><label for="res-date">Date</label><input id="res-date" required type="date" name="date"></div>
+            <div class="field"><label for="res-time">Time</label><input id="res-time" required type="time" name="time"></div>
+            <div class="field"><label for="res-guests">Guests</label><input id="res-guests" required type="number" min="1" max="20" name="guests" inputmode="numeric" value="2"></div>
+            <div class="field field--submit"><button type="submit" class="btn btn-sm btn-burgundy">Send via WhatsApp</button></div>
           </form>
+          <p class="reservation-sent" id="reservation-sent" role="status" tabindex="-1" hidden>WhatsApp is opening with your request — tap <strong>Send</strong> to confirm it. Didn&rsquo;t open? <a id="reservation-link" href="https://wa.me/218910181666" target="_blank" rel="noopener">Open WhatsApp</a> or call <a href="tel:+218910181666">091-0181666</a>.</p>
         </div>
       </div>
     </div>
@@ -322,7 +325,7 @@
 </main>
 
 <!-- FOOTER -->
-<footer id="reservations" class="site-footer">
+<footer class="site-footer">
   <picture><source type="image/webp" srcset="img/logo-cream.webp"><img src="img/logo-cream.png" alt="Flaminio Italian Restaurant" class="footer-logo" width="640" height="544" loading="lazy" decoding="async"></picture>
   <nav class="footer-nav" id="footer-nav" aria-label="Footer"></nav>
   <div class="footer-rule"></div>
@@ -330,7 +333,7 @@
   <div class="footer-social">
     <a href="https://www.facebook.com/flaminio.ly/" target="_blank" rel="noopener" aria-label="Flaminio on Facebook" class="social-btn">f</a>
   </div>
-  <div class="footer-copy">© Flaminio Italian Restaurant</div>
+  <div class="footer-copy">© 2026 Flaminio Italian Restaurant</div>
 </footer>
 
 <!-- LIGHTBOX -->

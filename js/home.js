@@ -1,4 +1,4 @@
-import { GALLERY } from './data.js';
+import { GALLERY, WHATSAPP } from './data.js';
 import { renderNav, initLangNote, initReveal, onSwipe, reducedMotion, webp } from './common.js';
 
 renderNav(document.getElementById('site-nav'), document.getElementById('footer-nav'), 'home');
@@ -146,23 +146,50 @@ document.getElementById('lightbox-next').addEventListener('click', e => { e.stop
 lightboxClose.addEventListener('click', e => { e.stopPropagation(); closeLightbox(); });
 document.querySelector('.lightbox-figure').addEventListener('click', e => e.stopPropagation());
 onSwipe(lightbox, stepLightbox);
+const lightboxControls = [lightboxClose, document.getElementById('lightbox-prev'), document.getElementById('lightbox-next')];
 window.addEventListener('keydown', e => {
   if (!lightbox.classList.contains('is-open')) return;
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const i = lightboxControls.indexOf(document.activeElement);
+    lightboxControls[(i + (e.shiftKey ? -1 : 1) + lightboxControls.length) % lightboxControls.length].focus();
+  }
   if (e.key === 'Escape') closeLightbox();
   if (e.key === 'ArrowRight') stepLightbox(1);
   if (e.key === 'ArrowLeft') stepLightbox(-1);
 });
 
-/* ---------- reservation form ---------- */
+/* ---------- reservation form: hand off to WhatsApp ---------- */
 const form = document.getElementById('reservation-form');
 const sentMsg = document.getElementById('reservation-sent');
+const sentLink = document.getElementById('reservation-link');
 const dateInput = form.querySelector('input[type="date"]');
-dateInput.min = new Date().toISOString().slice(0, 10);
+const today = new Date();
+dateInput.min = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, '0'), String(today.getDate()).padStart(2, '0')].join('-');
+
+function reservationMessage(data) {
+  const [y, m, d] = data.get('date').split('-').map(Number);
+  const date = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+    .format(new Date(y, m - 1, d));
+  return [
+    "Hello Flaminio, I'd like to request a table.",
+    '',
+    `Name: ${data.get('name').trim()}`,
+    `Phone: ${data.get('phone').trim()}`,
+    `Date: ${date}`,
+    `Time: ${data.get('time')}`,
+    `Guests: ${data.get('guests')}`,
+  ].join('\n');
+}
+
 form.addEventListener('submit', e => {
   e.preventDefault();
-  form.hidden = true;
+  const url = `${WHATSAPP}?text=${encodeURIComponent(reservationMessage(new FormData(form)))}`;
+  sentLink.href = url;
   sentMsg.hidden = false;
-  sentMsg.focus();
+  const win = window.open(url, '_blank');
+  if (win) win.opener = null;
+  else window.location.href = url;
 });
 
 function debounce(fn, ms) {

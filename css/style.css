@@ -122,6 +122,7 @@ picture { display: contents; }
   top: 0;
   z-index: 50;
   background: rgba(244, 239, 232, .96);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(184, 154, 91, .35);
 }
@@ -475,6 +476,7 @@ picture { display: contents; }
   align-items: center;
   justify-content: center;
   background: rgba(43, 14, 8, .55);
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   color: var(--cream);
   font-family: Lustria, serif;
@@ -610,29 +612,42 @@ picture { display: contents; }
   gap: 24px;
   align-items: stretch;
 }
-.map-placeholder {
+.find-us {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 12px;
   min-height: 420px;
-  background: repeating-linear-gradient(135deg, #e6ddd0 0 12px, #ede6da 12px 24px);
-  border: 1px solid rgba(184, 154, 91, .5);
-  color: var(--burgundy);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 12px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
+  padding: 40px 28px;
   text-align: center;
-  padding: 24px;
+  color: var(--cream);
+  background: var(--espresso);
+  border: 1px solid rgba(184, 154, 91, .5);
 }
+.find-us-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+.find-us::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(30, 10, 4, .55), rgba(30, 10, 4, .82)); }
+.find-us-mark { width: 56px; height: 40px; object-fit: cover; object-position: top; }
+.find-us-kicker { color: var(--gold); font-size: 12px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
+.find-us-title { font-size: clamp(26px, 3vw, 36px); line-height: 1.15; margin: 0; }
+.find-us-sub { margin: 0 0 10px; font-size: 15px; }
 .contact-card { background: #fff; border: 1px solid rgba(184, 154, 91, .5); padding: clamp(24px, 3vw, 40px); display: flex; flex-direction: column; gap: 22px; }
 .contact-label { font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--burgundy); }
 .contact-value { margin-top: 6px; font-size: 15px; line-height: 1.6; }
 .contact-phone { display: inline-block; margin-top: 6px; font-size: 20px; font-family: Lustria, serif; color: var(--burgundy); }
 .contact-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 .reservation-form { border-top: 1px solid rgba(184, 154, 91, .4); padding-top: 22px; }
-.reservation-form-title { font-family: Lustria, serif; font-size: 20px; }
-.reservation-sent { margin: 14px 0 0; color: var(--burgundy); font-size: 14px; }
+.reservation-form-title { font-family: Lustria, serif; font-weight: 400; font-size: 20px; margin: 0; }
+.reservation-intro { margin: 6px 0 0; font-size: 13.5px; line-height: 1.6; }
+.reservation-sent { margin: 14px 0 0; padding: 12px 14px; border-left: 2px solid var(--gold); background: var(--cream); color: var(--espresso); font-size: 14px; line-height: 1.6; }
+.reservation-sent a { text-decoration: underline; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field.span-2 { grid-column: 1 / -1; }
+.field label { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--burgundy); }
+.field--submit { justify-content: flex-end; }
 .reservation-fields {
   margin-top: 14px;
   display: grid;
@@ -655,10 +670,9 @@ picture { display: contents; }
 }
 .reservation-fields input:focus { border-color: var(--burgundy); }
 @media (max-width: 720px) {
-  .map-placeholder { min-height: 240px; }
+  .find-us { min-height: 300px; }
 }
-.reservation-fields input.span-2 { grid-column: 1 / -1; }
-.reservation-fields button { grid-column: 1 / -1; justify-self: start; }
+.reservation-fields button { width: 100%; min-height: 46px; }
 
 /* ---------- footer ---------- */
 .site-footer { background: var(--burgundy); color: var(--cream); padding: clamp(56px, 7vw, 90px) 20px 32px; text-align: center; }
@@ -765,7 +779,6 @@ picture { display: contents; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 .menu-cat-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--gold); padding-bottom: 12px; }
 .menu-cat-title { font-size: clamp(26px, 3vw, 36px); margin: 0; }
-.menu-cat-sub { font-size: 13px; letter-spacing: .1em; color: var(--burgundy); font-family: Lustria, serif; }
 .menu-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 22px 40px; margin-top: 22px; }
 .menu-item { display: flex; flex-direction: column; gap: 4px; padding-bottom: 14px; border-bottom: 1px dotted rgba(184, 154, 91, .45); }
 .menu-item-row { display: flex; align-items: baseline; gap: 10px; }
