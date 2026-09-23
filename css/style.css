@@ -317,13 +317,13 @@ html:not(.js) .hero-arrow, html:not(.js) .hero-dots, html:not(.js) .gallery-togg
   justify-content: center;
   gap: 0;
 }
-/* 8px visual dot inside a 24px tap target */
+/* 8px visual dot inside a 32px tap target */
 .hero-dot {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: none;
-  padding: 8px;
+  padding: 12px;
   cursor: pointer;
   background: rgba(244, 239, 232, .5);
   background-clip: content-box;
@@ -482,7 +482,7 @@ html:not(.js) .hero-arrow, html:not(.js) .hero-dots, html:not(.js) .gallery-togg
   align-items: center;
 }
 .about-photo { position: relative; }
-.about-photo img { width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block; border: 1px solid rgba(184, 154, 91, .5); }
+.about-photo img { width: 100%; height: auto; aspect-ratio: 4/5; object-fit: cover; display: block; border: 1px solid rgba(184, 154, 91, .5); }
 .about-photo .watermark { bottom: -30px; inset-inline-end: -30px; width: 180px; height: 130px; opacity: .35; position: absolute; top: auto; inset-inline-start: auto; }
 .about-copy { padding: 16px 0; }
 .about-kicker { display: flex; align-items: center; gap: 12px; color: var(--burgundy); font-weight: 600; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; }
@@ -584,7 +584,7 @@ html:not(.js) .hero-arrow, html:not(.js) .hero-dots, html:not(.js) .gallery-togg
 }
 .gallery-figure:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 @media (max-width: 720px) {
-  .gallery-figure figcaption { font-size: 10px; letter-spacing: .06em; padding: 22px 8px 8px; }
+  .gallery-figure figcaption { font-size: 11px; letter-spacing: .06em; padding: 22px 8px 8px; }
 }
 
 /* ---------- contact ---------- */
@@ -760,8 +760,6 @@ html:not(.js) .hero-arrow, html:not(.js) .hero-dots, html:not(.js) .gallery-togg
 .js .menu-panel:not(.is-active) { display: none; }
 @media (max-width: 760px) {
   .menu-panel { grid-template-columns: minmax(0, 1fr); margin-top: 36px; }
-  .menu-figure { position: static; }
-  .menu-figure img { aspect-ratio: 4/3; }
   .menu-tabs { gap: 6px; margin-top: 32px; }
   .menu-tab { padding: 9px 14px; }
 }
@@ -788,7 +786,7 @@ html:not(.js) .hero-arrow, html:not(.js) .hero-dots, html:not(.js) .gallery-togg
 .menu-brand { aspect-ratio: 4/5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; color: var(--cream); background: radial-gradient(ellipse at 50% 30%, rgba(184, 154, 91, .2), rgba(184, 154, 91, 0) 65%); }
 .menu-figure .menu-brand img { width: 58%; height: auto; aspect-ratio: auto; object-fit: contain; }
 .menu-brand span { font-size: clamp(22px, 2.4vw, 30px); text-align: center; padding: 0 16px; }
-@media (max-width: 760px) { .menu-brand { aspect-ratio: 4/3; } .menu-figure .menu-brand img { width: 40%; } }
+@media (max-width: 760px) { .menu-brand { aspect-ratio: 16/9; gap: 10px; } .menu-figure .menu-brand img { width: 26%; } .menu-brand span { font-size: 20px; } }
 .menu-note { margin: 40px 0 0; text-align: center; font-size: 12px; }
 
 /* ---------- Arabic (RTL) ---------- */
@@ -805,3 +803,28 @@ html[lang="ar"] .menu-item-name { font-size: 20px; }
 html[lang="ar"] .menu-item-alt, html[lang="ar"] .menu-cat-alt, html[lang="ar"] .menu-group span { font-family: Montserrat, Tajawal, sans-serif; font-size: 13px; }
 html[lang="ar"] .lang-btn { font-family: Montserrat, Tajawal, sans-serif; font-size: 13px; }
 html[lang="ar"] .about-text, html[lang="ar"] .signature-intro { line-height: 1.95; }
+
+/* ---------- mobile refinements: lighter frames, compact header, photo sizing ---------- */
+@media (max-width: 760px) {
+  .about-photo img { aspect-ratio: 4/3; object-position: 50% 68%; }
+  .about-photo .watermark { width: 120px; height: 86px; bottom: -18px; inset-inline-end: -12px; }
+  .dish-frame { padding: 4px; }
+  .dish-photo { outline: none; }
+  .dish-num { top: 10px; inset-inline-start: 10px; width: 32px; height: 32px; font-size: 12px; }
+  .gallery-figure { padding: 3px; border-color: rgba(184, 154, 91, .45); }
+  .gallery-figure figcaption { left: 3px; right: 3px; bottom: 3px; }
+  .menu-figure { position: static; order: -1; padding: 4px; }
+  .menu-figure img { aspect-ratio: 16/9; }
+  .menu-figure figcaption { padding: 8px 6px 2px; font-size: 10.5px; }
+}
+@media (min-width: 761px) {
+  .about-photo { max-width: 520px; margin-inline: auto; }
+}
+@media (max-width: 380px) {
+  .header-logo img { height: 46px; }
+  .header-right { gap: 2px; }
+  .lang-btn { font-size: 14px; padding-inline: 4px; }
+  .reserve-btn { padding: 9px 10px; font-size: 10.5px; letter-spacing: .08em; }
+  .site-nav { gap: 0 9px; padding: 0 6px 6px; }
+  .site-nav a { font-size: 11.5px; letter-spacing: .02em; padding: 8px 1px; }
+}

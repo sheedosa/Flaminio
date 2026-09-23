@@ -16,13 +16,14 @@ export const CONTACT = {
 export const HERO = ['fillet-cheese', 'caprese-pour', 'spaghetti-seafood', 'interior-table'];
 
 // `ref` is "<category id>/<item id>"; name, price and description come from MENU.
+// `pos` (optional) is the CSS object-position focus for tall photos in the landscape frame.
 export const SIGNATURE = [
   { ref: 'seafood/flaminio-seafood', img: 'seafood-pan' },
   { ref: 'steaks/fillet-with-cheese-sauce', img: 'fillet-cheese' },
   { ref: 'steaks/tomahawk-steak', img: 'tomahawk' },
   { ref: 'pasta/spaghetti-seafood', img: 'spaghetti-seafood' },
   { ref: 'salads/tropical-salad', img: 'tropical-salad' },
-  { ref: 'pizza/chicken-arugula-pizza', img: 'pizza-chicken-arugula' },
+  { ref: 'pizza/chicken-arugula-pizza', img: 'pizza-chicken-arugula', pos: '50% 78%' },
 ];
 
 // Photos not used elsewhere come first so the 8-photo preview shows new images.
@@ -133,7 +134,7 @@ export const MENU = [
     i('Creamy King Prawns', 'جمبري ملكي بالكريمة', 95, 'A mix of king prawns and small prawns with rice, served in a rich creamy sauce.', 'تتكون من جمبري صغير وجمبري ملكي مع أرز وصوص كريمي غني.'),
     i('Grilled Fish', 'سمك مشوي', 75, 'Grilled fish served with fries, mixed vegetables, and rice.', 'سمك مشوي مع بطاطا مقلية، خضار مشكلة، وأرز.'),
   ]},
-  { id: 'pizza', en: 'Pizza', ar: 'البيتزا', img: 'pizza-wood-fired', items: [
+  { id: 'pizza', en: 'Pizza', ar: 'البيتزا', img: 'pizza-chicken', items: [
     i('Margherita Pizza', 'بيتزا مارغريتا', 29, 'Classic pizza with tomato sauce, mozzarella cheese, and fresh basil leaves.', 'بيتزا كلاسيكية مع صلصة الطماطم، جبنة موتزاريلا، وأوراق ريحان طازجة.'),
     i('Tuna Pizza', 'بيتزا تونة', 35, 'Pizza with tomato sauce, mozzarella cheese, and tuna.', 'بيتزا مع صلصة الطماطم، جبنة موتزاريلا، وتونة طازجة.'),
     i('Chicken & Arugula Pizza', 'بيتزا دجاج مع جرجير', 39, 'Pizza with tomato sauce, mozzarella cheese, grilled chicken, and fresh arugula.', 'بيتزا مع صلصة الطماطم، جبنة موتزاريلا، دجاج مشوي، وجرجير طازج.'),

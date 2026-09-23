@@ -75,7 +75,7 @@ function signatureCards(lang, t, base) {
     const name = (lang === 'en' && s.en) || item[lang];
     const desc = lang === 'en' ? item.den : item.dar;
     return `<article class="dish-card${k === 0 ? ' featured' : ''}">
-      <div class="dish-frame"><div class="dish-photo">${pic(base, s.img, name, 'loading="lazy" decoding="async"', k === 0 ? '(min-width: 860px) 62vw, 100vw' : '(min-width: 860px) 31vw, 100vw')}<span class="dish-num" aria-hidden="true">${ROMAN[k]}</span></div></div>
+      <div class="dish-frame"><div class="dish-photo">${pic(base, s.img, name, `loading="lazy" decoding="async"${s.pos ? ` style="object-position:${s.pos}"` : ''}`, k === 0 ? '(min-width: 860px) 62vw, 100vw' : '(min-width: 860px) 31vw, 100vw')}<span class="dish-num" aria-hidden="true">${ROMAN[k]}</span></div></div>
       <div class="dish-body">
         <div class="dish-title-row"><h3 class="serif dish-name">${esc(name)}</h3><span class="dish-leader" aria-hidden="true"></span><span class="dish-price">${priceHtml(item.price, t)}</span></div>
         <p class="dish-desc">${esc(desc)}</p>
