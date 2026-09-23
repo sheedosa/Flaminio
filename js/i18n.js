@@ -57,7 +57,7 @@ export const STRINGS = {
     copyright: '© 2026 Flaminio Italian Restaurant',
     menuHeading: 'Our Menu', menuIntro: 'A carefully curated selection of Italian classics.',
     pdf: 'Full Menu PDF', download: 'download', tabsLabel: 'Menu categories',
-    lyd: 'LYD', priceNote: 'Prices in Libyan Dinar.', twoPrices: 'Two sizes',
+    lyd: 'LYD', priceNote: 'Prices in Libyan Dinar.',
     notFoundTitle: 'Page not found — Flaminio Italian Restaurant',
   },
   ar: {
@@ -114,7 +114,7 @@ export const STRINGS = {
     copyright: '© 2026 مطعم فلامينيو الإيطالي',
     menuHeading: 'قائمة الطعام', menuIntro: 'اختيار منسّق بعناية من الكلاسيكيات الإيطالية.',
     pdf: 'القائمة الكاملة PDF', download: 'تحميل', tabsLabel: 'فئات القائمة',
-    lyd: 'د.ل', priceNote: 'الأسعار بالدينار الليبي.', twoPrices: 'حجمان',
+    lyd: 'د.ل', priceNote: 'الأسعار بالدينار الليبي.',
     notFoundTitle: 'الصفحة غير موجودة — مطعم فلامينيو الإيطالي',
   },
 };

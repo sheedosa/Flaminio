@@ -25,8 +25,8 @@ assets/              downloadable menu PDF
 
 ## Editing content
 
-- **Prices, dishes, descriptions:** `js/data.js` → `MENU`. Price is a number, `[small, large]`
-  for two sizes, or `null` for "—". Each item has English (`en`, `den`) and Arabic (`ar`, `dar`).
+- **Prices, dishes, descriptions:** `js/data.js` → `MENU`. Price is a number in LYD, or `null`
+  for "—". Names and descriptions follow the printed menu word for word. Each item has English (`en`, `den`) and Arabic (`ar`, `dar`).
 - **Signature dishes:** `SIGNATURE` references menu items (`'category/item-id'`), so their
   names and prices always match the menu.
 - **Category photo:** `img` on the category; `null` shows the branded burgundy panel.

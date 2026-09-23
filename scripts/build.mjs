@@ -43,9 +43,7 @@ function pic(base, name, alt, attrs = '', sizes = '') {
   return `<picture><source type="image/webp" srcset="${set('webp')}"${sz}><img src="${base}img/${name}.jpg"${responsive ? ` srcset="${set('jpg')}"${sz}` : ''} alt="${esc(alt)}"${attrs ? ' ' + attrs : ''}></picture>`;
 }
 
-const priceHtml = (p, t) => Array.isArray(p)
-  ? `<span title="${esc(t.twoPrices)}"><bdi dir="ltr">${p[0]} / ${p[1]}</bdi> ${esc(t.lyd)}</span>`
-  : `${p} ${esc(t.lyd)}`;
+const priceHtml = (p, t) => `${p} ${esc(t.lyd)}`;
 
 const divider = base => `<div class="section-divider" aria-hidden="true"><span class="line"></span>${pic(base, 'logo-gold', '', 'width="56" height="40" loading="lazy" decoding="async"').replace('logo-gold.jpg', 'logo-gold.png')}<span class="line"></span></div>`;
 
@@ -157,7 +155,7 @@ function menuLd(lang, t) {
           hasMenuItem: itemsOf(c).map(it => ({
             '@type': 'MenuItem', name: it[lang],
             ...((lang === 'en' ? it.den : it.dar) ? { description: lang === 'en' ? it.den : it.dar } : {}),
-            ...(it.price == null ? {} : { offers: Array.isArray(it.price) ? it.price.map(offer) : offer(it.price) }),
+            ...(it.price == null ? {} : { offers: offer(it.price) }),
           })),
         })),
       },
