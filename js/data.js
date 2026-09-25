@@ -364,8 +364,8 @@ export const BRANCHES = [
     address: { streetAddress: 'Al-Markabat Street, Al-Hawari, near Asayel Resort', addressLocality: 'Benghazi', addressCountry: 'LY' },
   },
   {
-    id: 'downtown', en: 'Downtown', ar: 'وسط البلد',
-    placeEn: 'Downtown Benghazi', placeAr: 'وسط مدينة بنغازي',
+    id: 'downtown', en: 'Downtown', ar: 'داون تاون',
+    placeEn: 'Downtown Benghazi', placeAr: 'داون تاون، بنغازي',
     menu: MENU_DOWNTOWN, signature: SIGNATURE_DOWNTOWN, pdf: null,
     chef: 'Saif Eddine Fardhi',
   },
