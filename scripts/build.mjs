@@ -191,7 +191,7 @@ function menuLd(branch, lang, t) {
 }
 
 const fontsHref = lang => lang === 'ar'
-  ? 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@500;600&family=Tajawal:wght@400;500;700&display=swap'
+  ? 'https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@500;600&family=Tajawal:wght@400;500;700&display=swap'
   : 'https://fonts.googleapis.com/css2?family=Lustria&family=Montserrat:wght@400;500;600&family=Tajawal:wght@400;500&display=swap';
 
 function pageContext(branch, lang, page) {
