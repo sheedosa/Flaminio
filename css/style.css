@@ -866,3 +866,6 @@ html[lang="ar"] .about-text, html[lang="ar"] .signature-intro { line-height: 1.9
 .gate-step--branch:target { display: block; }
 .gate:has(.gate-step--branch:target) .gate-step--lang, .gate.is-branch .gate-step--lang { display: none; }
 @media (prefers-reduced-motion: reduce) { .gate-choice { transition: none; } }
+
+/* Arabic H1s use Cairo */
+html[lang="ar"] h1, html[lang="ar"] h1.serif, .gate-title-ar { font-family: Cairo, Tajawal, sans-serif; font-weight: 600; letter-spacing: 0; }
