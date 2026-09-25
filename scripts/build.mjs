@@ -1,9 +1,12 @@
-// Renders the site into dist/: English at the root, Arabic under /ar/.
+// Renders the site into dist/:
+//   /                      language + branch chooser (the "gate")
+//   /<branch>/             English site for that branch, /<branch>/ar/ Arabic
+//   /menu.html, /ar/…      redirects for links shared before branches existed
 // Usage: node scripts/build.mjs   (no dependencies; Node 18+)
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { CONTACT, HERO, SIGNATURE, GALLERY, MENU, itemsOf, findItem } from '../js/data.js';
+import { CONTACT, HERO, GALLERY, BRANCHES, itemsOf, findItem } from '../js/data.js';
 import { STRINGS } from '../js/i18n.js';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -16,6 +19,19 @@ const STATIC = ['css', 'js', 'img', 'assets', 'favicon.ico', 'site.webmanifest']
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const get = (ctx, key) => key.split('.').reduce((o, k) => (o == null ? undefined : o[k]), ctx);
+// "{branch}"-style placeholders in interface strings.
+const fill = (s, vars) => String(s).replace(/\{(\w+)\}/g, (_, k) => (k in vars ? vars[k] : `{${k}}`));
+const branchUrl = (branch, lang) => SITE + branch.id + '/' + LANGS[lang];
+
+// Fail early on broken content rather than publishing it.
+for (const b of BRANCHES) {
+  for (const c of b.menu) {
+    const ids = itemsOf(c).map(it => it.id);
+    if (new Set(ids).size !== ids.length) throw new Error(`${b.id}/${c.id}: duplicate item ids`);
+    for (const it of itemsOf(c)) if (it.price !== null && typeof it.price !== 'number') throw new Error(`${b.id}/${c.id}/${it.id}: price must be a number or null`);
+  }
+  for (const s of b.signature) findItem(s.ref, b.menu);
+}
 
 const partials = Object.fromEntries(
   fs.readFileSync(path.join(ROOT, 'src/partials.html'), 'utf8')
@@ -43,7 +59,9 @@ function pic(base, name, alt, attrs = '', sizes = '') {
   return `<picture><source type="image/webp" srcset="${set('webp')}"${sz}><img src="${base}img/${name}.jpg"${responsive ? ` srcset="${set('jpg')}"${sz}` : ''} alt="${esc(alt)}"${attrs ? ' ' + attrs : ''}></picture>`;
 }
 
-const priceHtml = (p, t) => `${p} ${esc(t.lyd)}`;
+const priceHtml = (p, t) => p == null
+  ? `<span class="price-tbc" title="${esc(t.priceTbc)}">—<span class="visually-hidden"> ${esc(t.priceTbc)}</span></span>`
+  : `${p} ${esc(t.lyd)}`;
 
 const divider = base => `<div class="section-divider" aria-hidden="true"><span class="line"></span>${pic(base, 'logo-gold', '', 'width="56" height="40" loading="lazy" decoding="async"').replace('logo-gold.jpg', 'logo-gold.png')}<span class="line"></span></div>`;
 
@@ -69,10 +87,10 @@ const heroDots = t => HERO.map((_, i) =>
 
 const trust = t => t.trust.map(s => `<span>${esc(s)}</span>`).join('<span aria-hidden="true">·</span>');
 
-function signatureCards(lang, t, base) {
-  return SIGNATURE.map((s, k) => {
-    const item = findItem(s.ref);
-    const name = (lang === 'en' && s.en) || item[lang];
+function signatureCards(branch, lang, t, base) {
+  return branch.signature.map((s, k) => {
+    const item = findItem(s.ref, branch.menu);
+    const name = item[lang];
     const desc = lang === 'en' ? item.den : item.dar;
     return `<article class="dish-card${k === 0 ? ' featured' : ''}">
       <div class="dish-frame"><div class="dish-photo">${pic(base, s.img, name, `loading="lazy" decoding="async"${s.pos ? ` style="object-position:${s.pos}"` : ''}`, k === 0 ? '(min-width: 860px) 62vw, 100vw' : '(min-width: 860px) 31vw, 100vw')}<span class="dish-num" aria-hidden="true">${ROMAN[k]}</span></div></div>
@@ -84,9 +102,10 @@ function signatureCards(lang, t, base) {
   }).join('\n    ');
 }
 
-function stats(t) {
-  const food = MENU.filter(c => !c.drinks).reduce((n, c) => n + itemsOf(c).length, 0);
-  const cells = [[String(MENU.length), t.statCategories], [`${Math.floor(food / 10) * 10}+`, t.statDishes], [t.statKidsBig, t.statKids]];
+function stats(branch, t) {
+  const menu = branch.menu;
+  const food = menu.filter(c => !c.drinks).reduce((n, c) => n + itemsOf(c).length, 0);
+  const cells = [[String(menu.length), t.statCategories], [`${Math.floor(food / 10) * 10}+`, t.statDishes], [t.statKidsBig, t.statKids]];
   return cells.map(([big, label]) => `<div class="stat-card"><div class="stat-big"><bdi>${esc(big)}</bdi></div><div class="stat-label">${esc(label)}</div></div>`).join('\n    ');
 }
 
@@ -96,22 +115,23 @@ const whyCards = t => t.why.map(([title, desc], i) =>
 const gallery = (lang, t, base) => GALLERY.map((g, i) =>
   `<figure class="gallery-figure" data-index="${i}" role="button" tabindex="0" aria-label="${esc(t.viewPhoto + ' ' + g[lang])}">${pic(base, g.img, '', 'loading="lazy" decoding="async"', i % 8 === 0 ? '(min-width: 720px) 50vw, 50vw' : '(min-width: 720px) 25vw, 50vw')}<figcaption>${esc(g[lang])}</figcaption></figure>`).join('\n      ');
 
-const menuTabs = lang => MENU.map(c => `<a class="menu-tab" href="#${c.id}" data-cat="${c.id}">${esc(c[lang])}</a>`).join('');
+const menuTabs = (menu, lang) => menu.map(c => `<a class="menu-tab" href="#${c.id}" data-cat="${c.id}">${esc(c[lang])}</a>`).join('');
 
 function menuItems(items, lang, t, level) {
   const alt = otherLang(lang);
   return `<div class="menu-items">${items.map(it => {
     const desc = lang === 'en' ? it.den : it.dar;
+    const badge = it.isNew ? ` <span class="menu-badge">${esc(t.newBadge)}</span>` : '';
     return `<div class="menu-item">
-          <div class="menu-item-row"><h${level} class="serif menu-item-name">${esc(it[lang])}</h${level}><span class="menu-item-leader" aria-hidden="true"></span><span class="menu-item-price">${priceHtml(it.price, t)}</span></div>
+          <div class="menu-item-row"><h${level} class="serif menu-item-name">${esc(it[lang])}${badge}</h${level}><span class="menu-item-leader" aria-hidden="true"></span><span class="menu-item-price">${priceHtml(it.price, t)}</span></div>
           <div class="menu-item-alt" lang="${alt}" dir="${STRINGS[alt].dir}">${esc(it[alt])}</div>${desc ? `\n          <p class="menu-item-desc">${esc(desc)}</p>` : ''}
         </div>`;
   }).join('\n        ')}</div>`;
 }
 
-function menuPanels(lang, t, base) {
+function menuPanels(menu, lang, t, base) {
   const alt = otherLang(lang);
-  return MENU.map(c => {
+  return menu.map(c => {
     const name = c[lang];
     const body = c.groups
       ? c.groups.map(g => `<h3 class="menu-group">${esc(g[lang])} <span lang="${alt}" dir="${STRINGS[alt].dir}">${esc(g[alt])}</span></h3>\n      ${menuItems(g.items, lang, t, 4)}`).join('\n      ')
@@ -131,26 +151,26 @@ function menuPanels(lang, t, base) {
 
 const json = o => JSON.stringify(o).replace(/</g, '\\u003c');
 
-function restaurantLd(lang) {
+function restaurantLd(branch, lang) {
   return json({
     '@context': 'https://schema.org', '@type': 'Restaurant',
-    name: STRINGS.en.siteName, alternateName: STRINGS.ar.siteName,
-    url: SITE + LANGS[lang], image: SITE + 'img/og-image.jpg', logo: SITE + 'img/logo-burgundy.png',
+    name: `${STRINGS.en.siteName} — ${branch.en}`, alternateName: `${STRINGS.ar.siteName} — ${branch.ar}`,
+    url: branchUrl(branch, lang), image: SITE + 'img/og-image.jpg', logo: SITE + 'img/logo-burgundy.png',
     telephone: CONTACT.phoneTel, servesCuisine: 'Italian', priceRange: '$$', acceptsReservations: 'True',
-    hasMenu: SITE + LANGS[lang] + 'menu.html',
-    address: { '@type': 'PostalAddress', streetAddress: 'Al-Markabat Street, Al-Hawari, near Asayel Resort', addressLocality: 'Benghazi', addressCountry: 'LY' },
+    hasMenu: branchUrl(branch, lang) + 'menu.html',
+    ...(branch.address ? { address: { '@type': 'PostalAddress', ...branch.address } } : {}),
     sameAs: [CONTACT.facebook],
   });
 }
 
-function menuLd(lang, t) {
+function menuLd(branch, lang, t) {
   const offer = p => ({ '@type': 'Offer', price: p, priceCurrency: 'LYD' });
   return json({
     '@context': 'https://schema.org',
     '@graph': [
       {
-        '@type': 'Menu', name: t.menuHeading, inLanguage: lang, url: SITE + LANGS[lang] + 'menu.html',
-        hasMenuSection: MENU.map(c => ({
+        '@type': 'Menu', name: `${t.menuHeading} — ${branch[lang]}`, inLanguage: lang, url: branchUrl(branch, lang) + 'menu.html',
+        hasMenuSection: branch.menu.map(c => ({
           '@type': 'MenuSection', name: c[lang],
           hasMenuItem: itemsOf(c).map(it => ({
             '@type': 'MenuItem', name: it[lang],
@@ -162,8 +182,8 @@ function menuLd(lang, t) {
       {
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: t.homeIcon, item: SITE + LANGS[lang] },
-          { '@type': 'ListItem', position: 2, name: t.menuHeading, item: SITE + LANGS[lang] + 'menu.html' },
+          { '@type': 'ListItem', position: 1, name: t.homeIcon, item: branchUrl(branch, lang) },
+          { '@type': 'ListItem', position: 2, name: t.menuHeading, item: branchUrl(branch, lang) + 'menu.html' },
         ],
       },
     ],
@@ -174,24 +194,27 @@ const fontsHref = lang => lang === 'ar'
   ? 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap'
   : 'https://fonts.googleapis.com/css2?family=Lustria&family=Montserrat:wght@400;500;600&family=Tajawal:wght@400;500&display=swap';
 
-function pageContext(lang, page) {
+function pageContext(branch, lang, page) {
   const t = STRINGS[lang];
-  const base = lang === 'en' ? '' : '../';
+  const base = lang === 'en' ? '../' : '../../';
   const file = page === 'menu' ? 'menu.html' : '';
-  const url = l => SITE + LANGS[l] + file;
+  const url = l => branchUrl(branch, l) + file;
   const isMenu = page === 'menu';
-  const pdfBytes = fs.statSync(path.join(ROOT, 'assets/Flaminio-Menu.pdf')).size;
+  const vars = { branch: branch[lang] };
+  const other = BRANCHES.find(b => b.id !== branch.id);
+  const catNames = branch.menu.map(c => c[lang]).join(lang === 'ar' ? '، ' : ', ');
+  const pdfSize = branch.pdf ? `${(fs.statSync(path.join(ROOT, 'assets', branch.pdf)).size / 1024 / 1024).toFixed(1)} MB` : '';
   return {
-    lang, t, base, contact: CONTACT,
-    title: isMenu ? t.menuTitle : t.homeTitle,
-    description: isMenu ? t.menuDesc : t.homeDesc,
-    ogTitle: isMenu ? t.menuOgTitle : t.homeTitle,
+    lang, t, base, contact: CONTACT, branch, branchName: branch[lang],
+    title: fill(isMenu ? t.menuTitle : t.homeTitle, vars),
+    description: isMenu ? `${fill(t.menuDescLead, vars)}${catNames}.` : t.homeDesc,
+    ogTitle: fill(isMenu ? t.menuOgTitle : t.homeTitle, vars),
     ogDescription: isMenu ? t.menuOgDesc : t.homeOgDesc,
     canonical: url(lang), ogImage: SITE + 'img/og-image.jpg', altLocale: STRINGS[otherLang(lang)].locale,
     hreflang: [`<link rel="alternate" hreflang="en" href="${url('en')}">`, `<link rel="alternate" hreflang="ar" href="${url('ar')}">`, `<link rel="alternate" hreflang="x-default" href="${url('en')}">`].join('\n'),
     preload: isMenu ? '' : `<link rel="preload" as="image" href="${base}img/${HERO[0]}.webp" type="image/webp" fetchpriority="high">`,
     fontsHref: fontsHref(lang),
-    jsonLd: isMenu ? menuLd(lang, t) : restaurantLd(lang),
+    jsonLd: isMenu ? menuLd(branch, lang, t) : restaurantLd(branch, lang),
     nav: nav(t, page),
     iconMenuHref: isMenu ? 'index.html' : 'menu.html', iconMenuLabel: isMenu ? t.homeIcon : t.menuIcon,
     homeHref: isMenu ? 'index.html' : '',
@@ -200,13 +223,40 @@ function pageContext(lang, page) {
     arrowPrev: t.dir === 'rtl' ? '›' : '‹', arrowNext: t.dir === 'rtl' ? '‹' : '›',
     divider: divider(base),
     heroSlides: heroSlides(base), heroDots: heroDots(t), trust: trust(t),
-    signatureCards: signatureCards(lang, t, base), stats: stats(t), whyCards: whyCards(t),
+    heroKicker: `<p class="hero-kicker"><span>${esc(fill(t.branchOf, vars))}</span><a href="${base}#${lang}">${esc(t.switchBranch)}</a></p>`,
+    signatureCards: signatureCards(branch, lang, t, base), stats: stats(branch, t), whyCards: whyCards(t),
     gallery: gallery(lang, t, base),
     sent: t.sentHtml.replace('{wa}', esc(CONTACT.whatsapp)).replace('{tel}', esc(CONTACT.phoneTel)).replace('{phone}', esc(CONTACT.phoneDisplay)),
-    menuTabs: menuTabs(lang), menuPanels: menuPanels(lang, t, base),
-    pdfSize: `${(pdfBytes / 1024 / 1024).toFixed(1)} MB`,
+    menuTabs: menuTabs(branch.menu, lang), menuPanels: menuPanels(branch.menu, lang, t, base),
+    menuBranch: `<p class="menu-branch">${esc(fill(t.menuBranchNote, vars))} <a href="${base}${other.id}/${LANGS[lang]}menu.html">${esc(fill(t.menuOtherBranch, { branch: other[lang] }))}</a></p>`,
+    chefLine: branch.chef ? `<p class="menu-chef">${esc(t.chefLine).replace('{chef}', `<bdi dir="ltr">${esc(branch.chef)}</bdi>`)}</p>` : '',
+    pdfButton: branch.pdf ? `<a href="${base}assets/${branch.pdf}" download="${branch.pdf}" class="btn btn-sm btn-outline-gold menu-pdf">↓ ${esc(t.pdf)} <span class="visually-hidden">(${pdfSize} ${esc(t.download)})</span></a>` : '',
+    footerBranches: `<div class="footer-branches">${esc(t.branchesLabel)}: ${BRANCHES.map(b => b.id === branch.id ? `<strong>${esc(b[lang])}</strong>` : `<a href="${base}${b.id}/${LANGS[lang]}${file}">${esc(b[lang])}</a>`).join(' <span aria-hidden="true">·</span> ')}</div>`,
   };
 }
+
+// The root page: pick a language, then a branch. Works without JavaScript (CSS :target).
+function gateContext() {
+  const en = STRINGS.en, ar = STRINGS.ar;
+  const choices = lang => BRANCHES.map(b =>
+    `<a href="${b.id}/${LANGS[lang]}" class="gate-choice gate-choice--branch" hreflang="${lang}"><span class="serif">${esc(b[lang])}</span><small>${esc(lang === 'en' ? b.placeEn : b.placeAr)}</small></a>`).join('\n      ');
+  return {
+    en, ar, title: en.gateTitle, description: en.gateDesc, canonical: SITE, ogImage: SITE + 'img/og-image.jpg',
+    jsonLd: json({
+      '@context': 'https://schema.org', '@type': 'Restaurant',
+      name: en.siteName, alternateName: ar.siteName, url: SITE, image: SITE + 'img/og-image.jpg', logo: SITE + 'img/logo-burgundy.png',
+      telephone: CONTACT.phoneTel, servesCuisine: 'Italian', priceRange: '$$', sameAs: [CONTACT.facebook],
+    }),
+    branchesEn: choices('en'), branchesAr: choices('ar'),
+  };
+}
+
+// Old URLs (before branches) keep working: they land on the Markabaat pages.
+const redirect = to => `<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0; url=${to}"><title>Flaminio</title>
+<script>location.replace(${JSON.stringify(to)} + location.hash)</script></head>
+<body><a href="${to}">${to}</a></body></html>
+`;
 
 function copy(src, dest) {
   const s = fs.statSync(src);
@@ -216,17 +266,20 @@ function copy(src, dest) {
 
 function sitemap() {
   const today = new Date().toISOString().slice(0, 10);
-  const entry = (file, priority) => Object.keys(LANGS).map(lang => `  <url>
-    <loc>${SITE + LANGS[lang] + file}</loc>
-${Object.keys(LANGS).map(l => `    <xhtml:link rel="alternate" hreflang="${l}" href="${SITE + LANGS[l] + file}"/>`).join('\n')}
-    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE + file}"/>
-    <lastmod>${today}</lastmod>
+  const url = (loc, priority, alternates = '') => `  <url>
+    <loc>${loc}</loc>
+${alternates}    <lastmod>${today}</lastmod>
     <priority>${priority}</priority>
-  </url>`).join('\n');
+  </url>`;
+  const entries = [url(SITE, '1.0')];
+  for (const b of BRANCHES) for (const [file, priority] of [['', '0.9'], ['menu.html', '0.9']]) for (const lang of Object.keys(LANGS)) {
+    const alternates = Object.keys(LANGS).map(l => `    <xhtml:link rel="alternate" hreflang="${l}" href="${branchUrl(b, l) + file}"/>\n`).join('')
+      + `    <xhtml:link rel="alternate" hreflang="x-default" href="${branchUrl(b, 'en') + file}"/>\n`;
+    entries.push(url(branchUrl(b, lang) + file, priority, alternates));
+  }
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${entry('', '1.0')}
-${entry('menu.html', '0.9')}
+${entries.join('\n')}
 </urlset>
 `;
 }
@@ -234,15 +287,27 @@ ${entry('menu.html', '0.9')}
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
 for (const item of STATIC) copy(path.join(ROOT, item), path.join(OUT, item));
-for (const lang of Object.keys(LANGS)) {
-  fs.mkdirSync(path.join(OUT, LANGS[lang]), { recursive: true });
-  for (const page of ['index', 'menu']) {
-    const tpl = fs.readFileSync(path.join(ROOT, `src/${page}.html`), 'utf8');
-    fs.writeFileSync(path.join(OUT, LANGS[lang], `${page}.html`), render(tpl, pageContext(lang, page), `${lang}/${page}`));
+const tpl = name => fs.readFileSync(path.join(ROOT, `src/${name}.html`), 'utf8');
+for (const branch of BRANCHES) {
+  for (const lang of Object.keys(LANGS)) {
+    const dir = path.join(OUT, branch.id, LANGS[lang]);
+    fs.mkdirSync(dir, { recursive: true });
+    for (const page of ['index', 'menu']) {
+      fs.writeFileSync(path.join(dir, `${page}.html`), render(tpl(page), pageContext(branch, lang, page), `${branch.id}/${lang}/${page}`));
+    }
   }
 }
-fs.writeFileSync(path.join(OUT, '404.html'), render(fs.readFileSync(path.join(ROOT, 'src/404.html'), 'utf8'), { basePath: BASE_PATH }, '404'));
+fs.writeFileSync(path.join(OUT, 'index.html'), render(tpl('gate'), gateContext(), 'gate'));
+fs.writeFileSync(path.join(OUT, 'menu.html'), redirect('markabaat/menu.html'));
+fs.mkdirSync(path.join(OUT, 'ar'), { recursive: true });
+fs.writeFileSync(path.join(OUT, 'ar', 'index.html'), redirect('../markabaat/ar/'));
+fs.writeFileSync(path.join(OUT, 'ar', 'menu.html'), redirect('../markabaat/ar/menu.html'));
+fs.writeFileSync(path.join(OUT, '404.html'), render(tpl('404'), {
+  basePath: BASE_PATH,
+  linksEn: [`<a class="a" href="${BASE_PATH}">Home</a>`, ...BRANCHES.map(b => `<a class="b" href="${BASE_PATH}${b.id}/menu.html">${esc(b.en)} menu</a>`)].join('\n      '),
+  linksAr: [`<a class="a" href="${BASE_PATH}#ar">الرئيسية</a>`, ...BRANCHES.map(b => `<a class="b" href="${BASE_PATH}${b.id}/ar/menu.html">قائمة فرع ${esc(b.ar)}</a>`)].join('\n      '),
+}, '404'));
 fs.writeFileSync(path.join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}sitemap.xml\n`);
 fs.writeFileSync(path.join(OUT, 'sitemap.xml'), sitemap());
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
-console.log(`Built ${SITE} → dist/ (${Object.keys(LANGS).join(', ')})`);
+console.log(`Built ${SITE} → dist/ (${BRANCHES.map(b => b.id).join(', ')} × ${Object.keys(LANGS).join(', ')})`);

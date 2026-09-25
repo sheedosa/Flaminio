@@ -1,8 +1,10 @@
 // All site content. The build (scripts/build.mjs) renders every page from this
 // file, and the browser scripts import it too — edit here, rebuild, done.
-// Prices and Arabic dish names/descriptions come from the restaurant's own menu
-// (assets/Flaminio-Menu.pdf). Names and descriptions in both languages follow the PDF
-// text verbatim (only evident spelling errors corrected).
+//
+// Two branches share everything except the menu: MENU (Markabaat) comes from the
+// printed menu (assets/Flaminio-Menu.pdf); MENU_DOWNTOWN from the Downtown menu
+// document. Names and descriptions follow those sources verbatim (only evident
+// spelling errors corrected). BRANCHES at the bottom ties it together.
 
 export const CONTACT = {
   phoneDisplay: '091-0181666',
@@ -246,10 +248,125 @@ export const MENU = [
 // Flat list of a category's items, whether or not it is split into groups.
 export const itemsOf = cat => cat.items || cat.groups.flatMap(g => g.items);
 
-export function findItem(ref) {
+export function findItem(ref, menu = MENU) {
   const [catId, itemId] = ref.split('/');
-  const cat = MENU.find(c => c.id === catId);
+  const cat = menu.find(c => c.id === catId);
   const item = cat && itemsOf(cat).find(it => it.id === itemId);
   if (!item) throw new Error(`Unknown menu item: ${ref}`);
   return item;
 }
+
+// ---------------------------------------------------------------------------
+// Downtown branch menu (from the restaurant's Downtown menu document).
+// The document lists names and prices only. `from()` copies the description of
+// the same dish on the Markabaat menu; dishes that are new to Flaminio (marked
+// NEW in the document, or not on the Markabaat menu) have no description yet.
+// A `null` price shows "—" (price on request) until the restaurant confirms it.
+const NEW = it => ({ ...it, isNew: true });
+const from = (ref, en, ar, price, over = {}) => {
+  const m = findItem(ref, MENU);
+  return { ...i(en, ar, price, m.den, m.dar), ...over };
+};
+
+export const MENU_DOWNTOWN = [
+  { id: 'soups', en: 'Soups', ar: 'الشوربات', img: 'mushroom-soup', items: [
+    from('soups/red-seafood-soup', 'Red Seafood Soup', 'شربة حمراء فواكه البحر', 55),
+    from('soups/white-seafood-soup', 'White Seafood Soup', 'شربة بيضاء فواكه البحر', 55),
+    from('soups/mushroom-soup', 'Mushroom Soup', 'شربة مشروم', 35),
+    from('soups/vegetable-soup', 'Vegetable Soup', 'شربة خضار', 30),
+  ]},
+  { id: 'salads', en: 'Salads', ar: 'السلطات', img: 'greek-salad', items: [
+    from('salads/caesar-salad', 'Caesar Salad', 'سلطة سيزر', 33),
+    from('salads/avocado-salad', 'Shrimp & Avocado Salad', 'سلطة جمبري وأفوكادو', 50),
+    from('salads/flaminio-salad', 'Flaminio Salad', 'سلطة فلامينيو', 55),
+    i('Quinoa Salad', 'سلطة كينوا', 52),
+    from('salads/greek-salad', 'Greek Salad', 'سلطة يونانية', 30),
+  ]},
+  { id: 'appetizers', en: 'Appetizers', ar: 'المقبلات', img: 'king-prawns', items: [
+    from('appetizers/crispy-chicken', 'Crispy Chicken', 'دجاج كرسبي', 49),
+    from('appetizers/shrimp-with-almonds', 'Almond Shrimp', 'جمبري باللوز', 49),
+    from('appetizers/seafood-gratin', 'Seafood Gratin', 'جراتان فواكه البحر', 46),
+    NEW(i('Black Mussels in Cream Sauce', 'محار أسود بالكريمة', 50)),
+  ]},
+  { id: 'pasta', en: 'Pasta', ar: 'الباستا', img: 'rigatoni-beef', items: [
+    from('pasta/spaghetti-seafood', 'Seafood Pasta', 'باستا فواكه البحر', 57),
+    from('pasta/alfredo', 'Alfredo Pasta', 'ألفريدو', 49),
+    from('pasta/pasta-pesto', 'Pesto Pasta', 'بيستو', 55),
+    from('pasta/penne-arrabbiata', 'Arrabbiata Pasta', 'أرابياتا', 35),
+    from('pasta/rigatoni-with-beef-strips', 'Rigatoni Beef Strips', 'ريغاتوني شرائح اللحمة', 55),
+    from('pasta/parma-ravioli', 'Parma Ravioli', 'رافيولي بارما', 55),
+    i('Shrimp Bottarga Pasta', 'باستا جمبري بوتارغ', 95),
+    from('pasta/lasagna', 'Lasagna', 'لازانيا', 47),
+    NEW(i('Flaminio Pasta', 'باستا فلامينيو', 120)),
+    i('Beef and Truffle Pasta', 'باستا لحم وترفاس', 110),
+  ]},
+  { id: 'risotto', en: 'Risotto', ar: 'الريزوتو', img: 'beef-risotto', items: [
+    from('risotto/seafood-risotto', 'Seafood Risotto', 'ريزوتو فواكه البحر', 55),
+    from('risotto/chicken-mushroom-risotto', 'Chicken & Mushroom Risotto', 'ريزوتو دجاج ومشروم', 52),
+    i('Truffle and Chicken Risotto', 'ريزوتو ترفاس ودجاج', 65),
+    NEW(i('Pink Sauce Shrimp & Mushroom Risotto', 'ريزوتو بينك صوص جمبري ومشروم', 57)),
+  ]},
+  { id: 'meat', en: 'Meat Selections', ar: 'اللحوم', img: 'tomahawk', items: [
+    from('steaks/grilled-fillet', 'Grilled Fillet Steak', 'فيليه مشوي', 99),
+    from('steaks/fillet-with-cheese-sauce', 'Fillet Steak with Cheese Sauce', 'فيليه بصوص الجبنة', 125),
+    from('steaks/parmesan-fillet', 'Fillet Steak with Parmesan Sauce', 'فيليه بصوص البرميزان', 127),
+    from('steaks/tomahawk-steak', 'Italian Style Tomahawk', 'توماهوك على الطريقة الإيطالية', 99),
+    from('steaks/fillet-with-mushroom-sauce', 'Fillet Steak with Mushroom Sauce', 'فيليه بصوص المشروم', 110),
+    i('Fillet Steak with Truffle Sauce', 'فيليه بصوص الترفاس', 135),
+  ]},
+  { id: 'chicken', en: 'Chicken', ar: 'الدجاج', img: 'chicken-cheese', items: [
+    from('chicken/grilled-chicken-with-rice', 'Grilled Chicken with Rice', 'دجاج مشوي مع الأرز', 47),
+    from('chicken/chicken-with-creamy-mushroom-sauce', 'Chicken with Mushroom Sauce', 'دجاج بصوص الفطر', 60),
+    from('chicken/chicken-with-italian-lemon-sauce', 'Lemon Sauce Chicken', 'دجاج بصوص الليمون', 60),
+    NEW(i('Flaminio Chicken', 'دجاج فلامينيو', 65)),
+  ]},
+  { id: 'kids', en: 'Kids Menu', ar: 'أطباق الأطفال', img: null, items: [
+    from('kids/kids-pizza', 'Kids Pizza', 'بيتزا كيدز', 20),
+    from('kids/kids-chicken-fillet', 'Kids Chicken Breast', 'صدور الدجاج للأطفال', 29),
+    NEW(i('Potato Wedges with Cheese Sauce', 'ودجز بطاطا مع صوص الجبنة', 25)),
+    from('kids/mini-calzone', 'Calzone', 'كالزوني', 27),
+  ]},
+  { id: 'pizza', en: 'Pizza', ar: 'البيتزا', img: 'pizza-chicken', items: [
+    from('pizza/margherita-pizza', 'Margherita Pizza', 'بيتزا مارغاريتا', 30),
+    from('pizza/tuna-pizza', 'Tuna Pizza', 'بيتزا تونة', 37),
+    from('pizza/vegetarian-pizza', 'Vegetable Pizza', 'بيتزا خضروات', 35),
+    from('pizza/chicken-arugula-pizza', 'Chicken & Rocket Pizza', 'بيتزا دجاج وجرجير', 42, { den: 'Pizza with tomato sauce, mozzarella cheese, grilled chicken, and fresh rocket.' }),
+    from('pizza/alfredo-pizza', 'Alfredo Pizza', 'بيتزا ألفريدو', 62),
+    from('pizza/chicago-pizza', 'Chicago Pizza', 'بيتزا شيكاغو', 65),
+    i('Minced Beef Pizza', 'بيتزا لحم مفروم', 42),
+    from('pizza/pepperoni-pizza', 'Pepperoni Pizza', 'بيتزا بيبروني', 65),
+    from('pizza/mushroom-pizza', 'Mushroom Pizza', 'بيتزا مشروم', 37),
+    from('pizza/four-cheese-pizza', 'Four Cheese Pizza', 'بيتزا أربع أجبان', 57),
+    i('Truffle Pizza', 'بيتزا ترافل', 70),
+    i('Burrata Pizza', 'بيتزا بوراتا', null),
+  ]},
+];
+
+// Signature dishes for the Downtown home page (photos verified to show the named dish).
+export const SIGNATURE_DOWNTOWN = [
+  { ref: 'meat/italian-style-tomahawk', img: 'tomahawk' },
+  { ref: 'meat/fillet-steak-with-cheese-sauce', img: 'fillet-cheese' },
+  { ref: 'pasta/seafood-pasta', img: 'spaghetti-seafood' },
+  { ref: 'pasta/rigatoni-beef-strips', img: 'rigatoni-beef' },
+  { ref: 'salads/shrimp-avocado-salad', img: 'avocado-shrimp', pos: '50% 62%' },
+  { ref: 'pizza/chicken-rocket-pizza', img: 'pizza-chicken-arugula', pos: '50% 78%' },
+];
+
+// ---------------------------------------------------------------------------
+// Branches. Each gets its own site (/<id>/ and /<id>/ar/) with its own menu and
+// signature dishes; everything else is shared for now. `pdf` is a file in assets/;
+// `address` feeds the Restaurant structured data and is left out until known.
+export const BRANCHES = [
+  {
+    id: 'markabaat', en: 'Markabaat', ar: 'المركبات',
+    placeEn: 'Al-Markabat Street, Al-Hawari', placeAr: 'شارع المركبات، الهواري',
+    menu: MENU, signature: SIGNATURE, pdf: 'Flaminio-Menu.pdf',
+    address: { streetAddress: 'Al-Markabat Street, Al-Hawari, near Asayel Resort', addressLocality: 'Benghazi', addressCountry: 'LY' },
+  },
+  {
+    id: 'downtown', en: 'Downtown', ar: 'وسط البلد',
+    placeEn: 'Downtown Benghazi', placeAr: 'وسط مدينة بنغازي',
+    menu: MENU_DOWNTOWN, signature: SIGNATURE_DOWNTOWN, pdf: null,
+    chef: 'Saif Eddine Fardhi',
+  },
+];

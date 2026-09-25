@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{lang}}" dir="{{t.dir}}">
+<html lang="{{lang}}" dir="{{t.dir}}" data-branch="{{branch.id}}" data-branch-name="{{branchName}}">
 <head>
 {{> head}}
 </head>
@@ -12,7 +12,9 @@
     {{{divider}}}
     <h1 class="serif menu-title" id="menu-title">{{t.menuHeading}}</h1>
     <p class="menu-subtitle">{{t.menuIntro}}</p>
-    <a href="{{base}}assets/Flaminio-Menu.pdf" download="Flaminio-Menu.pdf" class="btn btn-sm btn-outline-gold menu-pdf">↓ {{t.pdf}} <span class="visually-hidden">({{pdfSize}} {{t.download}})</span></a>
+    {{{menuBranch}}}
+    {{{chefLine}}}
+    {{{pdfButton}}}
   </div>
 
   <nav class="menu-tabs" id="menu-tabs" aria-label="{{t.tabsLabel}}">{{{menuTabs}}}</nav>

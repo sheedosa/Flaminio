@@ -158,9 +158,11 @@ function reservationMessage(data) {
   const [y, m, d] = data.get('date').split('-').map(Number);
   const date = new Intl.DateTimeFormat(t.dateLocale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', numberingSystem: 'latn' })
     .format(new Date(y, m - 1, d));
+  const branchName = document.documentElement.dataset.branchName || '';
   return [
     t.waHello,
     '',
+    ...(branchName ? [`${t.branchLabel}: ${branchName}`] : []),
     `${t.fName}: ${data.get('name').trim()}`,
     `${t.fPhone}: ${data.get('phone').trim()}`,
     `${t.fDate}: ${date}`,

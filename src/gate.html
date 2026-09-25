@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<link rel="canonical" href="{{canonical}}">
+<meta name="theme-color" content="#3a120a">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{en.siteName}}">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="ar_LY">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:url" content="{{canonical}}">
+<meta property="og:image" content="{{ogImage}}">
+<meta property="og:image:secure_url" content="{{ogImage}}">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{en.ogAlt}}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{title}}">
+<meta name="twitter:description" content="{{description}}">
+<meta name="twitter:image" content="{{ogImage}}">
+<meta name="twitter:image:alt" content="{{en.ogAlt}}">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="img/icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="img/icons/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="img/icons/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lustria&family=Montserrat:wght@400;500;600&family=Tajawal:wght@400;500;700&family=Amiri&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script>document.documentElement.classList.add('js')</script>
+<script type="application/ld+json">{{{jsonLd}}}</script>
+</head>
+<body class="gate-body">
+<main class="gate" id="top">
+  <picture><source type="image/webp" srcset="img/logo-cream.webp"><img src="img/logo-cream.png" alt="{{en.logoAlt}}" class="gate-logo" width="640" height="544" fetchpriority="high"></picture>
+
+  <div class="gate-step gate-step--lang" id="lang">
+    <p class="gate-kicker">Benghazi <span aria-hidden="true">·</span> <span lang="ar">بنغازي</span></p>
+    <h1 class="serif gate-title">{{en.gate.welcome}}<span class="gate-title-ar" lang="ar" dir="rtl">{{ar.gate.welcome}}</span></h1>
+    <p class="gate-lead">{{en.gate.chooseLang}} <span aria-hidden="true">·</span> <span lang="ar" dir="rtl">{{ar.gate.chooseLang}}</span></p>
+    <div class="gate-choices">
+      <a href="#en" class="gate-choice" hreflang="en">{{en.gate.langName}}</a>
+      <a href="#ar" class="gate-choice" lang="ar" hreflang="ar" dir="rtl">{{ar.gate.langName}}</a>
+    </div>
+  </div>
+
+  <section class="gate-step gate-step--branch" id="en" aria-labelledby="gate-en-title">
+    <p class="gate-kicker">{{en.siteName}}</p>
+    <h2 class="serif gate-title" id="gate-en-title">{{en.gate.chooseBranch}}</h2>
+    <p class="gate-lead">{{en.gate.branchLead}}</p>
+    <div class="gate-choices">
+      {{{branchesEn}}}
+    </div>
+    <a href="#lang" class="gate-back">‹ {{en.gate.back}}</a>
+  </section>
+
+  <section class="gate-step gate-step--branch" id="ar" lang="ar" dir="rtl" aria-labelledby="gate-ar-title">
+    <p class="gate-kicker">{{ar.siteName}}</p>
+    <h2 class="serif gate-title" id="gate-ar-title">{{ar.gate.chooseBranch}}</h2>
+    <p class="gate-lead">{{ar.gate.branchLead}}</p>
+    <div class="gate-choices">
+      {{{branchesAr}}}
+    </div>
+    <a href="#lang" class="gate-back">› {{ar.gate.back}}</a>
+  </section>
+</main>
+<script>
+(function () {
+  var gate = document.querySelector('.gate');
+  function update() { gate.classList.toggle('is-branch', /^#(en|ar)$/.test(location.hash)); }
+  addEventListener('hashchange', update);
+  update();
+})();
+</script>
+</body>
+</html>

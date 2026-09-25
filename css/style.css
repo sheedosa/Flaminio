@@ -828,3 +828,41 @@ html[lang="ar"] .about-text, html[lang="ar"] .signature-intro { line-height: 1.9
   .site-nav { gap: 0 9px; padding: 0 6px 6px; }
   .site-nav a { font-size: 11.5px; letter-spacing: .02em; padding: 8px 1px; }
 }
+
+/* ---------- branches ---------- */
+.hero-kicker { margin: 0 0 16px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 14px; color: var(--cream); font-size: 12px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+.hero-kicker span { padding: 5px 12px; border: 1px solid rgba(184, 154, 91, .9); border-radius: 999px; background: rgba(43, 14, 8, .45); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); text-shadow: none; }
+.hero-kicker a { color: var(--cream); font-size: 11px; font-weight: 500; letter-spacing: .12em; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(244, 239, 232, .7); opacity: .92; padding: 4px 0; }
+.hero-kicker a:hover { opacity: 1; color: var(--gold); }
+.menu-branch { margin: 14px 0 0; font-size: 13px; color: var(--espresso); line-height: 1.7; }
+.menu-branch a { color: var(--burgundy); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(184, 154, 91, .8); white-space: nowrap; }
+.menu-chef { margin: 12px 0 0; color: var(--burgundy); font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
+.menu-badge { display: inline-block; vertical-align: middle; margin-inline-start: 8px; padding: 2px 8px 1px; border: 1px solid var(--gold); border-radius: 999px; color: var(--burgundy); font-family: var(--font-body); font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; line-height: 1.5; }
+.price-tbc { color: var(--gold); }
+.footer-branches { margin-top: 20px; font-size: 13px; color: var(--cream); }
+.footer-branches a { color: var(--cream); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(184, 154, 91, .8); display: inline-block; padding: 6px 2px; }
+.footer-branches a:hover { color: var(--gold); }
+.footer-branches strong { color: var(--gold); font-weight: 600; display: inline-block; padding: 6px 2px; }
+
+/* ---------- gate: language, then branch ---------- */
+.gate-body { min-height: 100vh; min-height: 100svh; display: grid; place-items: center; padding: 40px 20px; background: var(--burgundy-deep) radial-gradient(ellipse at 50% 0%, rgba(184, 154, 91, .22), rgba(184, 154, 91, 0) 60%); color: var(--cream); }
+.gate { width: min(100%, 680px); text-align: center; }
+.gate-logo { height: 110px; width: auto; display: block; margin: 0 auto; }
+.gate-kicker { margin: 28px 0 0; color: var(--gold); font-size: 12px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; }
+.gate-title { font-size: clamp(30px, 5vw, 46px); line-height: 1.15; margin: 12px 0 0; font-weight: 400; }
+.gate-title-ar { display: block; font-family: Amiri, serif; font-size: .9em; margin-top: 6px; }
+.gate-lead { margin: 14px 0 0; font-size: 15px; line-height: 1.7; opacity: .92; }
+.gate-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 16px; margin-top: 30px; }
+.gate-choice { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 92px; padding: 22px 20px; border: 1px solid rgba(184, 154, 91, .7); background: rgba(244, 239, 232, .04); color: var(--cream); text-decoration: none; font-family: var(--font-head); font-size: 24px; transition: background .25s, border-color .25s, transform .25s; }
+.gate-choice:hover, .gate-choice:focus-visible { background: rgba(244, 239, 232, .1); border-color: var(--gold); transform: translateY(-2px); outline: none; }
+.gate-choice .serif { font-size: 26px; }
+.gate-choice small { font-family: var(--font-body); font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; opacity: .8; }
+.gate-back { display: inline-block; margin-top: 30px; color: var(--cream); opacity: .8; font-size: 13px; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(184, 154, 91, .8); padding: 6px; }
+.gate-back:hover { opacity: 1; color: var(--gold); }
+.gate [lang="ar"] { font-family: Tajawal, Montserrat, sans-serif; letter-spacing: 0; text-transform: none; }
+.gate [lang="ar"] .serif, .gate .serif[lang="ar"], .gate [lang="ar"].gate-choice, .gate-title-ar { font-family: Amiri, Lustria, serif; }
+.gate [lang="ar"] small { font-size: 13px; }
+.gate-step--branch { display: none; }
+.gate-step--branch:target { display: block; }
+.gate:has(.gate-step--branch:target) .gate-step--lang, .gate.is-branch .gate-step--lang { display: none; }
+@media (prefers-reduced-motion: reduce) { .gate-choice { transition: none; } }

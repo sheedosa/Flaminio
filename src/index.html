@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{lang}}" dir="{{t.dir}}">
+<html lang="{{lang}}" dir="{{t.dir}}" data-branch="{{branch.id}}" data-branch-name="{{branchName}}">
 <head>
 {{> head}}
 </head>
@@ -13,6 +13,7 @@
   <div class="hero-scrim"></div>
   <div class="hero-content">
     <div class="hero-vignette" aria-hidden="true"></div>
+    {{{heroKicker}}}
     <h1 class="hero-title">{{t.heroTitle}}</h1>
     <p class="hero-sub">{{t.heroSub}}</p>
     <div class="hero-actions">
