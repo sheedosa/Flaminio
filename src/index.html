@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{lang}}" dir="{{t.dir}}" data-branch="{{branch.id}}" data-branch-name="{{branchName}}">
+<html lang="{{lang}}" dir="{{t.dir}}" data-branch="{{branch.id}}" data-branch-name="{{branchName}}" data-whatsapp="{{contact.whatsapp}}">
 <head>
 {{> head}}
 </head>
@@ -90,12 +90,12 @@
         <picture><source type="image/webp" srcset="{{base}}img/interior-table.webp"><img src="{{base}}img/interior-table.jpg" alt="" class="find-us-bg" loading="lazy" decoding="async"></picture>
         <picture><source type="image/webp" srcset="{{base}}img/logo-gold.webp"><img src="{{base}}img/logo-gold.png" alt="" class="find-us-mark" width="56" height="40" loading="lazy" decoding="async"></picture>
         <div class="find-us-kicker">{{t.findUs}}</div>
-        <p class="serif find-us-title">{{t.findTitle}}</p>
-        <p class="find-us-sub">{{t.findSub}}</p>
+        <p class="serif find-us-title">{{contact.findTitle}}</p>
+        <p class="find-us-sub">{{contact.findSub}}</p>
         <a href="{{contact.maps}}" target="_blank" rel="noopener" class="btn btn-sm btn-cream">{{t.openMaps}}<span class="visually-hidden"> {{t.newTab}}</span></a>
       </div>
       <div class="contact-card">
-        <div><div class="contact-label">{{t.addressLabel}}</div><address class="contact-value">{{t.address}}</address></div>
+        <div><div class="contact-label">{{t.addressLabel}}</div><address class="contact-value">{{contact.address}}</address></div>
         <div><div class="contact-label">{{t.phoneLabel}}</div><a href="tel:{{contact.phoneTel}}" class="contact-phone"><bdi dir="ltr">{{contact.phoneDisplay}}</bdi></a></div>
         <div><div class="contact-label">{{t.hoursLabel}}</div><div class="contact-value">{{t.hours}}</div></div>
         <div class="contact-actions">

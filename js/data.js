@@ -6,11 +6,8 @@
 // document. Names and descriptions follow those sources verbatim (only evident
 // spelling errors corrected). BRANCHES at the bottom ties it together.
 
+// Shared by both branches. Phone, WhatsApp, address and map live on each branch in BRANCHES.
 export const CONTACT = {
-  phoneDisplay: '091-0181666',
-  phoneTel: '+218910181666',
-  whatsapp: 'https://wa.me/218910181666',
-  maps: 'https://www.google.com/maps/search/?api=1&query=Asayel+Resort+Al-Hawari+Benghazi',
   facebook: 'https://www.facebook.com/flaminio.ly/',
 };
 
@@ -355,18 +352,32 @@ export const SIGNATURE_DOWNTOWN = [
 // ---------------------------------------------------------------------------
 // Branches. Each gets its own site (/<id>/ and /<id>/ar/) with its own menu and
 // signature dishes; everything else is shared for now. `pdf` is a file in assets/;
-// `address` feeds the Restaurant structured data and is left out until known.
+// `contact` holds the branch's phone/WhatsApp, map link and address in both languages;
+// `address` feeds the Restaurant structured data.
 export const BRANCHES = [
   {
     id: 'markabaat', en: 'Markabaat', ar: 'المركبات',
     placeEn: 'Al-Markabat Street, Al-Hawari', placeAr: 'شارع المركبات، الهواري',
     menu: MENU, signature: SIGNATURE, pdf: 'Flaminio-Menu.pdf',
+    contact: {
+      phoneDisplay: '091-0181666', phoneTel: '+218910181666', whatsapp: 'https://wa.me/218910181666',
+      maps: 'https://www.google.com/maps/search/?api=1&query=Asayel+Resort+Al-Hawari+Benghazi',
+      en: { area: 'Al-Hawari, Benghazi', findTitle: 'Al-Markabat Street, Al-Hawari', findSub: 'Near Asayel Resort · Benghazi', address: 'Al-Hawari, Al-Markabat Street, near Asayel Resort, Benghazi, Libya' },
+      ar: { area: 'الهواري، بنغازي', findTitle: 'شارع المركبات، الهواري', findSub: 'قرب منتجع أصايل · بنغازي', address: 'بنغازي - الهواري، شارع المركبات قرب منتجع اصايل' },
+    },
     address: { streetAddress: 'Al-Markabat Street, Al-Hawari, near Asayel Resort', addressLocality: 'Benghazi', addressCountry: 'LY' },
   },
   {
     id: 'downtown', en: 'Downtown', ar: 'داون تاون',
-    placeEn: 'Downtown Benghazi', placeAr: 'داون تاون، بنغازي',
+    placeEn: 'Venezia Street, Benghazi', placeAr: 'شارع فينيسيا، بنغازي',
     menu: MENU_DOWNTOWN, signature: SIGNATURE_DOWNTOWN, pdf: null,
+    contact: {
+      phoneDisplay: '093-5433335', phoneTel: '+218935433335', whatsapp: 'https://wa.me/218935433335',
+      maps: 'https://www.google.com/maps/search/?api=1&query=Venezia+Street+Benghazi',
+      en: { area: 'Downtown Benghazi', findTitle: 'Venezia Street, Downtown', findSub: 'Benghazi', address: 'Downtown, Venezia Street, Benghazi, Libya' },
+      ar: { area: 'داون تاون، بنغازي', findTitle: 'شارع فينيسيا، داون تاون', findSub: 'بنغازي', address: 'داون تاون، شارع فينيسيا، بنغازي' },
+    },
+    address: { streetAddress: 'Venezia Street, Downtown', addressLocality: 'Benghazi', addressCountry: 'LY' },
     chef: 'Saif Eddine Fardhi',
   },
 ];

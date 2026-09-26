@@ -84,8 +84,9 @@ Then open http://localhost:8000 and pick a language and branch.
 
 ## Open items before launch
 
-- Downtown branch: address, phone/WhatsApp, Google Maps pin and opening hours (the site
-  currently shows the Markabaat contact details on both branches), a menu PDF, a price for
+- Contact details are per branch (`BRANCHES[].contact` in `js/data.js`): Markabaat 091-0181666,
+  Downtown 093-5433335 on Venezia Street. Still needed for Downtown: the exact Google Maps pin
+  (the map currently searches "Venezia Street, Benghazi"), opening hours, a menu PDF, a price for
   the Burrata pizza, descriptions for the new dishes, and desserts/drinks if they are served.
 
 - Real opening hours and the Google Maps pin for the restaurant (the site currently asks

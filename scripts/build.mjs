@@ -152,11 +152,12 @@ function menuPanels(menu, lang, t, base) {
 const json = o => JSON.stringify(o).replace(/</g, '\\u003c');
 
 function restaurantLd(branch, lang) {
+  const c = branch.contact;
   return json({
     '@context': 'https://schema.org', '@type': 'Restaurant',
     name: `${STRINGS.en.siteName} — ${branch.en}`, alternateName: `${STRINGS.ar.siteName} — ${branch.ar}`,
     url: branchUrl(branch, lang), image: SITE + 'img/og-image.jpg', logo: SITE + 'img/logo-burgundy.png',
-    telephone: CONTACT.phoneTel, servesCuisine: 'Italian', priceRange: '$$', acceptsReservations: 'True',
+    telephone: c.phoneTel, servesCuisine: 'Italian', priceRange: '$$', acceptsReservations: 'True',
     hasMenu: branchUrl(branch, lang) + 'menu.html',
     ...(branch.address ? { address: { '@type': 'PostalAddress', ...branch.address } } : {}),
     sameAs: [CONTACT.facebook],
@@ -201,13 +202,14 @@ function pageContext(branch, lang, page) {
   const url = l => branchUrl(branch, l) + file;
   const isMenu = page === 'menu';
   const vars = { branch: branch[lang] };
+  const contact = { ...CONTACT, ...branch.contact, ...branch.contact[lang] };
   const other = BRANCHES.find(b => b.id !== branch.id);
   const catNames = branch.menu.map(c => c[lang]).join(lang === 'ar' ? '، ' : ', ');
   const pdfSize = branch.pdf ? `${(fs.statSync(path.join(ROOT, 'assets', branch.pdf)).size / 1024 / 1024).toFixed(1)} MB` : '';
   return {
-    lang, t, base, contact: CONTACT, branch, branchName: branch[lang],
+    lang, t, base, contact, branch, branchName: branch[lang],
     title: fill(isMenu ? t.menuTitle : t.homeTitle, vars),
-    description: isMenu ? `${fill(t.menuDescLead, vars)}${catNames}.` : t.homeDesc,
+    description: isMenu ? `${fill(t.menuDescLead, vars)}${catNames}.` : fill(t.homeDesc, { area: contact.area, phone: contact.phoneDisplay }),
     ogTitle: fill(isMenu ? t.menuOgTitle : t.homeTitle, vars),
     ogDescription: isMenu ? t.menuOgDesc : t.homeOgDesc,
     canonical: url(lang), ogImage: SITE + 'img/og-image.jpg', altLocale: STRINGS[otherLang(lang)].locale,
@@ -226,7 +228,7 @@ function pageContext(branch, lang, page) {
     heroKicker: `<p class="hero-kicker"><span>${esc(fill(t.branchOf, vars))}</span><a href="${base}#${lang}">${esc(t.switchBranch)}</a></p>`,
     signatureCards: signatureCards(branch, lang, t, base), stats: stats(branch, t), whyCards: whyCards(t),
     gallery: gallery(lang, t, base),
-    sent: t.sentHtml.replace('{wa}', esc(CONTACT.whatsapp)).replace('{tel}', esc(CONTACT.phoneTel)).replace('{phone}', esc(CONTACT.phoneDisplay)),
+    sent: t.sentHtml.replace('{wa}', esc(contact.whatsapp)).replace('{tel}', esc(contact.phoneTel)).replace('{phone}', esc(contact.phoneDisplay)),
     menuTabs: menuTabs(branch.menu, lang), menuPanels: menuPanels(branch.menu, lang, t, base),
     menuBranch: `<p class="menu-branch">${esc(fill(t.menuBranchNote, vars))} <a href="${base}${other.id}/${LANGS[lang]}menu.html">${esc(fill(t.menuOtherBranch, { branch: other[lang] }))}</a></p>`,
     chefLine: branch.chef ? `<p class="menu-chef">${esc(t.chefLine).replace('{chef}', `<bdi dir="ltr">${esc(branch.chef)}</bdi>`)}</p>` : '',
@@ -245,7 +247,7 @@ function gateContext() {
     jsonLd: json({
       '@context': 'https://schema.org', '@type': 'Restaurant',
       name: en.siteName, alternateName: ar.siteName, url: SITE, image: SITE + 'img/og-image.jpg', logo: SITE + 'img/logo-burgundy.png',
-      telephone: CONTACT.phoneTel, servesCuisine: 'Italian', priceRange: '$$', sameAs: [CONTACT.facebook],
+      servesCuisine: 'Italian', priceRange: '$$', sameAs: [CONTACT.facebook],
     }),
     branchesEn: choices('en'), branchesAr: choices('ar'),
   };

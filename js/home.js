@@ -1,4 +1,3 @@
-import { CONTACT } from './data.js';
 import { t, rtl, initReveal, initLangSwitch, onSwipe, reducedMotion } from './common.js';
 
 initReveal();
@@ -173,7 +172,7 @@ function reservationMessage(data) {
 
 form.addEventListener('submit', e => {
   e.preventDefault();
-  const url = `${CONTACT.whatsapp}?text=${encodeURIComponent(reservationMessage(new FormData(form)))}`;
+  const url = `${document.documentElement.dataset.whatsapp}?text=${encodeURIComponent(reservationMessage(new FormData(form)))}`;
   document.getElementById('reservation-link').href = url;
   sentMsg.hidden = false;
   const win = window.open(url, '_blank');
