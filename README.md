@@ -62,11 +62,18 @@ assets/              downloadable menu PDF
 
 ## The admin page
 
-`/admin/` is a static page that talks to the GitHub API from the owner's browser. It needs a
-fine-grained personal access token limited to this repository with **Contents: read and
-write** and **Actions: read** (the second lets it show when the deploy has finished). The
-token is kept in the browser only. `site.config.json` holds the repository and branch it
-writes to. It is excluded from the sitemap and blocked in robots.txt.
+`/admin/` is a static page that talks to the GitHub API from the browser. Day to day it opens
+with a **password**. Behind it is a fine-grained personal access token limited to this
+repository (**Contents: read and write**, **Actions: read**), stored only in encrypted form in
+`content/admin-lock.json` (PBKDF2-SHA256 with 1,000,000 rounds → AES-256-GCM). To set or
+reset the password, open `/admin/#setup`, paste the token and choose a password (three words
+or 14+ characters are required). Deleting the token on GitHub locks everyone out at once.
+`site.config.json` holds the repository and branch it writes to. The page is excluded from
+the sitemap and blocked in robots.txt.
+
+`tests/admin-e2e.mjs` drives the admin against the real GitHub API (setup, password login,
+edits, photo upload, save, read-back). It is meant to run from a throwaway branch with a
+workflow that serves `dist/` and targets a disposable branch; it never writes to `main`.
 
 ## Running locally
 
