@@ -149,3 +149,11 @@ html[lang="en"] body { font-size: 16px; }
 html[lang="en"] h1, html[lang="en"] h2, html[lang="en"] h3, html[lang="en"] .pick, html[lang="en"] .top-name { font-weight: 400; }
 html[lang="en"] [dir="rtl"], html[lang="en"] input[name="ar"] { font-family: Tajawal, system-ui, sans-serif; }
 @media (max-width: 480px) { .top { flex-wrap: wrap; } .top-actions { width: 100%; justify-content: flex-end; } .top-actions .btn { padding: 6px 10px; } }
+
+/* password login + setup */
+.pw-row { display: flex; gap: 8px; align-items: stretch; }
+.pw-row input { flex: 1; min-width: 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; font-size: 17px; font-family: Montserrat, system-ui, sans-serif; direction: ltr; text-align: left; background: #fff; }
+.pw-row .btn { flex: 0 0 auto; }
+#password, #setup-pw, #done-pw { letter-spacing: .04em; }
+.linklike { background: none; border: 0; padding: 6px; color: var(--burgundy); text-decoration: underline; text-underline-offset: 3px; font-size: 15px; justify-self: center; }
+.hint-box { background: var(--cream); border-inline-start: 3px solid var(--gold); padding: 10px 12px; font-size: 14px; color: var(--muted); }

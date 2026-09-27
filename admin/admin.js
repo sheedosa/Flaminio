@@ -58,6 +58,15 @@ const L = {
     savedBuilding: 'تم الحفظ ✓ جارٍ تحديث الموقع… (نحو دقيقة)', savedToast: 'تم الحفظ. الموقع يتحدث خلال دقيقة تقريباً.',
     live: 'أصبح مباشراً على الموقع ✓', openPage: 'افتح الصفحة', deployFailed: 'تم الحفظ لكن النشر تعثّر. أعد المحاولة أو تواصل مع مسؤول الموقع.',
     saved: 'تم الحفظ ✓', saveFailed: 'تعذّر الحفظ. حاول مرة أخرى.', netCheck: 'تعذّر التحقق من الاتصال. تحقق من الإنترنت.',
+    pwLabel: 'كلمة المرور', pwLogin: 'دخول', pwWrong: 'كلمة المرور غير صحيحة.', pwUnlocking: 'جارٍ فتح القفل…',
+    useKey: 'الدخول بمفتاح GitHub بدلاً من ذلك', usePw: 'الدخول بكلمة المرور', noLock: 'لم تُعيَّن كلمة مرور بعد. ادخل بمفتاح GitHub ثم اضغط «كلمة المرور» لتعيينها.',
+    keyStale: 'كلمة المرور صحيحة لكن مفتاح GitHub المرتبط بها لم يعد يعمل (انتهى أو حُذف). يجب إعداد كلمة المرور من جديد بمفتاح جديد.',
+    pwMenu: 'كلمة المرور', setupTitle: 'إعداد كلمة المرور', setupLead: 'مرة واحدة: الصق مفتاح GitHub واختر كلمة مرور. بعدها يكفي الرابط وكلمة المرور للدخول من أي جهاز.',
+    changeTitle: 'تغيير كلمة المرور', changeLead: 'اختر كلمة مرور جديدة. كلمة المرور القديمة تتوقف عن العمل فوراً على كل الأجهزة.',
+    setupKey: 'مفتاح GitHub (يبدأ بـ github_pat_)', newPw: 'كلمة المرور الجديدة', suggest: 'اقتراح آخر',
+    pwRule: 'ثلاث كلمات على الأقل أو 14 حرفاً. الاقتراح سهل الكتابة وقوي بما يكفي.', pwWeak: 'كلمة المرور قصيرة أو سهلة التخمين. استخدم ثلاث كلمات على الأقل أو 14 حرفاً.',
+    setupSave: 'حفظ كلمة المرور', setupSaving: 'جارٍ التشفير والحفظ…', setupDone: 'تم تعيين كلمة المرور ✓', setupDoneLead: 'سلّم هذين للمسؤول عن القائمة:',
+    linkLabel: 'الرابط', continue: 'متابعة إلى لوحة التحكم', copy: 'نسخ', copied: 'تم النسخ ✓', back: 'رجوع',
   },
   en: {
     dir: 'ltr', toggle: 'عربي', toggleTitle: 'التبديل إلى العربية',
@@ -93,6 +102,15 @@ const L = {
     savedBuilding: 'Saved ✓ Updating the website… (about a minute)', savedToast: 'Saved. The website updates in about a minute.',
     live: 'Live on the website ✓', openPage: 'Open the page', deployFailed: 'Saved, but publishing failed. Try again or contact the site admin.',
     saved: 'Saved ✓', saveFailed: 'Couldn’t save. Please try again.', netCheck: 'Couldn’t check the connection. Check your internet.',
+    pwLabel: 'Password', pwLogin: 'Sign in', pwWrong: 'Wrong password.', pwUnlocking: 'Unlocking…',
+    useKey: 'Sign in with a GitHub key instead', usePw: 'Sign in with the password', noLock: 'No password has been set yet. Sign in with the GitHub key, then tap “Password” to set one.',
+    keyStale: 'The password is right, but the GitHub key behind it no longer works (expired or deleted). Set the password up again with a new key.',
+    pwMenu: 'Password', setupTitle: 'Set up the password', setupLead: 'One time only: paste the GitHub key and choose a password. After that, the link and the password are all anyone needs.',
+    changeTitle: 'Change the password', changeLead: 'Choose a new password. The old one stops working immediately on every device.',
+    setupKey: 'GitHub key (starts with github_pat_)', newPw: 'New password', suggest: 'Suggest another',
+    pwRule: 'At least three words or 14 characters. The suggestion is easy to type and strong enough.', pwWeak: 'That password is too short or easy to guess. Use at least three words or 14 characters.',
+    setupSave: 'Save password', setupSaving: 'Encrypting and saving…', setupDone: 'Password set ✓', setupDoneLead: 'Give these two things to whoever manages the menu:',
+    linkLabel: 'Link', continue: 'Continue to the admin', copy: 'Copy', copied: 'Copied ✓', back: 'Back',
   },
 };
 let lang = 'ar';
@@ -115,7 +133,9 @@ function setLang(next) {
   try { localStorage.setItem(LANG_KEY, lang); } catch (e) { /* ignore */ }
   applyLang();
   // Redraw the current screen from memory; unsaved edits live in `state`, not in the page.
-  if (state.screen === 'login') { const v = ($('#token') || {}).value || ''; renderLogin(state.loginError); $('#token').value = v; }
+  if (state.screen === 'login') { const v = ($('#token') || $('#password') || {}).value || ''; renderLogin(state.loginError); const f = $('#token') || $('#password'); if (f) f.value = v; }
+  else if (state.screen === 'setup') renderSetup(state.setupError);
+  else if (state.screen === 'setup-done') renderSetupDone(state.donePw);
   else if (state.screen === 'picker') renderPicker();
   else if (state.screen === 'editor') { renderTop(); renderEditor(); }
   else if (state.screen === 'loading') renderTop();
@@ -236,9 +256,10 @@ function statusHtml(s) {
 }
 function renderTop() {
   $('#top-branch').textContent = state.branch ? t('branchOf', { b: bname(state.branch) }) : '';
-  if (state.screen === 'login') { $('#top-actions').innerHTML = ''; return; }
+  if (state.screen === 'login' || state.screen === 'setup' || state.screen === 'setup-done') { $('#top-actions').innerHTML = ''; return; }
   if (state.screen === 'picker') {
-    $('#top-actions').innerHTML = `<button class="btn btn-ghost" id="logout-btn" type="button">${esc(t('logout'))}</button>`;
+    $('#top-actions').innerHTML = `<button class="btn btn-ghost" id="pw-btn" type="button">${esc(t('pwMenu'))}</button><button class="btn btn-ghost" id="logout-btn" type="button">${esc(t('logout'))}</button>`;
+    $('#pw-btn').addEventListener('click', () => renderSetup());
     $('#logout-btn').addEventListener('click', logout);
     return;
   }
@@ -248,48 +269,198 @@ function renderTop() {
 }
 window.addEventListener('beforeunload', e => { if (state.menu && changes().length && !state.busy) { e.preventDefault(); e.returnValue = ''; } });
 
+/* ---------- password lock ----------
+   The GitHub key is stored in the repository only in encrypted form (content/admin-lock.json):
+   PBKDF2-SHA256 (1,000,000 rounds, random salt) derives an AES-256-GCM key from the password. */
+const LOCK_PATH = 'content/admin-lock.json';
+const ITER = 1000000;
+const WORDS = 'amber anchor apple arch basil bay bell berry birch bloom bread breeze brook cedar cherry cloud clover coast coral cotton crane crystal daisy dawn delta dove dune eagle ember fern fig flame flint forest fox garden ginger glade grape harbor hazel heron honey island ivory jade jasmine lemon lily lime linen lotus maple marble meadow melon mint mist moon moss night oak ocean olive orange orchid palm pearl pepper pine plum pond poppy quartz rain raven reef river robin rose sage salt sand sea shell silk silver sky snow spice spring star stone storm sugar summer sun swan thyme tide tiger tulip valley velvet violet wave willow wind winter wolf'.split(' ');
+const bytesB64 = u8 => btoa(String.fromCharCode(...u8));
+const b64Bytes = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+function suggestPassword() {
+  const r = crypto.getRandomValues(new Uint32Array(4));
+  return [WORDS[r[0] % WORDS.length], WORDS[r[1] % WORDS.length], WORDS[r[2] % WORDS.length], String(1000 + (r[3] % 9000))].join('-');
+}
+function strongEnough(pw) {
+  const p = pw.trim();
+  const words = p.split(/[\s\-_.]+/).filter(w => w.length >= 3);
+  return p.length >= 14 || (words.length >= 3 && p.length >= 12);
+}
+async function deriveKey(password, salt, iterations) {
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(password.trim()), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({ name: 'PBKDF2', hash: 'SHA-256', salt, iterations }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+}
+async function sealToken(token, password) {
+  const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveKey(password, salt, ITER);
+  const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(token)));
+  return { v: 1, kdf: 'PBKDF2-SHA256', iter: ITER, cipher: 'AES-256-GCM', salt: bytesB64(salt), iv: bytesB64(iv), data: bytesB64(ct) };
+}
+async function openToken(lock, password) {
+  const key = await deriveKey(password, b64Bytes(lock.salt), lock.iter);
+  const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64Bytes(lock.iv) }, key, b64Bytes(lock.data));
+  return new TextDecoder().decode(pt);
+}
+// The lock is public data: read it without a key, freshest source first.
+async function fetchLock() {
+  const sources = [
+    [`${API}/repos/${cfg.repo}/contents/${LOCK_PATH}?ref=${encodeURIComponent(cfg.branch)}`, { Accept: 'application/vnd.github.raw+json' }],
+    [`https://raw.githubusercontent.com/${cfg.repo}/${cfg.branch}/${LOCK_PATH}?t=${Date.now()}`, {}],
+    [`../${LOCK_PATH}?t=${Date.now()}`, {}],
+  ];
+  for (const [url, headers] of sources) {
+    try {
+      const res = await fetch(url, { headers, cache: 'no-store' });
+      if (res.status === 404) continue;
+      if (!res.ok) continue;
+      const lock = await res.json();
+      if (lock && lock.data && lock.salt) return lock;
+    } catch (e) { /* try the next source */ }
+  }
+  return null;
+}
+// Can this key write to the site? (Tokens that don't report permissions are accepted; a failed save would still stop them.)
+async function checkKey() {
+  const repo = await gh(`/repos/${cfg.repo}`);
+  if (repo.permissions && !repo.permissions.push) throw Object.assign(new Error('errNoPush'), { key: 'errNoPush' });
+  return repo;
+}
+function keepToken(token) {
+  try { (state.remember ? localStorage : sessionStorage).setItem(TOKEN_KEY, token); } catch (e) { /* storage blocked: stay signed in for this page only */ }
+}
+
 /* ---------- login ---------- */
 function renderLogin(error = '') {
   state.screen = 'login'; state.loginError = error;
   renderTop();
   $('#savebar').hidden = true;
+  const usePw = state.lock && state.loginMode !== 'key';
   $('#app').innerHTML = `
   <section class="login">
     <img class="logo" src="../img/logo-burgundy.png" alt="">
     <h1>${esc(t('title'))}</h1>
     <p class="muted">${esc(t('loginLead'))}</p>
     <form class="card" id="login-form" style="margin-top:18px">
+      ${usePw ? `
+      <div class="field">
+        <label for="password">${esc(t('pwLabel'))}</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" dir="ltr" required>
+      </div>` : `
       <div class="field">
         <label for="token">${esc(t('keyLabel'))}</label>
         <input id="token" name="token" type="password" autocomplete="off" dir="ltr" placeholder="github_pat_…" required>
         <span class="hint">${esc(t('keyHint'))}</span>
       </div>
+      ${state.lock ? '' : `<p class="hint-box">${esc(t('noLock'))}</p>`}`}
       <label class="check"><input type="checkbox" id="remember" checked> <span>${esc(t('remember'))}</span></label>
-      ${error ? `<p class="error">${esc(t(error))}</p>` : ''}
-      <button class="btn btn-primary btn-lg" type="submit">${esc(t('login'))}</button>
+      ${error ? `<p class="error" role="alert">${esc(t(error))}</p>` : ''}
+      <button class="btn btn-primary btn-lg" type="submit">${esc(usePw ? t('pwLogin') : t('login'))}</button>
+      ${state.lock ? `<button class="linklike" type="button" id="mode-btn">${esc(usePw ? t('useKey') : t('usePw'))}</button>` : ''}
     </form>
   </section>`;
+  const modeBtn = $('#mode-btn');
+  if (modeBtn) modeBtn.addEventListener('click', () => { state.loginMode = usePw ? 'key' : 'pw'; renderLogin(); });
   $('#login-form').addEventListener('submit', async e => {
     e.preventDefault();
-    const token = $('#token').value.trim();
     state.remember = $('#remember').checked;
-    if (!token) return;
-    const btn = e.target.querySelector('button'); btn.disabled = true; btn.textContent = t('checking');
+    const btn = e.target.querySelector('button[type=submit]'); btn.disabled = true;
+    if (usePw) {
+      const pw = $('#password').value;
+      if (!pw.trim()) { btn.disabled = false; return; }
+      btn.textContent = t('pwUnlocking');
+      let token;
+      try { token = await openToken(state.lock, pw); } catch (err) { renderLogin('pwWrong'); $('#password').focus(); return; }
+      state.token = token;
+      try { await checkKey(); keepToken(token); renderPicker(); }
+      catch (err) { state.token = null; renderLogin(err.status === 401 || err.status === 404 ? 'keyStale' : err.key || 'errNet'); }
+      return;
+    }
+    const token = $('#token').value.trim();
+    if (!token) { btn.disabled = false; return; }
+    btn.textContent = t('checking');
     state.token = token;
+    try { await checkKey(); keepToken(token); renderPicker(); }
+    catch (err) { state.token = null; renderLogin(err.status === 401 ? 'err401' : err.status === 404 ? 'err404' : err.key || 'errNet'); }
+  });
+}
+/* ---------- password setup / change ---------- */
+function renderSetup(error = '') {
+  state.screen = 'setup'; state.setupError = error;
+  renderTop();
+  $('#savebar').hidden = true;
+  const needKey = !state.token;
+  const pw = state.setupPw || (state.setupPw = suggestPassword());
+  $('#app').innerHTML = `
+  <section class="login">
+    <h1>${esc(needKey ? t('setupTitle') : t('changeTitle'))}</h1>
+    <p class="muted">${esc(needKey ? t('setupLead') : t('changeLead'))}</p>
+    <form class="card" id="setup-form" style="margin-top:18px">
+      ${needKey ? `<div class="field"><label for="setup-key">${esc(t('setupKey'))}</label><input id="setup-key" type="password" autocomplete="off" dir="ltr" placeholder="github_pat_…" required></div>` : ''}
+      <div class="field">
+        <label for="setup-pw">${esc(t('newPw'))}</label>
+        <div class="pw-row"><input id="setup-pw" type="text" autocomplete="new-password" dir="ltr" value="${esc(pw)}" required><button class="btn btn-sm" type="button" id="suggest-btn">${esc(t('suggest'))}</button></div>
+        <span class="hint">${esc(t('pwRule'))}</span>
+      </div>
+      ${error ? `<p class="error" role="alert">${esc(t(error))}</p>` : ''}
+      <button class="btn btn-primary btn-lg" type="submit">${esc(t('setupSave'))}</button>
+      <button class="linklike" type="button" id="setup-back">${esc(t('back'))}</button>
+    </form>
+  </section>`;
+  const keyInput = $('#setup-key');
+  if (keyInput && state.setupKey) keyInput.value = state.setupKey;
+  $('#setup-pw').addEventListener('input', e => { state.setupPw = e.target.value; });
+  if (keyInput) keyInput.addEventListener('input', e => { state.setupKey = e.target.value; });
+  $('#suggest-btn').addEventListener('click', () => { state.setupPw = suggestPassword(); $('#setup-pw').value = state.setupPw; });
+  $('#setup-back').addEventListener('click', () => { history.replaceState(null, '', location.pathname); state.setupPw = ''; state.setupKey = ''; state.token ? renderPicker() : renderLogin(); });
+  $('#setup-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const password = $('#setup-pw').value.trim();
+    if (!strongEnough(password)) { renderSetup('pwWeak'); return; }
+    const btn = e.target.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = t('setupSaving');
+    const hadToken = !!state.token;
+    if (!hadToken) state.token = (keyInput.value || '').trim();
     try {
-      const repo = await gh(`/repos/${cfg.repo}`);
-      if (!repo.permissions || !repo.permissions.push) throw Object.assign(new Error('errNoPush'), { key: 'errNoPush' });
-      (state.remember ? localStorage : sessionStorage).setItem(TOKEN_KEY, token);
-      renderPicker();
+      await checkKey();
+      const lock = await sealToken(state.token, password);
+      await putFile(LOCK_PATH, JSON.stringify(lock, null, 2) + '\n', hadToken ? 'Change admin password / تغيير كلمة مرور لوحة التحكم' : 'Set admin password / تعيين كلمة مرور لوحة التحكم');
+      state.lock = lock; state.remember = true; keepToken(state.token);
+      state.setupPw = ''; state.setupKey = '';
+      renderSetupDone(password);
     } catch (err) {
-      state.token = null;
-      renderLogin(err.status === 401 ? 'err401' : err.status === 404 ? 'err404' : err.key || 'errNet');
+      if (!hadToken) state.token = null;
+      renderSetup(err.status === 401 ? 'err401' : err.status === 404 ? 'err404' : err.key || 'saveFailed');
     }
   });
 }
+function renderSetupDone(password) {
+  state.screen = 'setup-done'; state.donePw = password;
+  renderTop();
+  const link = `${cfg.siteUrl}admin/`;
+  $('#app').innerHTML = `
+  <section class="login">
+    <h1>${esc(t('setupDone'))}</h1>
+    <div class="card">
+      <p>${esc(t('setupDoneLead'))}</p>
+      <div class="field"><label>${esc(t('linkLabel'))}</label><div class="pw-row"><input readonly dir="ltr" value="${esc(link)}" id="done-link"><button class="btn btn-sm" type="button" data-copy="done-link">${esc(t('copy'))}</button></div></div>
+      <div class="field"><label>${esc(t('pwLabel'))}</label><div class="pw-row"><input readonly dir="ltr" value="${esc(password)}" id="done-pw"><button class="btn btn-sm" type="button" data-copy="done-pw">${esc(t('copy'))}</button></div></div>
+      <button class="btn btn-primary btn-lg" type="button" id="done-continue">${esc(t('continue'))}</button>
+    </div>
+  </section>`;
+  document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => {
+    const input = $('#' + b.dataset.copy);
+    try { await navigator.clipboard.writeText(input.value); b.textContent = t('copied'); } catch (e) { input.select(); }
+  }));
+  $('#done-continue').addEventListener('click', () => { history.replaceState(null, '', location.pathname); renderPicker(); });
+}
+// Create or update one file on the branch with a single commit.
+async function putFile(path, text, message) {
+  let sha;
+  try { sha = (await gh(`/repos/${cfg.repo}/contents/${path}?ref=${encodeURIComponent(cfg.branch)}`)).sha; } catch (e) { if (e.status !== 404) throw e; }
+  return gh(`/repos/${cfg.repo}/contents/${path}`, { method: 'PUT', body: { message, content: textToB64(text), branch: cfg.branch, ...(sha ? { sha } : {}) } });
+}
 function logout() {
   localStorage.removeItem(TOKEN_KEY); sessionStorage.removeItem(TOKEN_KEY);
-  state.token = null; state.branch = null; state.menu = null; state.status = null;
+  state.token = null; state.branch = null; state.menu = null; state.status = null; state.loginMode = 'pw';
   renderLogin();
 }
 
@@ -672,7 +843,11 @@ applyLang();
 $('#lang-btn').addEventListener('click', () => setLang(lang === 'ar' ? 'en' : 'ar'));
 $('#save-btn').addEventListener('click', save);
 $('#discard-btn').addEventListener('click', () => { if (confirm(t('confirmDiscard'))) loadBranch(state.branch.id); });
-state.token = localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY);
-if (state.token) {
-  gh(`/repos/${cfg.repo}`).then(repo => (repo.permissions && repo.permissions.push ? renderPicker() : logout())).catch(err => { if (err.status === 401 || err.status === 404) logout(); else { renderPicker(); toast(t('netCheck'), true); } });
-} else renderLogin();
+try { state.token = localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY); } catch (e) { state.token = null; }
+(async () => {
+  state.lock = await fetchLock();
+  if (location.hash === '#setup') { state.token = null; renderSetup(); return; }
+  if (!state.token) { renderLogin(); return; }
+  try { await checkKey(); renderPicker(); }
+  catch (err) { if (err.status === 401 || err.status === 404 || err.key) logout(); else { renderPicker(); toast(t('netCheck'), true); } }
+})();
