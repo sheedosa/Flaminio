@@ -48,6 +48,7 @@ try {
   await page.click('#login-form button[type=submit]');
   await page.waitForSelector('.error', { timeout: 30000 });
   check('wrong password refused', /غير صحيحة|Wrong/.test(await page.textContent('.error')));
+  await page.evaluate(() => document.querySelector('.error')?.remove()); // clear the previous attempt's message
   await page.fill('#password', password);
   await page.click('#login-form button[type=submit]');
   await page.waitForSelector('.pick, .error', { timeout: 30000 });
@@ -104,5 +105,5 @@ try {
 }
 await browser.close();
 fs.writeFileSync('e2e-shots/results.json', JSON.stringify({ results, fail }, null, 2));
-note(fail.length ? 'error' : 'notice', fail.length ? `E2E FAILED: ${fail.join(', ')}` : 'E2E PASSED');
+note(fail.length ? 'error' : 'notice', `${fail.length ? 'E2E FAILED: ' + fail.join(', ') : 'E2E PASSED'} || ${Object.entries(results).map(([k, v]) => `${k}: ${v}`).join(' || ')}`);
 process.exit(fail.length ? 1 : 0);
