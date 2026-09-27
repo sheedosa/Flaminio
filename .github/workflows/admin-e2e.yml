@@ -24,7 +24,11 @@ jobs:
           SHA=$(curl -s -H "Authorization: Bearer $TOKEN" https://api.github.com/repos/$REPO/git/ref/heads/main | jq -r .object.sha)
           curl -s -X DELETE -H "Authorization: Bearer $TOKEN" https://api.github.com/repos/$REPO/git/refs/heads/$TARGET || true
           curl -sf -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" https://api.github.com/repos/$REPO/git/refs -d "{\"ref\":\"refs/heads/$TARGET\",\"sha\":\"$SHA\"}" > /dev/null
-      - run: (python3 -m http.server 8931 -d dist > /dev/null 2>&1 &) && sleep 2 && node tests/admin-e2e.mjs
+      - name: Run the admin against the real GitHub API
+        run: |
+          (python3 -m http.server 8931 -d dist > /dev/null 2>&1 &)
+          sleep 2
+          node tests/admin-e2e.mjs
       - if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -32,4 +36,5 @@ jobs:
           path: e2e-shots
       - if: always()
         name: Delete the throwaway target branch
-        run: curl -s -X DELETE -H "Authorization: Bearer $TOKEN" https://api.github.com/repos/$REPO/git/refs/heads/$TARGET || true
+        run: |
+          curl -s -X DELETE -H "Authorization: Bearer $TOKEN" https://api.github.com/repos/$REPO/git/refs/heads/$TARGET || true
