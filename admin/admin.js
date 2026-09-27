@@ -304,7 +304,8 @@ async function openToken(lock, password) {
 // The lock is public data: read it without a key, freshest source first.
 async function fetchLock() {
   const sources = [
-    [`${API}/repos/${cfg.repo}/contents/${LOCK_PATH}?ref=${encodeURIComponent(cfg.branch)}`, { Accept: 'application/vnd.github.raw+json' }],
+    // A unique query string skips GitHub's shared cache, so a new or changed password works at once.
+    [`${API}/repos/${cfg.repo}/contents/${LOCK_PATH}?ref=${encodeURIComponent(cfg.branch)}&t=${Date.now()}`, { Accept: 'application/vnd.github.raw+json' }],
     [`https://raw.githubusercontent.com/${cfg.repo}/${cfg.branch}/${LOCK_PATH}?t=${Date.now()}`, {}],
     [`../${LOCK_PATH}?t=${Date.now()}`, {}],
   ];
