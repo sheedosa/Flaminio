@@ -1,0 +1,1317 @@
+[
+  {
+    "id": "soups",
+    "en": "Soups",
+    "ar": "الشوربات",
+    "img": "mushroom-soup",
+    "items": [
+      {
+        "id": "white-seafood-soup",
+        "en": "White Seafood Soup",
+        "ar": "شوربة فواكه البحر البيضاء",
+        "price": 50,
+        "den": "A rich creamy soup with a mix of fresh seafood, offering smooth and distinctive ocean flavors.",
+        "dar": "شوربة كريمية غنية بمزيج فواكه البحر الطازجة، تقدم بنكهات بحرية ناعمة ومميزة."
+      },
+      {
+        "id": "red-seafood-soup",
+        "en": "Red Seafood Soup",
+        "ar": "شوربة فواكه البحر الحمراء",
+        "price": 50,
+        "den": "A rich soup with a mix of fresh seafood in a signature Italian bisque sauce, offering deep and vibrant ocean flavors.",
+        "dar": "شوربة غنية بمزيج فواكه البحر الطازجة مع صوص البيسك الإيطالي المميز، تقدم بنكهات بحرية عميقة ومليئة بالألوان."
+      },
+      {
+        "id": "vegetable-soup",
+        "en": "Vegetable Soup",
+        "ar": "شوربة الخضار",
+        "price": 22,
+        "den": "Smooth vegetable soup, full of natural flavors, light and nutritious.",
+        "dar": "شوربة خضار مهروسة غنية بالنكهات الطبيعية، خفيفة ومغذية."
+      },
+      {
+        "id": "mushroom-soup",
+        "en": "Mushroom Soup",
+        "ar": "شوربة الماشروم",
+        "price": 30,
+        "den": "Creamy mushroom soup with fresh mushroom pieces, delivering a rich and flavorful experience.",
+        "dar": "شوربة كريمية مع قطع المشروم الطازج، نكهة غنية ودافقة باللذة."
+      },
+      {
+        "id": "sweet-potato-soup",
+        "en": "Sweet Potato Soup",
+        "ar": "شوربة البطاطا الحلوة",
+        "price": 22,
+        "den": "Creamy soup made from sweet potatoes, smooth and comforting.",
+        "dar": "شوربة كريمية مصنوعة من البطاطا الحلوة، ناعمة ومريحة."
+      }
+    ]
+  },
+  {
+    "id": "salads",
+    "en": "Salads",
+    "ar": "السلاطات",
+    "img": "greek-salad",
+    "items": [
+      {
+        "id": "caesar-salad",
+        "en": "Caesar Salad",
+        "ar": "سلطة سيزر",
+        "price": 35,
+        "den": "Fresh romaine lettuce with grilled chicken slices, Parmesan cheese, and Caesar dressing.",
+        "dar": "خس طازج، شرائح دجاج مشوي، جبن بارميزان، وصوص السيزر."
+      },
+      {
+        "id": "caprese-salad",
+        "en": "Caprese Salad",
+        "ar": "سلطة كابريزي",
+        "price": 25,
+        "den": "Fresh tomatoes with mozzarella cheese, basil, and extra virgin olive oil.",
+        "dar": "طماطم طازجة، جبن موتزاريلا، ريحان، وزيت زيتون بكر."
+      },
+      {
+        "id": "tunisian-salad",
+        "en": "Tunisian Salad",
+        "ar": "سلطة تونسية",
+        "price": 25,
+        "den": "Tuna with boiled eggs, tomatoes, cucumbers, and red onions.",
+        "dar": "تونة، بيض مسلوق، طماطم، خيار، وبصل أحمر."
+      },
+      {
+        "id": "italian-countryside-salad",
+        "en": "Italian Countryside Salad",
+        "ar": "سلطة الريف الإيطالي",
+        "price": 35,
+        "den": "Lettuce, avocado, luncheon meat, and pineapple slices.",
+        "dar": "خس، أفوكادو، لانشون، وشرائح أناناس."
+      },
+      {
+        "id": "greek-salad",
+        "en": "Greek Salad",
+        "ar": "سلطة يونانية",
+        "price": 30,
+        "den": "Cucumbers, tomatoes, olives, feta cheese, and red onions.",
+        "dar": "خيار، طماطم، زيتون، جبنة فيتا، وبصل أحمر."
+      },
+      {
+        "id": "flaminio-salad",
+        "en": "Flaminio Salad",
+        "ar": "سلطة فلامينيو",
+        "price": 49,
+        "den": "Chicken, lettuce, avocado, sweet potatoes, raisins, and corn.",
+        "dar": "دجاج مشوي، خس، أفوكادو، بطاطا حلوة، ذرة، وزبيب."
+      },
+      {
+        "id": "avocado-salad",
+        "en": "Avocado Salad",
+        "ar": "سلطة الأفوكادو",
+        "price": 48,
+        "den": "Guacamole, tomatoes, and shrimp.",
+        "dar": "جواكامولي، أناناس، وجمبري ملكي."
+      },
+      {
+        "id": "tropical-salad",
+        "en": "Tropical Salad",
+        "ar": "السلطة الاستوائية",
+        "price": 38,
+        "den": "A mix of fresh rocket, nutritious chia seeds, juicy pineapple pieces, and shrimp, served with refreshing and vibrant flavors.",
+        "dar": "خليط من الجرجير الطازج، حبوب الشيا المغذية، قطع الأناناس الطازج، وقطع الجمبري، تقدم بنكهات منعشة وحيوية."
+      }
+    ]
+  },
+  {
+    "id": "appetizers",
+    "en": "Appetizers",
+    "ar": "المقبلات",
+    "img": "king-prawns",
+    "items": [
+      {
+        "id": "crispy-calamari",
+        "en": "Crispy Calamari",
+        "ar": "كالامار مقرمش",
+        "price": 40,
+        "den": "Crispy fried calamari rings served with tartar sauce.",
+        "dar": "حلقات كالامار مقلية تقدم مع صوص التارتار."
+      },
+      {
+        "id": "spicy-king-prawn",
+        "en": "Spicy King Prawn",
+        "ar": "جمبري ملكي حار",
+        "price": 45,
+        "den": "King prawns sautéed with garlic, olive oil, and spicy seasoning.",
+        "dar": "جمبري ملكي مطهو بالزيت والثوم مع التوابل الحارة."
+      },
+      {
+        "id": "seafood-gratin",
+        "en": "Seafood Gratin",
+        "ar": "جراتان فواكه البحر",
+        "price": 43,
+        "den": "Mixed seafood baked in the oven with cooking cream and assorted cheeses.",
+        "dar": "فواكه بحر مشكلة مع كريمة الطبخ وتشكيلة من الأجبان بالفرن."
+      },
+      {
+        "id": "royal-saut",
+        "en": "Royal Sauté",
+        "ar": "سوتيه رويال",
+        "price": 60,
+        "den": "Black mussels, clams, and king prawns prepared in authentic Italian style.",
+        "dar": "محار أسود وجندوفلي مع جمبري ملكي على الطريقة الإيطالية."
+      },
+      {
+        "id": "crispy-chicken",
+        "en": "Crispy Chicken",
+        "ar": "دجاج كرسبي",
+        "price": 47,
+        "den": "Six crispy chicken pieces coated with Doritos crumbs, served with special sauce.",
+        "dar": "6 قطع دجاج مغطاة بفتات دوريتوس المقرمش، تقدّم مع صوص خاص."
+      },
+      {
+        "id": "shrimp-with-almonds",
+        "en": "Shrimp with Almonds",
+        "ar": "جمبري باللوز",
+        "price": 45,
+        "den": "Four shrimp pieces coated with crunchy almond slices, served with tartar sauce.",
+        "dar": "4 قطع جمبري مغطاة بشرائح اللوز المقرمشة مع صوص التارتار."
+      },
+      {
+        "id": "flaminio-special",
+        "en": "Flaminio Special",
+        "ar": "فلامينيو سبيشال",
+        "price": 48,
+        "den": "A special platter of fried shrimp, mozzarella sticks, and breaded chicken with tartar sauce.",
+        "dar": "تشكيلة مميزة من الجمبري المقلي، أصابع الموزاريلا، ودجاج بانيه مع صوص التارتار."
+      }
+    ]
+  },
+  {
+    "id": "pasta",
+    "en": "Pasta",
+    "ar": "الباستا",
+    "img": "rigatoni-beef",
+    "items": [
+      {
+        "id": "penne-arrabbiata",
+        "en": "Penne Arrabbiata",
+        "ar": "بينا أرابياتا",
+        "price": 30,
+        "den": "Penne pasta with spicy tomato sauce, olive oil, garlic, basil, olives, and Parmesan cheese.",
+        "dar": "بينا مع صلصة الطماطم الحارة، زيت الزيتون، ثوم، ريحان، وزيتون، بجبنة بارميزان."
+      },
+      {
+        "id": "alfredo",
+        "en": "Alfredo",
+        "ar": "الفريدو",
+        "price": 46,
+        "den": "Fettuccine pasta with cooking cream, chicken pieces, mushroom and Parmesan cheese.",
+        "dar": "فيتوتشيني مع كريمة الطبخ، قطع دجاج، وماشروم وجبنة بارميزان."
+      },
+      {
+        "id": "pasta-pesto",
+        "en": "Pasta Pesto",
+        "ar": "باستا بيستو",
+        "price": 52,
+        "den": "Rigatoni pasta with pesto sauce, cooking cream, and chicken pieces.",
+        "dar": "ريغاتوني مع صوص البيستو، كريمة الطبخ، وقطع الدجاج."
+      },
+      {
+        "id": "four-cheese-pasta",
+        "en": "Four Cheese Pasta",
+        "ar": "باستا أربع أجبان",
+        "price": 39,
+        "den": "Pasta with cooking cream and a mix of Italian cheeses.",
+        "dar": "باستا مع كريمة الطبخ وتشكيلة من الأجبان الإيطالية."
+      },
+      {
+        "id": "spaghetti-bolognese",
+        "en": "Spaghetti Bolognese",
+        "ar": "سباغيتي بولونيز",
+        "price": 45,
+        "den": "Spaghetti with minced beef, tomato sauce, mozzarella, and Parmesan cheese.",
+        "dar": "سباغيتي مع لحم مفروم بصلصة طماطم، موزاريلا، وجبنة بارميزان."
+      },
+      {
+        "id": "rigatoni-with-beef-strips",
+        "en": "Rigatoni with Beef Strips",
+        "ar": "ريغاتوني بشرائح اللحمة",
+        "price": 50,
+        "den": "Rigatoni pasta with tomato sauce, olives, grilled beef strips, and Parmesan cheese.",
+        "dar": "ريغاتوني مع صلصة الطماطم، زيتون، شرائح فيليه مشوي، وجبنة بارميزان."
+      },
+      {
+        "id": "parma-ravioli",
+        "en": "Parma Ravioli",
+        "ar": "رافيولي بارما",
+        "price": 50,
+        "den": "Ravioli stuffed with minced beef, served with creamy pink sauce.",
+        "dar": "رافيولي محشو باللحم المفروم مع صوص وردي كريمي."
+      },
+      {
+        "id": "lasagna",
+        "en": "Lasagna",
+        "ar": "لازانيا",
+        "price": 45,
+        "den": "Minced meat with Italian cheese.",
+        "dar": "لحم مفروم مع الجبن الإيطالي."
+      },
+      {
+        "id": "mare-e-monti",
+        "en": "Mare e Monti",
+        "ar": "ماري مانتي",
+        "price": 47,
+        "den": "(Sea and Mountain) combines the best of the sea and the land, featuring baby shrimp, king prawns, and fresh mushrooms, all brought together in a creamy pink sauce for an elegant Italian flavor.",
+        "dar": "(بحر وجبل) يجمع بين روعة البحر وسحر الأرض، حيث يلتقي الجمبري الصغير والجمبري الملكي مع الفطر الطازج، مغمورين في صوص وردي كريمي يضيف لمسة إيطالية أنيقة ونكهة متوازنة."
+      },
+      {
+        "id": "shrimp-mushroom-ravioli",
+        "en": "Shrimp & Mushroom Ravioli",
+        "ar": "رافيولي بالجمبري والمشروم",
+        "price": 55,
+        "den": "Six ravioli pieces stuffed with shrimp and mushrooms, served with cooking cream and blue cheese.",
+        "dar": "6 قطع رافيولي محشوة بالجمبري والمشروم مع كريمة الطبخ والجبنة الزرقاء."
+      },
+      {
+        "id": "spaghetti-seafood",
+        "en": "Spaghetti Seafood",
+        "ar": "سباغيتي فواكه البحر",
+        "price": 55,
+        "den": "Spaghetti with tomato sauce, seafood mix, garlic, and basil.",
+        "dar": "سباغيتي مع صلصة الطماطم، فواكه البحر، ثوم، وريحان."
+      },
+      {
+        "id": "seafood-spaghetti-with-mascarpone",
+        "en": "Seafood Spaghetti with Mascarpone",
+        "ar": "سباغيتي فواكه البحر مع ماسكربوني",
+        "price": 70,
+        "den": "Spaghetti with tomato sauce, seafood, and mascarpone cheese.",
+        "dar": "سباغيتي مع صلصة الطماطم، فواكه البحر، وجبنة ماسكربوني."
+      },
+      {
+        "id": "pasta-with-lemon-sauce",
+        "en": "Pasta with Lemon Sauce",
+        "ar": "باستا بصوص الليمون",
+        "price": 70,
+        "den": "Pasta with shrimp, mushrooms, mussels, cooking cream, and lemon zest.",
+        "dar": "باستا مع جمبري، مشروم، محار، كريمة طبخ، وقشور الليمون."
+      },
+      {
+        "id": "king-prawns-pasta-with-bisque-sauce",
+        "en": "King Prawns Pasta with Bisque Sauce",
+        "ar": "باستا جمبري ملكي بصوص البيسك",
+        "price": 68,
+        "den": "Pasta with rich bisque sauce and king prawns.",
+        "dar": "باستا مع صوص البيسك والجمبري الملكي."
+      },
+      {
+        "id": "pasta-with-shrimp-sauce",
+        "en": "Pasta with Shrimp Sauce",
+        "ar": "باستا جانوتشي بصلصة الجمبري",
+        "price": 45,
+        "den": "Pasta with king prawns and creamy pink sauce.",
+        "dar": "باستا مع جمبري ملكي وصوص وردي كريمي."
+      }
+    ]
+  },
+  {
+    "id": "risotto",
+    "en": "Risotto",
+    "ar": "الريزوتو",
+    "img": "beef-risotto",
+    "items": [
+      {
+        "id": "seafood-risotto",
+        "en": "Seafood Risotto",
+        "ar": "ريزوتو فواكه البحر",
+        "price": 52,
+        "den": "Creamy rice with mixed seafood, tomato sauce, pesto, and Parmesan cheese.",
+        "dar": "أرز كريمي مع فواكه البحر المشكلة، صوص الطماطم، صوص البيستو، وجبنة بارميزان."
+      },
+      {
+        "id": "chicken-mushroom-risotto",
+        "en": "Chicken & Mushroom Risotto",
+        "ar": "ريزوتو بالدجاج والمشروم",
+        "price": 49,
+        "den": "Rice with chicken pieces, fresh mushrooms, and a touch of cream.",
+        "dar": "أرز مع قطع دجاج ومشروم طازج بلمسة من الكريمة."
+      },
+      {
+        "id": "beef-mushroom-risotto",
+        "en": "Beef & Mushroom Risotto",
+        "ar": "ريزوتو لحم بالمشروم",
+        "price": 55,
+        "den": "Creamy rice with beef slices, mushrooms, cooking cream, Parmesan, blue cheese, and arugula.",
+        "dar": "أرز كريمي مع شرائح لحم، مشروم، كريمة طبخ، جبنة بارميزان، جبنة زرقاء، وجرجير."
+      },
+      {
+        "id": "vegetable-risotto",
+        "en": "Vegetable Risotto",
+        "ar": "ريزوتو خضار",
+        "price": 40,
+        "den": "Creamy rice with a mix of fresh vegetables and Parmesan cheese.",
+        "dar": "أرز كريمي مع تشكيلة من الخضار الطازجة وجبنة بارميزان."
+      },
+      {
+        "id": "paella",
+        "en": "Paella",
+        "ar": "بايلا",
+        "price": 58,
+        "den": "Rice with a mix of seafood, chicken, peas, and bell peppers.",
+        "dar": "أرز مع مزيج من فواكه البحر، الدجاج، البزاليا، والفلفل الألوان."
+      },
+      {
+        "id": "spinach-shrimp-risotto",
+        "en": "Spinach & Shrimp Risotto",
+        "ar": "ريزوتو سبانخ بالجمبري",
+        "price": 49,
+        "den": "Rice with fresh spinach, shrimp, mushrooms, and Parmesan cheese.",
+        "dar": "أرز مع سبانخ طازج، جمبري، مشروم، وجبنة بارميزان."
+      }
+    ]
+  },
+  {
+    "id": "steaks",
+    "en": "Fillet & Steaks",
+    "ar": "الفيليه والستيك",
+    "img": "tomahawk",
+    "items": [
+      {
+        "id": "grilled-fillet",
+        "en": "Grilled Fillet",
+        "ar": "فليه مشوي",
+        "price": 95,
+        "den": "Grilled beef fillet with mashed potatoes, mixed vegetables, and rice.",
+        "dar": "فيليه لحم مشوي مع بطاطا مهروسة، خضار مشكلة، وأرز."
+      },
+      {
+        "id": "fillet-with-cheese-sauce",
+        "en": "Fillet with Cheese Sauce",
+        "ar": "فليه بصوص الجبن",
+        "price": 120,
+        "den": "Beef fillet with cooking cream, blue cheese, Parmesan cheese, mashed potatoes, mixed vegetables, and rice.",
+        "dar": "فيليه لحم مع كريمة الطبخ، جبنة زرقاء، جبنة بارميزان، بطاطا مهروسة، خضار مشكلة، وأرز."
+      },
+      {
+        "id": "fillet-with-pepper-sauce",
+        "en": "Fillet with Pepper Sauce",
+        "ar": "فليه بصوص الفلفل",
+        "price": 98,
+        "den": "Beef fillet with pepper demi-glace sauce, mashed potatoes, mixed vegetables, and rice.",
+        "dar": "فيليه لحم مع صوص الديمي جلاص بالفلفل، بطاطا مهروسة، خضار مشكلة، وأرز."
+      },
+      {
+        "id": "fillet-with-mushroom-sauce",
+        "en": "Fillet with Mushroom Sauce",
+        "ar": "فليه بالفطر",
+        "price": 98,
+        "den": "Beef fillet with mushroom demi-glace sauce, mashed potatoes, mixed vegetables, and rice.",
+        "dar": "فيليه لحم مع صوص المشروم بالديمي جلاص، بطاطا مهروسة، خضار مشكلة، وأرز."
+      },
+      {
+        "id": "parmesan-fillet",
+        "en": "Parmesan Fillet",
+        "ar": "فليه باريمجانو",
+        "price": 120,
+        "den": "Beef fillet with cooking cream, Parmesan cheese, mashed potatoes, mixed vegetables, and rice.",
+        "dar": "فيليه لحم مع كريمة الطبخ، جبنة بارميزان، بطاطا مهروسة، خضار مشكلة، وأرز."
+      },
+      {
+        "id": "fillet-roma",
+        "en": "Fillet Roma",
+        "ar": "فيلي روما",
+        "price": 120,
+        "den": "Marinated beef fillet slices with Flaminio’s special seasoning, served with demi-glace mushroom sauce and creamy risotto.",
+        "dar": "شرائح فيليه متبلة بتتبيلة فلامينيو الخاصة، تقدم مع صوص الديمي جلاص والفطر مع ريزوتو كريمي."
+      },
+      {
+        "id": "t-bone-steak",
+        "en": "T-Bone Steak",
+        "ar": "طبق تي بون",
+        "price": 110,
+        "den": "T-bone steak with mixed vegetables, mashed potatoes, BBQ sauce, and rice.",
+        "dar": "تي بون مع خضار مشكلة، بطاطا مهروسة، صوص باربكيو، وأرز."
+      },
+      {
+        "id": "tomahawk-steak",
+        "en": "Tomahawk Steak",
+        "ar": "طبق التوماهوك",
+        "price": 98,
+        "den": "Tomahawk steak served with pasta in Italian tomato sauce, mixed vegetables, and mashed potatoes.",
+        "dar": "ستيك التوماهوك يقدم مع باستا بصلصة الطماطم الإيطالية، خضار مشكلة، وبطاطا مهروسة."
+      },
+      {
+        "id": "flaminio-mixed-grill",
+        "en": "Flaminio Mixed Grill",
+        "ar": "مشاوي فلامينيو",
+        "price": 250,
+        "den": "A premium platter of beef fillet slices, T-bone, chicken breast, merguez, and nuggets, served with rice, mashed potatoes, mixed vegetables, fries, pickles, salad, and a selection of Flaminio’s special sauces.",
+        "dar": "تشكيلة فاخرة من شرائح الفيليه، تي بون، صدور دجاج، مرقاز، ناغتس، مع أرز، بطاطا مهروسة، خضار مشكلة، بطاطا مقلية، مخللات، سلطة، وتشكيلة صلصات خاصة."
+      }
+    ]
+  },
+  {
+    "id": "chicken",
+    "en": "Chicken Dishes",
+    "ar": "أطباق الدجاج",
+    "img": "chicken-cheese",
+    "items": [
+      {
+        "id": "chicken-breast-with-italian-cheese",
+        "en": "Chicken Breast with Italian Cheese",
+        "ar": "صدر الدجاج بالجبن الإيطالي",
+        "price": 55,
+        "den": "Grilled chicken breast and melted mozzarella cheese, served with mixed vegetables and creamy mashed potatoes.",
+        "dar": "صدر دجاج مشوي وجبنة الموزاريلا الذائبة، يقدم مع خضار مشكلة وبطاطا مهروسة كريمية."
+      },
+      {
+        "id": "chicken-with-creamy-mushroom-sauce",
+        "en": "Chicken with Creamy Mushroom Sauce",
+        "ar": "دجاج بصوص الفطر الكريمي",
+        "price": 55,
+        "den": "Grilled chicken breast topped with rich Italian creamy mushroom sauce, served with seasonal vegetables and mashed potatoes.",
+        "dar": "صدور دجاج مشوية تقدم مع صوص الفطر الكريمي الإيطالي الغني، مرافق بخضار موسمية وبطاطا مهروسة."
+      },
+      {
+        "id": "chicken-with-italian-lemon-sauce",
+        "en": "Chicken with Italian Lemon Sauce",
+        "ar": "دجاج بصوص الليمون الإيطالي",
+        "price": 55,
+        "den": "Grilled chicken breast infused with authentic Italian lemon flavor, served with mixed vegetables and smooth mashed potatoes.",
+        "dar": "صدور دجاج مشوية بنكهة الليمون الإيطالية العطرية، تقدم مع خضار مشكلة وبطاطا مهروسة ناعمة."
+      },
+      {
+        "id": "parmesan-pesto-chicken",
+        "en": "Parmesan Pesto Chicken",
+        "ar": "دجاج بيستو بالبرميجان",
+        "price": 58,
+        "den": "Tender chicken slices coated in classic Italian pesto sauce, finished with a touch of Parmesan cheese.",
+        "dar": "شرائح دجاج طرية مغطاة بصوص البيستو الإيطالي الكلاسيكي، مع لمسة من جبنة البرميجان."
+      },
+      {
+        "id": "grilled-chicken-with-rice",
+        "en": "Grilled Chicken with Rice",
+        "ar": "دجاج مشوي مع الأرز",
+        "price": 45,
+        "den": "Grilled chicken breast marinated in Flaminio’s special seasoning, served with mixed vegetables and white rice.",
+        "dar": "صدر دجاج مشوي بتتبيلة فلامينيو الخاصة، يقدم مع خضار مشكلة وأرز أبيض."
+      },
+      {
+        "id": "chicken-diet",
+        "en": "Chicken Diet",
+        "ar": "دجاج دايت",
+        "price": 40,
+        "den": "Healthy grilled chicken breast Italian style, served with fresh salad and light mixed vegetables.",
+        "dar": "صدور دجاج مشوية على الطريقة الإيطالية، مع سلطة طازجة وخضار مشكلة خفيفة."
+      }
+    ]
+  },
+  {
+    "id": "seafood",
+    "en": "Seafood Dishes",
+    "ar": "أطباق فواكه البحر",
+    "img": "seafood-pan",
+    "items": [
+      {
+        "id": "salmon-with-cheese",
+        "en": "Salmon with Cheese",
+        "ar": "سالمون بالجبنة",
+        "price": 120,
+        "den": "Salmon fillet with mashed potatoes, mushrooms, cooking cream, and blue cheese.",
+        "dar": "قطعة سالمون فيليه مع بطاطا مهروسة، مشروم، كريمة طبخ، وجبنة زرقاء."
+      },
+      {
+        "id": "royal-shrimp-with-garlic-lemon",
+        "en": "Royal Shrimp with Garlic & Lemon",
+        "ar": "طبق جمبري ملكي بالثوم والليمون",
+        "price": 75,
+        "den": "King prawns cooked with garlic and lemon, served with mashed potatoes, mixed vegetables, and rice.",
+        "dar": "جمبري ملكي كبير مطهو بالثوم والليمون مع بطاطا مهروسة، خضار مشكلة، وأرز."
+      },
+      {
+        "id": "flaminio-seafood",
+        "en": "Flaminio Seafood",
+        "ar": "فلامينيو فواكه البحر",
+        "price": 135,
+        "den": "A premium selection of fresh seafood, combining baby shrimp, cuttlefish, king prawns, clams, and black mussels, delicately prepared with our signature Flaminio sauce, offering you a unique seafood experience with an authentic Italian touch.",
+        "dar": "مزيج فاخر من ثمار البحر الطازجة، يجمع بين الجمبري الصغير، السيبيا، الجمبري الملكي، الجندوفلي، والمحار الأسود، محضر بلمسة خاصة مع صوص فلامينيو المميز."
+      },
+      {
+        "id": "creamy-king-prawns",
+        "en": "Creamy King Prawns",
+        "ar": "جمبري ملكي بالكريمة",
+        "price": 95,
+        "den": "A mix of king prawns and small prawns with rice, served in a rich creamy sauce.",
+        "dar": "تتكون من جمبري صغير وجمبري ملكي مع أرز وصوص كريمي غني."
+      },
+      {
+        "id": "grilled-fish",
+        "en": "Grilled Fish",
+        "ar": "سمك مشوي",
+        "price": 75,
+        "den": "Grilled fish served with fries, mixed vegetables, and rice.",
+        "dar": "سمك مشوي مع بطاطا مقلية، خضار مشكلة، وأرز."
+      }
+    ]
+  },
+  {
+    "id": "pizza",
+    "en": "Pizza",
+    "ar": "البيتزا",
+    "img": "pizza-chicken",
+    "items": [
+      {
+        "id": "margherita-pizza",
+        "en": "Margherita Pizza",
+        "ar": "بيتزا مارغريتا",
+        "price": 29,
+        "den": "Classic pizza with tomato sauce, mozzarella cheese, and fresh basil leaves.",
+        "dar": "بيتزا كلاسيكية مع صلصة الطماطم، جبنة موتزاريلا، وأوراق ريحان طازجة."
+      },
+      {
+        "id": "tuna-pizza",
+        "en": "Tuna Pizza",
+        "ar": "بيتزا تونة",
+        "price": 35,
+        "den": "Pizza with tomato sauce, mozzarella cheese, and tuna.",
+        "dar": "بيتزا مع صلصة الطماطم، جبنة موتزاريلا، وتونة طازجة."
+      },
+      {
+        "id": "chicken-arugula-pizza",
+        "en": "Chicken & Arugula Pizza",
+        "ar": "بيتزا دجاج مع جرجير",
+        "price": 39,
+        "den": "Pizza with tomato sauce, mozzarella cheese, grilled chicken, and fresh arugula.",
+        "dar": "بيتزا مع صلصة الطماطم، جبنة موتزاريلا، دجاج مشوي، وجرجير طازج."
+      },
+      {
+        "id": "seafood-pizza",
+        "en": "Seafood Pizza",
+        "ar": "بيتزا فواكه البحر",
+        "price": 50,
+        "den": "Pizza topped with assorted seafood, tomato sauce, and mozzarella cheese.",
+        "dar": "بيتزا غنية بفواكه البحر المتنوعة مع صلصة الطماطم وجبنة موتزاريلا."
+      },
+      {
+        "id": "vegetarian-pizza",
+        "en": "Vegetarian Pizza",
+        "ar": "بيتزا الخضروات",
+        "price": 33,
+        "den": "Pizza with tomato sauce, mozzarella cheese, bell peppers, olives, mushrooms, and zucchini.",
+        "dar": "بيتزا طازجة مع صلصة الطماطم، جبنة موتزاريلا، وفلفل ألوان، زيتون، مشروم، وكوسة."
+      },
+      {
+        "id": "pepperoni-pizza",
+        "en": "Pepperoni Pizza",
+        "ar": "بيتزا بيبروني",
+        "price": 59,
+        "den": "Pizza with tomato sauce, mozzarella cheese, and pepperoni slices.",
+        "dar": "بيتزا مع صلصة الطماطم، جبنة موتزاريلا، وشرائح بيبروني."
+      },
+      {
+        "id": "four-cheese-pizza",
+        "en": "Four Cheese Pizza",
+        "ar": "بيتزا أربع أجبان",
+        "price": 55,
+        "den": "Pizza with fresh cream and a mixture of Italian cheeses.",
+        "dar": "بيتزا مع كريمة طازجة وخليط من الأجبان الإيطالية."
+      },
+      {
+        "id": "luncheon-pizza",
+        "en": "Luncheon Pizza",
+        "ar": "بيتزا لانشون",
+        "price": 36,
+        "den": "Pizza with tomato sauce, mozzarella cheese, and luncheon meat slices.",
+        "dar": "بيتزا مع صلصة الطماطم، جبنة موتزاريلا، وشرائح لانشون."
+      },
+      {
+        "id": "alfredo-pizza",
+        "en": "Alfredo Pizza",
+        "ar": "بيتزا ألفريدو",
+        "price": 62,
+        "den": "Pizza with creamy sauce, chicken pieces, mushrooms, and mozzarella cheese.",
+        "dar": "بيتزا بالكريمة، قطع دجاج، مشروم، وجبنة موتزاريلا."
+      },
+      {
+        "id": "chicago-pizza",
+        "en": "Chicago Pizza",
+        "ar": "بيتزا شيكاغو",
+        "price": 65,
+        "den": "Double-crust pizza stuffed with chicken, minced beef, mushrooms, and a blend of cheeses.",
+        "dar": "من طبقتين من العجينة محشوة بالدجاج، اللحم المفروم، الفطر، ومزيج من الأجبان."
+      },
+      {
+        "id": "mushroom-pizza",
+        "en": "Mushroom Pizza",
+        "ar": "بيتزا ماشروم",
+        "price": 34,
+        "den": "Pizza with tomato sauce, mozzarella cheese, and mushrooms.",
+        "dar": "بيتزا مع صلصة الطماطم، جبنة موتزاريلا، وماشروم."
+      }
+    ]
+  },
+  {
+    "id": "sandwiches",
+    "en": "Sandwiches",
+    "ar": "الساندويتشات",
+    "img": "skillet-burger",
+    "items": [
+      {
+        "id": "beef-burger",
+        "en": "Beef Burger",
+        "ar": "برغر لحم",
+        "price": 16,
+        "den": "Grilled beef burger with lettuce, tomatoes, cheese, and special sauce.",
+        "dar": "برغر لحم بقري مشوي مع خس، طماطم، جبنة، وصوص خاص."
+      },
+      {
+        "id": "skillet-burger",
+        "en": "Skillet Burger",
+        "ar": "برغر سكيليت",
+        "price": 45,
+        "den": "Two pieces of meat with mushroom sauce.",
+        "dar": "قطعتين من اللحم وصوص الفطر."
+      },
+      {
+        "id": "banieh",
+        "en": "Banieh",
+        "ar": "بانيه",
+        "price": 14,
+        "den": "Breaded chicken burger with lettuce, tomatoes, cheese, and special sauce.",
+        "dar": "دجاج بانيه مقرمش مع خس، طماطم، جبنة، وصوص خاص."
+      },
+      {
+        "id": "chicken-fajitas",
+        "en": "Chicken Fajitas",
+        "ar": "فاخيتاس دجاج",
+        "price": 26,
+        "den": "Grilled chicken served with tortilla bread and creamy sauce.",
+        "dar": "دجاج مع خبز التورتيلا وصوص كريمي."
+      },
+      {
+        "id": "avocado-chicken-fajitas",
+        "en": "Avocado Chicken Fajitas",
+        "ar": "فاخيتاس بصوص الأفوكادو",
+        "price": 30,
+        "den": "Grilled chicken served with tortilla bread and avocado sauce.",
+        "dar": "دجاج مع خبز التورتيلا وصوص الأفوكادو."
+      },
+      {
+        "id": "grilled-chicken-scallop",
+        "en": "Grilled Chicken Scallop",
+        "ar": "جريل سكالوب دجاج",
+        "price": 22,
+        "den": "Chicken with white cheese and Flaminio bread.",
+        "dar": "دجاج مع جبنة بيضاء وخبز فلامينيو."
+      },
+      {
+        "id": "grilled-beef-steak-sandwich",
+        "en": "Grilled Beef Steak Sandwich",
+        "ar": "جريل ستيك لحم",
+        "price": 28,
+        "den": "Grilled beef steak sandwich with special sauce.",
+        "dar": "ساندويتش ستيك لحم مشوي مع صوص خاص."
+      },
+      {
+        "id": "chicken-panuzzo",
+        "en": "Chicken Panuzzo",
+        "ar": "بانوزو دجاج",
+        "price": 24,
+        "den": "Italian panuzzo bread filled with grilled chicken, sauces, and cheese.",
+        "dar": "خبز بانوزو إيطالي محشو بدجاج مشوي مع صوصات وجبنة."
+      },
+      {
+        "id": "beef-panuzzo",
+        "en": "Beef Panuzzo",
+        "ar": "بانوزو لحم",
+        "price": 26,
+        "den": "Italian panuzzo bread filled with minced beef, sauces, and cheese.",
+        "dar": "خبز بانوزو إيطالي محشو بلحم مفروم مع صوصات وجبنة."
+      },
+      {
+        "id": "chicken-corny",
+        "en": "Chicken Corny",
+        "ar": "كورني دجاج",
+        "price": 25,
+        "den": "Corny bread filled with grilled chicken, tomato sauce, and cheese.",
+        "dar": "خبز كورني محشو بدجاج مشوي مع صلصة الطماطم والجبنة."
+      },
+      {
+        "id": "beef-corny",
+        "en": "Beef Corny",
+        "ar": "كورني لحم",
+        "price": 28,
+        "den": "Corny bread filled with minced beef, tomato sauce, and cheese.",
+        "dar": "خبز كورني محشو بلحم مفروم مع صلصة الطماطم والجبنة."
+      },
+      {
+        "id": "chicken-baguette",
+        "en": "Chicken Baguette",
+        "ar": "باقات دجاج",
+        "price": 28,
+        "den": "Italian baguette filled with chicken, tomato sauce, mushrooms, and cheese.",
+        "dar": "باقات إيطالي محشو بدجاج، صلصة الطماطم، الفطر، والجبنة."
+      },
+      {
+        "id": "beef-baguette",
+        "en": "Beef Baguette",
+        "ar": "باقات لحم",
+        "price": 30,
+        "den": "Italian baguette filled with minced beef, tomato sauce, mushrooms, and cheese.",
+        "dar": "باقات إيطالي محشو بلحم مفروم، صلصة الطماطم، الفطر، والجبنة."
+      },
+      {
+        "id": "mixed-baguette",
+        "en": "Mixed Baguette",
+        "ar": "باقات مكس",
+        "price": 35,
+        "den": "Italian baguette filled with chicken, minced beef, mushrooms, tomato sauce, and cheese.",
+        "dar": "باقات إيطالي محشو بدجاج، لحم مفروم، فطر، صلصة الطماطم، والجبنة."
+      }
+    ]
+  },
+  {
+    "id": "kids",
+    "en": "Flaminio Kids",
+    "ar": "فلامينيو كيدز",
+    "img": "kids-pasta",
+    "items": [
+      {
+        "id": "kids-chicken-fillet",
+        "en": "Kids Chicken Fillet",
+        "ar": "صدور دجاج أطفال",
+        "price": 25,
+        "den": "Chicken fillet with cheese, French fries, and a Suntop drink.",
+        "dar": "قطع دجاج مع جبنة، بطاطا مقلية، ومشروب سانتوب."
+      },
+      {
+        "id": "mini-pasta-kids",
+        "en": "Mini Pasta Kids",
+        "ar": "ميني باستا كيدز",
+        "price": 34,
+        "den": "Pasta with tomato sauce, meatballs, mozzarella cheese, and a Suntop drink.",
+        "dar": "باستا بصلصة الطماطم مع كرات اللحم وجبنة موتزاريلا، تقدم مع مشروب سانتوب."
+      },
+      {
+        "id": "kids-pizza",
+        "en": "Kids Pizza",
+        "ar": "بيتزا كيدز",
+        "price": 16,
+        "den": "Mini pizza served with French fries and a Suntop drink.",
+        "dar": "بيتزا صغيرة مع بطاطا مقلية ومشروب سانتوب."
+      },
+      {
+        "id": "mozzarella-sticks",
+        "en": "Mozzarella Sticks",
+        "ar": "موتزاريلا ستيك",
+        "price": 28,
+        "den": "Four crispy mozzarella sticks served with special sauce and a Suntop drink.",
+        "dar": "4 قطع من أصابع الموتزاريلا المقلية مع صوص خاص ومشروب سانتوب."
+      },
+      {
+        "id": "mini-calzone",
+        "en": "Mini Calzone",
+        "ar": "ميني كالزوني",
+        "price": 25,
+        "den": "Mini calzone stuffed with chicken and tomato sauce, served with French fries and a Suntop drink.",
+        "dar": "كالزوني صغير محشو بالدجاج وصلصة الطماطم، يقدم مع بطاطا مقلية ومشروب سانتوب."
+      }
+    ]
+  },
+  {
+    "id": "desserts",
+    "en": "Desserts",
+    "ar": "الحلويات",
+    "img": null,
+    "items": [
+      {
+        "id": "vanilla-cr-me-br-l-e",
+        "en": "Vanilla Crème Brûlée",
+        "ar": "كريم برولي فانيلا",
+        "price": 15,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "large-cr-me-br-l-e",
+        "en": "Large Crème Brûlée",
+        "ar": "كريم برولي كبير",
+        "price": 20,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "small-cr-me-br-l-e",
+        "en": "Small Crème Brûlée",
+        "ar": "كريم برولي صغير",
+        "price": 15,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "lemon-tiramisu",
+        "en": "Lemon Tiramisu",
+        "ar": "تيراميسو ليمون",
+        "price": 25,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "small-tiramisu",
+        "en": "Small Tiramisu",
+        "ar": "تيراميسو كلاسيك صغير",
+        "price": 20,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "large-tiramisu",
+        "en": "Large Tiramisu",
+        "ar": "تيراميسو كبير",
+        "price": 25,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "cake",
+        "en": "Cake",
+        "ar": "كيكة",
+        "price": 20,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "san-sebastian-cake",
+        "en": "San Sebastian Cake",
+        "ar": "كيكة سان سيباستيان",
+        "price": 25,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "nutella-nut-pancakes",
+        "en": "Nutella Nut Pancakes",
+        "ar": "بان كيك نوتيلا",
+        "price": 20,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "lotus-pancakes",
+        "en": "Lotus Pancakes",
+        "ar": "بان كيك لوتس",
+        "price": 20,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "mix-pancakes",
+        "en": "Mix Pancakes",
+        "ar": "بان كيك ميكس",
+        "price": 25,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "nutella-banana-crepe",
+        "en": "Nutella Banana Crepe",
+        "ar": "كريب نوتيلا",
+        "price": 20,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "lotus-crepe",
+        "en": "Lotus Crepe",
+        "ar": "كريب لوتس",
+        "price": 20,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "mix-crepe",
+        "en": "Mix Crepe",
+        "ar": "كريب ميكس",
+        "price": 25,
+        "den": "",
+        "dar": ""
+      }
+    ]
+  },
+  {
+    "id": "hot-coffee",
+    "en": "Hot Coffee",
+    "ar": "مشروبات ساخنة",
+    "img": null,
+    "drinks": true,
+    "items": [
+      {
+        "id": "espresso",
+        "en": "Espresso",
+        "ar": "اسبريسو",
+        "price": 4,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "double-espresso",
+        "en": "Double Espresso",
+        "ar": "دبل اسبريسو",
+        "price": 5,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "macchiato",
+        "en": "Macchiato",
+        "ar": "مكياتو",
+        "price": 4,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "double-macchiato",
+        "en": "Double Macchiato",
+        "ar": "دبل مكياتو",
+        "price": 4,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "special",
+        "en": "Special",
+        "ar": "اسبسيال",
+        "price": 6,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "cappuccino",
+        "en": "Cappuccino",
+        "ar": "كابتشينو",
+        "price": 8,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "cappuccino-2",
+        "en": "Cappuccino",
+        "ar": "كابتشينو",
+        "price": 3,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "nescafe",
+        "en": "Nescafe",
+        "ar": "نسكافيه",
+        "price": 5,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "nescafe-2",
+        "en": "Nescafe",
+        "ar": "نسكافيه",
+        "price": 3,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "mocha",
+        "en": "Mocha",
+        "ar": "موكا",
+        "price": 12,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "latte",
+        "en": "Latte",
+        "ar": "لاتيه",
+        "price": 8,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "arabic-coffee",
+        "en": "Arabic Coffee",
+        "ar": "قهوة عربية",
+        "price": 6,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "tea-red-green",
+        "en": "Tea (Red/Green)",
+        "ar": "شاي (أحمر / أخضر)",
+        "price": 2,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "tunisian-tea-red-green",
+        "en": "Tunisian Tea (Red/Green)",
+        "ar": "شاي تونسي (أحمر / أخضر)",
+        "price": 3,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "turkish-coffee",
+        "en": "Turkish Coffee",
+        "ar": "قهوة تركية",
+        "price": 6,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "hot-chocolate",
+        "en": "Hot Chocolate",
+        "ar": "هوت شوكلت",
+        "price": 15,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "american-coffee",
+        "en": "American Coffee",
+        "ar": "أميريكان كافي",
+        "price": 4,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "nesquik",
+        "en": "Nesquik",
+        "ar": "نسكويك",
+        "price": 5,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "ovaltine",
+        "en": "Ovaltine",
+        "ar": "أوفلتين",
+        "price": 5,
+        "den": "",
+        "dar": ""
+      }
+    ]
+  },
+  {
+    "id": "cold-drinks",
+    "en": "Cold Coffee & Drinks",
+    "ar": "قهوة ومشروبات باردة",
+    "img": null,
+    "drinks": true,
+    "groups": [
+      {
+        "en": "Cold Coffee",
+        "ar": "قهوة باردة",
+        "items": [
+          {
+            "id": "flavored-latte",
+            "en": "Flavored Latte",
+            "ar": "لاتيه نكهات",
+            "price": 12,
+            "den": "Mocha - Caramel - Hazelnut - Vanilla",
+            "dar": "موكا، كراميل، بندق، فانيليا."
+          },
+          {
+            "id": "iced-macchiato",
+            "en": "Iced Macchiato",
+            "ar": "ايس مكياطة",
+            "price": 10,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "iced-caf",
+            "en": "Iced Café",
+            "ar": "ايس كافي",
+            "price": 10,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "frappuccino",
+            "en": "Frappuccino",
+            "ar": "فرابتشينو",
+            "price": 15,
+            "den": "Mocha - Caramel - Hazelnut - Vanilla",
+            "dar": "موكا، كراميل، بندق، فانيليا."
+          }
+        ]
+      },
+      {
+        "en": "Cold Drinks",
+        "ar": "مشروبات باردة",
+        "items": [
+          {
+            "id": "milkshakes",
+            "en": "Milkshakes",
+            "ar": "ميلك شيك",
+            "price": 12,
+            "den": "Nutella - Lotus - Kinder - Milka - Strawberry - Mango - Vanilla - Raspberry - Blueberry",
+            "dar": "نوتيلا، لوتس، كيندر، ميلكا، فراولة، منجا، فانيليا، توت أحمر، توت أزرق."
+          },
+          {
+            "id": "mojito",
+            "en": "Mojito",
+            "ar": "موهيتو",
+            "price": 10,
+            "den": "Classic - Pineapple - Strawberry - Kiwi",
+            "dar": "كلاسيك، أناناس، فراولة، كيوي."
+          },
+          {
+            "id": "smoothies",
+            "en": "Smoothies",
+            "ar": "سموثي",
+            "price": 10,
+            "den": "Depending on available flavors",
+            "dar": "حسب النكهات المتوفرة."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "soft-drinks",
+    "en": "Soft Drinks & Juices",
+    "ar": "مشروبات غازية وعصائر",
+    "img": null,
+    "drinks": true,
+    "groups": [
+      {
+        "en": "Soft Drinks",
+        "ar": "المشروبات الغازية",
+        "items": [
+          {
+            "id": "sparkling-water",
+            "en": "Sparkling Water",
+            "ar": "مياه غازية",
+            "price": 8,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "soft-drink",
+            "en": "Soft Drink",
+            "ar": "مشروب غازي",
+            "price": 5,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "mineral-water-1-l",
+            "en": "Mineral Water 1 L",
+            "ar": "مياه معدنية 1 ل",
+            "price": 5,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "mineral-water",
+            "en": "Mineral Water",
+            "ar": "مياه معدنية",
+            "price": 1,
+            "den": "",
+            "dar": ""
+          }
+        ]
+      },
+      {
+        "en": "Natural Juices",
+        "ar": "عصائر طبيعية",
+        "items": [
+          {
+            "id": "orange",
+            "en": "Orange",
+            "ar": "برتقال",
+            "price": 10,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "strawberry",
+            "en": "Strawberry",
+            "ar": "فراولة",
+            "price": 12,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "mango",
+            "en": "Mango",
+            "ar": "مانجو",
+            "price": 10,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "lemon-with-mint",
+            "en": "Lemon with Mint",
+            "ar": "ليمون بالنعناع",
+            "price": 10,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "guava",
+            "en": "Guava",
+            "ar": "جوافة",
+            "price": 10,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "kiwi",
+            "en": "Kiwi",
+            "ar": "كيوي",
+            "price": 17,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "yogurt",
+            "en": "Yogurt",
+            "ar": "زبادو",
+            "price": 16,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "dates-and-almonds",
+            "en": "Dates and Almonds",
+            "ar": "تمر ولوز",
+            "price": 13,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "avocado",
+            "en": "Avocado",
+            "ar": "أفوكادو",
+            "price": 17,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "cocktail",
+            "en": "Cocktail",
+            "ar": "كوكتيل",
+            "price": 15,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "banana-milk",
+            "en": "Banana Milk",
+            "ar": "حليب بالموز",
+            "price": 9,
+            "den": "",
+            "dar": ""
+          }
+        ]
+      }
+    ]
+  }
+]

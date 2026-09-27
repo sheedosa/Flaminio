@@ -1,0 +1,56 @@
+{
+  "markabaat": {
+    "phone": "0910181666",
+    "whatsapp": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Asayel+Resort+Al-Hawari+Benghazi",
+    "address": {
+      "en": "Al-Hawari, Al-Markabat Street, near Asayel Resort, Benghazi, Libya",
+      "ar": "بنغازي - الهواري، شارع المركبات قرب منتجع اصايل"
+    },
+    "findTitle": {
+      "en": "Al-Markabat Street, Al-Hawari",
+      "ar": "شارع المركبات، الهواري"
+    },
+    "findSub": {
+      "en": "Near Asayel Resort · Benghazi",
+      "ar": "قرب منتجع أصايل · بنغازي"
+    },
+    "area": {
+      "en": "Al-Hawari, Benghazi",
+      "ar": "الهواري، بنغازي"
+    },
+    "hours": {
+      "en": "Please call us for today’s opening hours.",
+      "ar": "يرجى الاتصال بنا لمعرفة ساعات العمل اليوم."
+    },
+    "chef": "",
+    "pdf": "Flaminio-Menu.pdf"
+  },
+  "downtown": {
+    "phone": "0935433335",
+    "whatsapp": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Venezia+Street+Benghazi",
+    "address": {
+      "en": "Downtown, Venezia Street, Benghazi, Libya",
+      "ar": "داون تاون، شارع فينيسيا، بنغازي"
+    },
+    "findTitle": {
+      "en": "Venezia Street, Downtown",
+      "ar": "شارع فينيسيا، داون تاون"
+    },
+    "findSub": {
+      "en": "Benghazi",
+      "ar": "بنغازي"
+    },
+    "area": {
+      "en": "Downtown Benghazi",
+      "ar": "داون تاون، بنغازي"
+    },
+    "hours": {
+      "en": "Please call us for today’s opening hours.",
+      "ar": "يرجى الاتصال بنا لمعرفة ساعات العمل اليوم."
+    },
+    "chef": "Saif Eddine Fardhi",
+    "pdf": ""
+  }
+}

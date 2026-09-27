@@ -17,18 +17,24 @@ Static HTML, CSS and vanilla JavaScript. A zero-dependency Node script renders e
 page from the content files, so menus, prices and copy live in exactly one place.
 GitHub Actions runs the build and publishes `dist/` to GitHub Pages on every push to `main`.
 
-The two branches share everything (design, copy, photos, contact details) except the
-menu and the signature dishes on the home page.
+The two branches share the design, copy and gallery; each has its own menu, contact
+details and signature dishes.
 
 ```
-js/data.js           ALL content: MENU (Markabaat) and MENU_DOWNTOWN with prices and EN + AR
-                     names/descriptions, signature dishes per branch, gallery captions, hero
-                     photos, contact details, and BRANCHES (names, menu, PDF, chef)
+content/             EDITED IN THE ADMIN PAGE (/admin/): branches.json (phone, WhatsApp,
+                     address, hours, chef per branch), menu-<branch>.json (categories and
+                     dishes with prices, EN + AR names/descriptions, "new"/hidden flags,
+                     photo paths) and photos/ (dish and category photos uploaded there)
+admin/               the owner's editor: Arabic, one shared access key, saves straight into
+                     this repository through the GitHub API (one commit per save)
+js/data.js           code-owned content: hero and gallery photos, Facebook link, BRANCHES
+                     (ids, names, front-page labels, signature dish refs)
 js/i18n.js           interface copy in English and Arabic
 src/*.html           page templates ({{token}} placeholders) + shared head/header/footer;
                      gate.html is the language + branch chooser at /
-scripts/build.mjs    renders dist/ — the gate at /, then /<branch>/ and /<branch>/ar/ for each
-                     branch, redirects for the old URLs, sitemap and robots.txt
+scripts/build.mjs    merges content/ with data.js and renders dist/ — the gate at /, then
+                     /<branch>/ and /<branch>/ar/, /admin/, redirects, sitemap and robots.txt
+scripts/migrate-content.mjs  the one-time export that created content/ (kept for reference)
 site.config.json     the public site URL (change this when the custom domain goes live)
 css/style.css        all styles; logical properties so Arabic mirrors automatically
 js/home.js, menu.js  interaction only: carousel, gallery, lightbox, WhatsApp booking, menu tabs
@@ -38,20 +44,29 @@ assets/              downloadable menu PDF
 
 ## Editing content
 
-- **Prices, dishes, descriptions:** `js/data.js` → `MENU` (Markabaat) and `MENU_DOWNTOWN`.
-  Price is a number in LYD, or `null` for "—" (price on request). Names and descriptions
-  follow the restaurant's own menus word for word. Each item has English (`en`, `den`) and
-  Arabic (`ar`, `dar`). Wrap an item in `NEW(...)` to show a "New" badge. Downtown items
-  created with `from('markabaat-ref', ...)` reuse the Markabaat description of the same dish.
-- **Signature dishes:** `SIGNATURE` / `SIGNATURE_DOWNTOWN` reference menu items
-  (`'category/item-id'`), so their names and prices always match the menu.
-- **Branches:** `BRANCHES` — names in both languages, the menu and signature list, the PDF
-  file in `assets/` (or `null` for no PDF button), the executive chef line, and the postal
-  address used in structured data. Adding a branch there builds a full site for it.
+- **Prices, dishes, photos, branch details:** use the admin page at `/admin/` (Arabic,
+  needs the owner's access key). It edits `content/*.json` and `content/photos/` and commits
+  to `main`; GitHub Pages republishes within about a minute. The same files can be edited by
+  hand in a pull request: price is a number in LYD or `null` for "—", `isNew` shows the badge,
+  `hidden` keeps a dish off the site, `img` is a bundled photo name or a `content/photos/…`
+  path (with a matching `-thumb.jpg`). Item `id`s are stable keys; never change them.
+- **Signature dishes:** `BRANCHES[].signature` in `js/data.js` references dishes by
+  `'category-id/item-id'`; a hidden or removed dish is skipped with a build warning.
+- **Branches:** `BRANCHES` in `js/data.js` (ids, names, front-page labels, signature dishes)
+  plus an entry per branch in `content/branches.json`. Adding a branch to both builds a full
+  site for it.
 - **Category photo:** `img` on the category; `null` shows the branded burgundy panel.
 - **New photo:** add `img/<name>.jpg` and `img/<name>.webp` (plus `-480` versions and an entry
   in `img/widths.json` for responsive loading).
 - **Interface copy:** `js/i18n.js`.
+
+## The admin page
+
+`/admin/` is a static page that talks to the GitHub API from the owner's browser. It needs a
+fine-grained personal access token limited to this repository with **Contents: read and
+write** and **Actions: read** (the second lets it show when the deploy has finished). The
+token is kept in the browser only. `site.config.json` holds the repository and branch it
+writes to. It is excluded from the sitemap and blocked in robots.txt.
 
 ## Running locally
 

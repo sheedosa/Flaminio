@@ -26,6 +26,14 @@
 
 {{> footer}}
 
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="{{t.photoViewer}}">
+  <figure class="lightbox-figure">
+    <img id="lightbox-img" src="data:," alt="">
+    <figcaption id="lightbox-cap"></figcaption>
+  </figure>
+  <button type="button" class="lightbox-close" aria-label="{{t.closeViewer}}" id="lightbox-close">×</button>
+</div>
+
 <script type="module" src="{{base}}js/menu.js"></script>
 </body>
 </html>

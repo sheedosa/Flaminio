@@ -871,3 +871,12 @@ html[lang="ar"] .about-text, html[lang="ar"] .signature-intro { line-height: 1.9
 html[lang="ar"] h1, html[lang="ar"] h2, html[lang="ar"] h3, html[lang="ar"] h4, html[lang="ar"] .serif, .gate [lang="ar"] .serif, .gate-title-ar { font-family: 'Noto Kufi Arabic', Tajawal, sans-serif; letter-spacing: 0; }
 html[lang="ar"] h1, .gate-title-ar { font-weight: 600; }
 html[lang="ar"] h2, html[lang="ar"] h3, html[lang="ar"] h4, html[lang="ar"] .serif { font-weight: 500; }
+
+/* ---------- dish photos on the menu ---------- */
+.menu-item-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
+.menu-item--photo { flex-direction: row; align-items: flex-start; gap: 14px; }
+.menu-thumb { flex: 0 0 auto; width: 72px; height: 72px; padding: 3px; margin: 0; border: 1px solid rgba(184, 154, 91, .6); background: #fff; cursor: zoom-in; }
+.menu-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.menu-thumb:hover { border-color: var(--gold); }
+.menu-thumb:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+@media (max-width: 760px) { .menu-thumb { width: 64px; height: 64px; padding: 2px; } .menu-item--photo { gap: 12px; } }
