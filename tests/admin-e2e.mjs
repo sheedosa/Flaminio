@@ -8,13 +8,16 @@ const API = 'https://api.github.com';
 fs.mkdirSync('e2e-shots', { recursive: true });
 const gh = async p => { const r = await fetch(API + p, { headers: { Authorization: `Bearer ${TOKEN}`, Accept: 'application/vnd.github+json' } }); return { status: r.status, body: r.status === 200 ? await r.json() : null }; };
 const results = {}; const fail = [];
-const check = (name, ok, detail = '') => { results[name] = ok ? 'ok' : `FAIL ${detail}`; if (!ok) fail.push(name); console.log(ok ? '✓' : '✗', name, ok ? '' : detail); };
+// Results are also printed as GitHub annotations so they can be read through the API.
+const note = (level, text) => console.log(`::${level} title=admin-e2e::${String(text).replace(/\r?\n/g, ' | ').slice(0, 900)}`);
+const check = (name, ok, detail = '') => { results[name] = ok ? 'ok' : `FAIL ${detail}`; if (!ok) fail.push(name); console.log(ok ? '✓' : '✗', name, ok ? '' : detail); note(ok ? 'notice' : 'error', `${ok ? 'PASS' : 'FAIL'} ${name}${ok ? '' : ' — ' + detail}`); };
 
 const browser = await chromium.launch();
 async function open(width = 1280) {
   const ctx = await browser.newContext({ viewport: { width, height: 900 } });
   const page = await ctx.newPage();
-  page.on('pageerror', e => console.log('pageerror:', e.message));
+  page.on('pageerror', e => note('warning', 'pageerror: ' + e.message));
+  page.on('console', m => { if (m.type() === 'error') note('warning', 'console: ' + m.text()); });
   await page.route('**/admin/config.js', async route => {
     const res = await route.fetch();
     route.fulfill({ status: 200, contentType: 'application/javascript', body: (await res.text()).replace('"branch":"main"', `"branch":"${TARGET}"`) });
@@ -97,9 +100,9 @@ try {
   check('single commit with summary', /Update Downtown/.test(msg || ''), msg);
   console.log('commit:', msg && msg.split('\n')[0]);
 } catch (e) {
-  console.log('ERROR', e.stack || e.message); fail.push('exception');
+  note('error', 'EXCEPTION ' + (e.stack || e.message)); fail.push('exception');
 }
 await browser.close();
 fs.writeFileSync('e2e-shots/results.json', JSON.stringify({ results, fail }, null, 2));
-console.log(fail.length ? `E2E FAILED: ${fail.join(', ')}` : 'E2E PASSED');
+note(fail.length ? 'error' : 'notice', fail.length ? `E2E FAILED: ${fail.join(', ')}` : 'E2E PASSED');
 process.exit(fail.length ? 1 : 0);
