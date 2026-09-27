@@ -364,7 +364,7 @@ fs.writeFileSync(path.join(OUT, '404.html'), render(tpl('404'), {
 copy(path.join(ROOT, 'admin'), path.join(OUT, 'admin'));
 fs.writeFileSync(path.join(OUT, 'admin', 'config.js'), `window.FLAMINIO_ADMIN = ${json({
   repo: CONFIG.repo, branch: CONFIG.branch || 'main', siteUrl: SITE,
-  branches: branches.map(b => ({ id: b.id, en: b.en, ar: b.ar, placeAr: b.placeAr })),
+  branches: branches.map(b => ({ id: b.id, en: b.en, ar: b.ar, placeAr: b.placeAr, placeEn: b.placeEn })),
 })};\n`);
 fs.writeFileSync(path.join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: ${BASE_PATH}admin/\n\nSitemap: ${SITE}sitemap.xml\n`);
 fs.writeFileSync(path.join(OUT, 'sitemap.xml'), sitemap());

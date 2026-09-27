@@ -54,6 +54,7 @@ button { cursor: pointer; }
 .field input:focus, .field textarea:focus { outline: 2px solid var(--gold); outline-offset: 1px; border-color: var(--gold); }
 .field textarea { min-height: 84px; resize: vertical; }
 .field input[dir="ltr"], .field textarea[dir="ltr"] { text-align: left; }
+.field input[dir="rtl"], .field textarea[dir="rtl"] { text-align: right; }
 .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 14px; }
 .preview-number { font-family: Montserrat, system-ui, sans-serif; direction: ltr; unicode-bidi: isolate; font-weight: 600; }
 
@@ -95,6 +96,9 @@ button { cursor: pointer; }
 .item-fields input { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 16px; }
 .item-fields input:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
 .item-fields input[name="en"] { direction: ltr; text-align: left; }
+.item-fields input[name="ar"] { direction: rtl; text-align: right; }
+details.desc textarea[dir="rtl"] { text-align: right; } details.desc textarea[dir="ltr"] { text-align: left; }
+.group-head input[dir="rtl"] { text-align: right; } .group-head input[dir="ltr"] { text-align: left; }
 .item-fields input[name="price"] { direction: ltr; text-align: center; font-weight: 700; }
 .item-row { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
 .switch { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: var(--muted); }
@@ -135,3 +139,13 @@ details.desc textarea { width: 100%; margin-top: 8px; padding: 10px 12px; border
 .empty { text-align: center; color: var(--muted); padding: 24px; border: 1px dashed var(--line); }
 .notice { border-inline-start: 4px solid var(--gold); background: var(--surface); padding: 12px 14px; font-size: 15px; color: var(--muted); }
 .ltr { direction: ltr; unicode-bidi: isolate; }
+
+/* language switch + English interface */
+.lang-btn { min-height: 38px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--gold); background: var(--surface); color: var(--espresso); font-weight: 700; font-size: 14px; font-family: var(--font); }
+.lang-btn:hover { background: var(--cream-deep); }
+.lang-btn:lang(en) { font-family: Montserrat, system-ui, sans-serif; }
+html[lang="en"] { --font: Montserrat, "Segoe UI", system-ui, sans-serif; --font-head: Lustria, Georgia, serif; }
+html[lang="en"] body { font-size: 16px; }
+html[lang="en"] h1, html[lang="en"] h2, html[lang="en"] h3, html[lang="en"] .pick, html[lang="en"] .top-name { font-weight: 400; }
+html[lang="en"] [dir="rtl"], html[lang="en"] input[name="ar"] { font-family: Tajawal, system-ui, sans-serif; }
+@media (max-width: 480px) { .top { flex-wrap: wrap; } .top-actions { width: 100%; justify-content: flex-end; } .top-actions .btn { padding: 6px 10px; } }

@@ -1,5 +1,5 @@
 // Flaminio admin: edits content/*.json and photos in the website's GitHub repository.
-// Every "حفظ ونشر" is one commit; GitHub Pages rebuilds the site within about a minute.
+// Every "Save & publish" (حفظ ونشر) is one commit; GitHub Pages rebuilds the site within about a minute.
 const cfg = window.FLAMINIO_ADMIN;
 const API = 'https://api.github.com';
 const TOKEN_KEY = 'flaminio-admin-token';
@@ -16,10 +16,110 @@ const state = {
   pending: new Map(),      // path -> Blob (photos to upload)
   previews: new Map(),     // path -> object URL
   removed: new Set(),      // photo paths to delete
-  tab: 'info', catUid: null, busy: false, status: null,
+  tab: 'info', catUid: null, busy: false, status: null, screen: null,
 };
 let uidSeq = 1;
 const uid = () => 'u' + (uidSeq++);
+
+/* ---------- interface language ---------- */
+const LANG_KEY = 'flaminio-admin-lang';
+const L = {
+  ar: {
+    dir: 'rtl', toggle: 'English', toggleTitle: 'Switch to English',
+    title: 'لوحة تحكم فلامينيو', dashboard: 'لوحة التحكم', loading: 'جارٍ التحميل…', siteLink: 'الموقع',
+    loginLead: 'من هنا تُعدَّل قائمة الطعام والأسعار ومعلومات كل فرع، وتظهر التغييرات على الموقع خلال دقيقة.',
+    keyLabel: 'مفتاح الدخول', keyHint: 'المفتاح موجود في دليل المالك. لا تشاركه مع أحد.', remember: 'تذكرني على هذا الجهاز',
+    login: 'دخول', checking: 'جارٍ التحقق…',
+    errNoPush: 'المفتاح صحيح لكنه لا يملك صلاحية الكتابة على الموقع.', err401: 'المفتاح غير صحيح أو منتهي الصلاحية.',
+    err404: 'المفتاح لا يصل إلى موقع فلامينيو. تأكد من اختيار المستودع الصحيح عند إنشائه.', errNet: 'تعذّر الاتصال. تحقق من الإنترنت.',
+    logout: 'تسجيل الخروج', logoutShort: 'خروج', switchBranch: 'تغيير الفرع',
+    pickTitle: 'أي فرع تريد تعديله؟', pickNote: 'التغييرات تُحفظ لكل فرع على حدة. بعد الضغط على «حفظ ونشر» يتحدّث موقع الفرع خلال دقيقة تقريباً.',
+    branchOf: 'فرع {b}', loadingBranch: 'جارٍ تحميل بيانات الفرع…', loadFailed: 'تعذّر التحميل', retry: 'إعادة المحاولة', noBranchData: 'لا توجد بيانات لهذا الفرع في الموقع.',
+    confirmSwitch: 'لديك تغييرات غير محفوظة. هل تريد تركها والانتقال إلى فرع آخر؟', confirmLogout: 'لديك تغييرات غير محفوظة. هل تريد الخروج دون حفظ؟',
+    tabInfo: 'معلومات الفرع', tabMenu: 'قائمة الطعام',
+    phoneCard: 'الهاتف وواتساب', phone: 'رقم الهاتف', phoneShows: 'يظهر على الموقع كـ', whatsapp: 'رقم واتساب (اتركه فارغاً إذا كان نفس رقم الهاتف)', whatsappHint: 'طلبات الحجز من الموقع تصل إلى هذا الرقم.',
+    addressCard: 'العنوان', findTitleAr: 'العنوان القصير (عربي)', findTitleEn: 'العنوان القصير (إنجليزي)', findTitleHint: 'يظهر بخط كبير في بطاقة «موقعنا».',
+    findSubAr: 'سطر تحت العنوان (عربي)', findSubEn: 'سطر تحت العنوان (إنجليزي)', findSubHint: 'مثل: قرب منتجع أصايل · بنغازي',
+    addressAr: 'العنوان الكامل (عربي)', addressEn: 'العنوان الكامل (إنجليزي)', maps: 'رابط خرائط جوجل', mapsHint: 'افتح موقع المطعم في خرائط جوجل، اضغط «مشاركة» وانسخ الرابط.',
+    hoursCard: 'ساعات العمل', hoursAr: 'ساعات العمل (عربي)', hoursEn: 'ساعات العمل (إنجليزي)', chefCard: 'الشيف', chef: 'اسم الشيف التنفيذي (اختياري، يظهر أعلى القائمة)',
+    cats: 'الأقسام', addCat: '+ إضافة قسم', catAr: 'اسم القسم (عربي)', catEn: 'اسم القسم (إنجليزي)', catPhoto: 'صورة القسم (تظهر بجانب القائمة)',
+    catUp: 'تقديم القسم', catDown: 'تأخير القسم', delCat: 'حذف القسم', newCatAr: 'قسم جديد', groupAr: 'اسم المجموعة (عربي)', groupEn: 'اسم المجموعة (إنجليزي)',
+    noItemsGroup: 'لا توجد أطباق في هذه المجموعة.', addToGroup: '+ إضافة طبق إلى «{g}»', noItems: 'لا توجد أطباق بعد. اضغط «إضافة طبق».', addItem: '+ إضافة طبق', noCats: 'لا توجد أقسام بعد.',
+    dishAr: 'اسم الطبق (عربي)', dishEn: 'اسم الطبق (إنجليزي)', price: 'السعر', priceLabel: 'السعر بالدينار', isNew: 'جديد', hide: 'إخفاء من القائمة',
+    up: 'تقديم', down: 'تأخير', delItem: 'حذف الطبق', desc: 'الوصف (اختياري)', descAr: 'وصف الطبق بالعربية', descEn: 'وصف الطبق بالإنجليزية',
+    changePhoto: 'تغيير الصورة', addPhoto: 'إضافة صورة', removePhoto: 'إزالة الصورة', dropHere: 'اسحب صورة هنا<br>أو اضغط للاختيار', dropShort: '+ صورة', preparing: 'جارٍ تجهيز الصورة…',
+    notImage: 'الملف ليس صورة. اختر صورة JPG أو PNG.', badImage: 'تعذّر قراءة الصورة. جرّب صورة أخرى.',
+    confirmDelCat: 'حذف قسم «{c}» وكل أطباقه ({n})؟', confirmDelItem: 'حذف «{d}»؟', thisDish: 'هذا الطبق',
+    chInfo: 'معلومات الفرع', chCats: 'الأقسام', chAdd: 'إضافة «{d}»', chEdit: 'تعديل «{d}»', chDel: 'حذف طبق',
+    none: 'لا توجد تغييرات', unsaved1: 'تغيير واحد غير محفوظ', unsaved2: 'تغييران غير محفوظين', unsavedN: '{n} تغييرات غير محفوظة',
+    discard: 'تراجع عن التغييرات', save: 'حفظ ونشر', confirmDiscard: 'التراجع عن كل التغييرات غير المحفوظة؟',
+    noName: 'يوجد طبق بدون اسم. اكتب اسمه أو احذفه.', saving: 'جارٍ الحفظ…', uploading: 'جارٍ رفع الصور… ({i}/{n})', publishing: 'جارٍ النشر…',
+    conflict: 'تم تعديل هذا الفرع من جهاز آخر. أعد تحميل الصفحة ثم كرّر تعديلاتك.', nothing: 'لا يوجد ما يُحفظ.',
+    savedBuilding: 'تم الحفظ ✓ جارٍ تحديث الموقع… (نحو دقيقة)', savedToast: 'تم الحفظ. الموقع يتحدث خلال دقيقة تقريباً.',
+    live: 'أصبح مباشراً على الموقع ✓', openPage: 'افتح الصفحة', deployFailed: 'تم الحفظ لكن النشر تعثّر. أعد المحاولة أو تواصل مع مسؤول الموقع.',
+    saved: 'تم الحفظ ✓', saveFailed: 'تعذّر الحفظ. حاول مرة أخرى.', netCheck: 'تعذّر التحقق من الاتصال. تحقق من الإنترنت.',
+  },
+  en: {
+    dir: 'ltr', toggle: 'عربي', toggleTitle: 'التبديل إلى العربية',
+    title: 'Flaminio Admin', dashboard: 'Admin', loading: 'Loading…', siteLink: 'Website',
+    loginLead: 'Edit the menu, prices and each branch’s details here. Changes appear on the website within about a minute.',
+    keyLabel: 'Access key', keyHint: 'The key is in the owner’s guide. Don’t share it with anyone.', remember: 'Remember me on this device',
+    login: 'Sign in', checking: 'Checking…',
+    errNoPush: 'The key is valid but it can’t make changes to the website.', err401: 'The key is wrong or has expired.',
+    err404: 'The key can’t reach the Flaminio website. Make sure you picked the right repository when creating it.', errNet: 'Couldn’t connect. Check your internet.',
+    logout: 'Sign out', logoutShort: 'Sign out', switchBranch: 'Switch branch',
+    pickTitle: 'Which branch do you want to edit?', pickNote: 'Each branch is saved separately. After “Save & publish”, that branch’s site updates within about a minute.',
+    branchOf: '{b} branch', loadingBranch: 'Loading branch details…', loadFailed: 'Couldn’t load', retry: 'Try again', noBranchData: 'There is no data for this branch on the website.',
+    confirmSwitch: 'You have unsaved changes. Leave them and switch branch?', confirmLogout: 'You have unsaved changes. Sign out without saving?',
+    tabInfo: 'Branch details', tabMenu: 'Menu',
+    phoneCard: 'Phone & WhatsApp', phone: 'Phone number', phoneShows: 'Shown on the website as', whatsapp: 'WhatsApp number (leave empty if same as phone)', whatsappHint: 'Booking requests from the website go to this number.',
+    addressCard: 'Address', findTitleAr: 'Short address (Arabic)', findTitleEn: 'Short address (English)', findTitleHint: 'Shown large on the “Find us” card.',
+    findSubAr: 'Line under the address (Arabic)', findSubEn: 'Line under the address (English)', findSubHint: 'For example: Near Asayel Resort · Benghazi',
+    addressAr: 'Full address (Arabic)', addressEn: 'Full address (English)', maps: 'Google Maps link', mapsHint: 'Open the restaurant in Google Maps, tap “Share” and copy the link.',
+    hoursCard: 'Opening hours', hoursAr: 'Opening hours (Arabic)', hoursEn: 'Opening hours (English)', chefCard: 'Chef', chef: 'Executive chef’s name (optional, shown above the menu)',
+    cats: 'Categories', addCat: '+ Add category', catAr: 'Category name (Arabic)', catEn: 'Category name (English)', catPhoto: 'Category photo (shown beside the menu)',
+    catUp: 'Move category up', catDown: 'Move category down', delCat: 'Delete category', newCatAr: 'قسم جديد', groupAr: 'Group name (Arabic)', groupEn: 'Group name (English)',
+    noItemsGroup: 'No dishes in this group yet.', addToGroup: '+ Add dish to “{g}”', noItems: 'No dishes yet. Tap “Add dish”.', addItem: '+ Add dish', noCats: 'No categories yet.',
+    dishAr: 'Dish name (Arabic)', dishEn: 'Dish name (English)', price: 'Price', priceLabel: 'Price in LYD', isNew: 'New', hide: 'Hide from menu',
+    up: 'Move up', down: 'Move down', delItem: 'Delete dish', desc: 'Description (optional)', descAr: 'Description in Arabic', descEn: 'Description in English',
+    changePhoto: 'Change photo', addPhoto: 'Add photo', removePhoto: 'Remove photo', dropHere: 'Drop a photo here<br>or tap to choose', dropShort: '+ Photo', preparing: 'Preparing photo…',
+    notImage: 'That file isn’t a photo. Choose a JPG or PNG.', badImage: 'Couldn’t read that photo. Try another one.',
+    confirmDelCat: 'Delete the “{c}” category and all its dishes ({n})?', confirmDelItem: 'Delete “{d}”?', thisDish: 'this dish',
+    chInfo: 'branch details', chCats: 'categories', chAdd: 'added “{d}”', chEdit: 'edited “{d}”', chDel: 'deleted a dish',
+    none: 'No changes', unsaved1: '1 unsaved change', unsaved2: '2 unsaved changes', unsavedN: '{n} unsaved changes',
+    discard: 'Undo changes', save: 'Save & publish', confirmDiscard: 'Undo all unsaved changes?',
+    noName: 'A dish has no name. Add a name or delete it.', saving: 'Saving…', uploading: 'Uploading photos… ({i}/{n})', publishing: 'Publishing…',
+    conflict: 'This branch was changed from another device. Reload the page, then make your changes again.', nothing: 'Nothing to save.',
+    savedBuilding: 'Saved ✓ Updating the website… (about a minute)', savedToast: 'Saved. The website updates in about a minute.',
+    live: 'Live on the website ✓', openPage: 'Open the page', deployFailed: 'Saved, but publishing failed. Try again or contact the site admin.',
+    saved: 'Saved ✓', saveFailed: 'Couldn’t save. Please try again.', netCheck: 'Couldn’t check the connection. Check your internet.',
+  },
+};
+let lang = 'ar';
+try { if (localStorage.getItem(LANG_KEY) === 'en') lang = 'en'; } catch (e) { /* storage unavailable */ }
+const t = (key, vars = {}) => String(L[lang][key] ?? L.ar[key] ?? key).replace(/\{(\w+)\}/g, (_, k) => (k in vars ? vars[k] : ''));
+const bname = b => (lang === 'en' ? b.en : b.ar);
+const dishName = it => (lang === 'en' ? (it.en || it.ar) : (it.ar || it.en));
+const catName = c => (lang === 'en' ? (c.en || c.ar) : (c.ar || c.en));
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.documentElement.dir = L[lang].dir;
+  document.title = t('title');
+  document.querySelectorAll('[data-i18n]').forEach(el => { if (el.id !== 'save-status') el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
+  const btn = $('#lang-btn');
+  btn.textContent = t('toggle'); btn.title = t('toggleTitle'); btn.lang = lang === 'en' ? 'ar' : 'en';
+}
+function setLang(next) {
+  lang = next;
+  try { localStorage.setItem(LANG_KEY, lang); } catch (e) { /* ignore */ }
+  applyLang();
+  // Redraw the current screen from memory; unsaved edits live in `state`, not in the page.
+  if (state.screen === 'login') { const v = ($('#token') || {}).value || ''; renderLogin(state.loginError); $('#token').value = v; }
+  else if (state.screen === 'picker') renderPicker();
+  else if (state.screen === 'editor') { renderTop(); renderEditor(); }
+  else if (state.screen === 'loading') renderTop();
+}
 
 /* ---------- GitHub API ---------- */
 async function gh(path, opts = {}) {
@@ -105,16 +205,16 @@ function listOf(cat, groupUid) {
 /* ---------- change tracking ---------- */
 function changes() {
   const list = [];
-  if (JSON.stringify(state.info) !== state.origInfo) list.push('معلومات الفرع');
-  if (catSignature(state.menu) !== state.origCats) list.push('الأقسام');
+  if (JSON.stringify(state.info) !== state.origInfo) list.push(t('chInfo'));
+  if (catSignature(state.menu) !== state.origCats) list.push(t('chCats'));
   const seen = new Set();
   for (const c of state.menu) for (const it of itemsOf(c)) {
     seen.add(it._uid);
     const before = state.origItems.get(it._uid);
-    if (before === undefined) list.push(`إضافة «${it.ar || it.en}»`);
-    else if (before !== serializeItem(it)) list.push(`تعديل «${it.ar || it.en}»`);
+    if (before === undefined) list.push(t('chAdd', { d: dishName(it) }));
+    else if (before !== serializeItem(it)) list.push(t('chEdit', { d: dishName(it) }));
   }
-  for (const u of state.origItems.keys()) if (!seen.has(u)) list.push('حذف طبق');
+  for (const u of state.origItems.keys()) if (!seen.has(u)) list.push(t('chDel'));
   return list;
 }
 function updateSaveBar() {
@@ -124,33 +224,49 @@ function updateSaveBar() {
   if (state.busy) return;
   const n = changes().length;
   st.className = 'savebar-status';
-  if (state.status) { st.className += ' ' + state.status.cls; st.innerHTML = state.status.html; }
-  else st.textContent = n ? `${n} ${n === 1 ? 'تغيير غير محفوظ' : n === 2 ? 'تغييران غير محفوظين' : 'تغييرات غير محفوظة'}` : 'لا توجد تغييرات';
-  if (n && state.status) { st.className = 'savebar-status'; st.textContent = `${n} ${n === 1 ? 'تغيير غير محفوظ' : 'تغييرات غير محفوظة'}`; }
+  if (n) st.textContent = n === 1 ? t('unsaved1') : n === 2 ? t('unsaved2') : t('unsavedN', { n });
+  else if (state.status) { st.className += ' ' + state.status.cls; st.innerHTML = statusHtml(state.status); }
+  else st.textContent = t('none');
   btn.disabled = !n;
   discard.hidden = !n;
+}
+// Save status is stored as a message key (+ optional link) so it follows the language toggle.
+function statusHtml(s) {
+  return esc(t(s.key, s.vars)) + (s.link ? ` <a href="${esc(s.link)}" target="_blank" rel="noopener">${esc(t('openPage'))}</a>` : '');
+}
+function renderTop() {
+  $('#top-branch').textContent = state.branch ? t('branchOf', { b: bname(state.branch) }) : '';
+  if (state.screen === 'login') { $('#top-actions').innerHTML = ''; return; }
+  if (state.screen === 'picker') {
+    $('#top-actions').innerHTML = `<button class="btn btn-ghost" id="logout-btn" type="button">${esc(t('logout'))}</button>`;
+    $('#logout-btn').addEventListener('click', logout);
+    return;
+  }
+  $('#top-actions').innerHTML = `<button class="btn btn-ghost" id="switch-btn" type="button">${esc(t('switchBranch'))}</button><button class="btn btn-ghost" id="logout-btn" type="button">${esc(t('logoutShort'))}</button>`;
+  $('#switch-btn').addEventListener('click', () => { if (!changes().length || confirm(t('confirmSwitch'))) renderPicker(); });
+  $('#logout-btn').addEventListener('click', () => { if (!changes().length || confirm(t('confirmLogout'))) logout(); });
 }
 window.addEventListener('beforeunload', e => { if (state.menu && changes().length && !state.busy) { e.preventDefault(); e.returnValue = ''; } });
 
 /* ---------- login ---------- */
 function renderLogin(error = '') {
-  $('#top-branch').textContent = '';
-  $('#top-actions').innerHTML = '';
+  state.screen = 'login'; state.loginError = error;
+  renderTop();
   $('#savebar').hidden = true;
   $('#app').innerHTML = `
   <section class="login">
     <img class="logo" src="../img/logo-burgundy.png" alt="">
-    <h1>لوحة تحكم فلامينيو</h1>
-    <p class="muted">من هنا تُعدَّل قائمة الطعام والأسعار ومعلومات كل فرع، وتظهر التغييرات على الموقع خلال دقيقة.</p>
+    <h1>${esc(t('title'))}</h1>
+    <p class="muted">${esc(t('loginLead'))}</p>
     <form class="card" id="login-form" style="margin-top:18px">
       <div class="field">
-        <label for="token">مفتاح الدخول</label>
+        <label for="token">${esc(t('keyLabel'))}</label>
         <input id="token" name="token" type="password" autocomplete="off" dir="ltr" placeholder="github_pat_…" required>
-        <span class="hint">المفتاح موجود في دليل المالك. لا تشاركه مع أحد.</span>
+        <span class="hint">${esc(t('keyHint'))}</span>
       </div>
-      <label class="check"><input type="checkbox" id="remember" checked> <span>تذكرني على هذا الجهاز</span></label>
-      ${error ? `<p class="error">${esc(error)}</p>` : ''}
-      <button class="btn btn-primary btn-lg" type="submit">دخول</button>
+      <label class="check"><input type="checkbox" id="remember" checked> <span>${esc(t('remember'))}</span></label>
+      ${error ? `<p class="error">${esc(t(error))}</p>` : ''}
+      <button class="btn btn-primary btn-lg" type="submit">${esc(t('login'))}</button>
     </form>
   </section>`;
   $('#login-form').addEventListener('submit', async e => {
@@ -158,49 +274,45 @@ function renderLogin(error = '') {
     const token = $('#token').value.trim();
     state.remember = $('#remember').checked;
     if (!token) return;
-    const btn = e.target.querySelector('button'); btn.disabled = true; btn.textContent = 'جارٍ التحقق…';
+    const btn = e.target.querySelector('button'); btn.disabled = true; btn.textContent = t('checking');
     state.token = token;
     try {
       const repo = await gh(`/repos/${cfg.repo}`);
-      if (!repo.permissions || !repo.permissions.push) throw new Error('المفتاح صحيح لكنه لا يملك صلاحية الكتابة على الموقع.');
+      if (!repo.permissions || !repo.permissions.push) throw Object.assign(new Error('errNoPush'), { key: 'errNoPush' });
       (state.remember ? localStorage : sessionStorage).setItem(TOKEN_KEY, token);
       renderPicker();
     } catch (err) {
       state.token = null;
-      renderLogin(err.status === 401 ? 'المفتاح غير صحيح أو منتهي الصلاحية.' : err.status === 404 ? 'المفتاح لا يصل إلى موقع فلامينيو. تأكد من اختيار المستودع الصحيح عند إنشائه.' : (err.message || 'تعذّر الاتصال. تحقق من الإنترنت.'));
+      renderLogin(err.status === 401 ? 'err401' : err.status === 404 ? 'err404' : err.key || 'errNet');
     }
   });
 }
 function logout() {
   localStorage.removeItem(TOKEN_KEY); sessionStorage.removeItem(TOKEN_KEY);
-  state.token = null; state.branch = null; state.menu = null;
+  state.token = null; state.branch = null; state.menu = null; state.status = null;
   renderLogin();
 }
 
 /* ---------- branch picker ---------- */
 function renderPicker() {
-  state.branch = null; state.menu = null; state.status = null;
-  $('#top-branch').textContent = '';
-  $('#top-actions').innerHTML = `<button class="btn btn-ghost" id="logout-btn" type="button">تسجيل الخروج</button>`;
-  $('#logout-btn').addEventListener('click', logout);
+  state.branch = null; state.menu = null; state.status = null; state.screen = 'picker';
+  renderTop();
   updateSaveBar();
   $('#app').innerHTML = `
-  <h1>أي فرع تريد تعديله؟</h1>
+  <h1>${esc(t('pickTitle'))}</h1>
   <div class="picker">
-    ${cfg.branches.map(b => `<button class="pick" type="button" data-branch="${b.id}">${esc(b.ar)}<small>${esc(b.placeAr)}</small></button>`).join('')}
+    ${cfg.branches.map(b => `<button class="pick" type="button" data-branch="${b.id}">${esc(bname(b))}<small>${esc(lang === 'en' ? (b.placeEn || '') : b.placeAr)}</small></button>`).join('')}
   </div>
-  <p class="notice">التغييرات تُحفظ لكل فرع على حدة. بعد الضغط على «حفظ ونشر» يتحدّث موقع الفرع خلال دقيقة تقريباً.</p>`;
+  <p class="notice">${esc(t('pickNote'))}</p>`;
   document.querySelectorAll('[data-branch]').forEach(btn => btn.addEventListener('click', () => loadBranch(btn.dataset.branch)));
 }
 
 /* ---------- loading content ---------- */
 async function loadBranch(id) {
   state.branch = cfg.branches.find(b => b.id === id);
-  $('#app').innerHTML = '<p class="loading">جارٍ تحميل بيانات الفرع…</p>';
-  $('#top-branch').textContent = `فرع ${state.branch.ar}`;
-  $('#top-actions').innerHTML = `<button class="btn btn-ghost" id="switch-btn" type="button">تغيير الفرع</button><button class="btn btn-ghost" id="logout-btn" type="button">خروج</button>`;
-  $('#switch-btn').addEventListener('click', () => { if (!changes().length || confirm('لديك تغييرات غير محفوظة. هل تريد تركها والانتقال إلى فرع آخر؟')) renderPicker(); });
-  $('#logout-btn').addEventListener('click', () => { if (!changes().length || confirm('لديك تغييرات غير محفوظة. هل تريد الخروج دون حفظ؟')) logout(); });
+  state.screen = 'loading'; state.menu = null;
+  $('#app').innerHTML = `<p class="loading">${esc(t('loadingBranch'))}</p>`;
+  renderTop();
   try {
     const ref = await gh(`/repos/${cfg.repo}/git/ref/heads/${cfg.branch}`);
     state.head = ref.object.sha;
@@ -213,7 +325,7 @@ async function loadBranch(id) {
     }
     state.allInfo = JSON.parse(state.files['content/branches.json'].text);
     state.info = state.allInfo[id];
-    if (!state.info) throw new Error('لا توجد بيانات لهذا الفرع في الموقع.');
+    if (!state.info) throw new Error(t('noBranchData'));
     state.menu = JSON.parse(state.files[`content/menu-${id}.json`].text);
     for (const c of state.menu) {
       c._uid = uid();
@@ -225,9 +337,10 @@ async function loadBranch(id) {
     state.origItems = new Map(state.menu.flatMap(c => itemsOf(c).map(it => [it._uid, serializeItem(it)])));
     state.pending.clear(); state.removed.clear(); state.status = null;
     state.tab = 'info'; state.catUid = state.menu[0] && state.menu[0]._uid;
+    state.screen = 'editor';
     renderEditor();
   } catch (err) {
-    $('#app').innerHTML = `<div class="card"><h2>تعذّر التحميل</h2><p>${esc(err.message)}</p><button class="btn" id="retry" type="button">إعادة المحاولة</button></div>`;
+    $('#app').innerHTML = `<div class="card"><h2>${esc(t('loadFailed'))}</h2><p>${esc(err.message)}</p><button class="btn" id="retry" type="button">${esc(t('retry'))}</button></div>`;
     $('#retry').addEventListener('click', () => loadBranch(id));
   }
 }
@@ -236,11 +349,16 @@ async function loadBranch(id) {
 function renderEditor() {
   $('#app').innerHTML = `
   <div class="tabs" role="tablist">
-    <button class="tab${state.tab === 'info' ? ' is-active' : ''}" type="button" data-tab="info" role="tab">معلومات الفرع</button>
-    <button class="tab${state.tab === 'menu' ? ' is-active' : ''}" type="button" data-tab="menu" role="tab">قائمة الطعام</button>
+    <button class="tab${state.tab === 'info' ? ' is-active' : ''}" type="button" data-tab="info" role="tab">${esc(t('tabInfo'))}</button>
+    <button class="tab${state.tab === 'menu' ? ' is-active' : ''}" type="button" data-tab="menu" role="tab">${esc(t('tabMenu'))}</button>
   </div>
   <div id="panel"></div>`;
   document.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => { state.tab = b.dataset.tab; renderEditor(); }));
+  // One set of listeners per panel element; redrawing the panel's contents never adds more.
+  const panel = $('#panel');
+  panel.addEventListener('input', e => (state.tab === 'info' ? onInfoInput(e) : onMenuInput(e)));
+  panel.addEventListener('change', e => { if (state.tab === 'menu') onMenuInput(e); });
+  panel.addEventListener('click', e => { if (state.tab === 'menu') onMenuClick(e); });
   if (state.tab === 'info') renderInfo(); else renderMenu();
   updateSaveBar();
 }
@@ -251,44 +369,42 @@ function field(label, name, value, { hint = '', dir = '', textarea = false, type
     ? `<textarea ${attrs}>${esc(value)}</textarea>`
     : `<input type="${type}" ${attrs} value="${esc(value)}">`}${hint ? `<span class="hint">${hint}</span>` : ''}</div>`;
 }
+// Arabic/English field pairs: the interface language's box comes first.
+const pair = (arHtml, enHtml) => (lang === 'en' ? enHtml + arHtml : arHtml + enHtml);
 function renderInfo() {
   const i = state.info;
   $('#panel').innerHTML = `
   <div class="card">
-    <h2>الهاتف وواتساب</h2>
-    ${field('رقم الهاتف', 'phone', i.phone, { dir: 'ltr', type: 'tel', placeholder: '0910181666', hint: `يظهر على الموقع كـ <span class="preview-number" id="phone-preview">${esc(displayNumber(i.phone))}</span>` })}
-    ${field('رقم واتساب (اتركه فارغاً إذا كان نفس رقم الهاتف)', 'whatsapp', i.whatsapp || '', { dir: 'ltr', type: 'tel', placeholder: '0910181666', hint: 'طلبات الحجز من الموقع تصل إلى هذا الرقم.' })}
+    <h2>${esc(t('phoneCard'))}</h2>
+    ${field(esc(t('phone')), 'phone', i.phone, { dir: 'ltr', type: 'tel', placeholder: '0910181666', hint: `${esc(t('phoneShows'))} <span class="preview-number" id="phone-preview">${esc(displayNumber(i.phone))}</span>` })}
+    ${field(esc(t('whatsapp')), 'whatsapp', i.whatsapp || '', { dir: 'ltr', type: 'tel', placeholder: '0910181666', hint: esc(t('whatsappHint')) })}
   </div>
   <div class="card">
-    <h2>العنوان</h2>
+    <h2>${esc(t('addressCard'))}</h2>
     <div class="grid-2">
-      ${field('العنوان القصير (عربي)', 'findTitle.ar', i.findTitle.ar, { hint: 'يظهر بخط كبير في بطاقة «موقعنا».' })}
-      ${field('Short address (English)', 'findTitle.en', i.findTitle.en, { dir: 'ltr' })}
-      ${field('سطر تحت العنوان (عربي)', 'findSub.ar', i.findSub.ar, { hint: 'مثل: قرب منتجع أصايل · بنغازي' })}
-      ${field('Line under the address (English)', 'findSub.en', i.findSub.en, { dir: 'ltr' })}
-      ${field('العنوان الكامل (عربي)', 'address.ar', i.address.ar, { textarea: true })}
-      ${field('Full address (English)', 'address.en', i.address.en, { textarea: true, dir: 'ltr' })}
+      ${pair(field(esc(t('findTitleAr')), 'findTitle.ar', i.findTitle.ar, { dir: 'rtl', hint: esc(t('findTitleHint')) }), field(esc(t('findTitleEn')), 'findTitle.en', i.findTitle.en, { dir: 'ltr' }))}
+      ${pair(field(esc(t('findSubAr')), 'findSub.ar', i.findSub.ar, { dir: 'rtl', hint: esc(t('findSubHint')) }), field(esc(t('findSubEn')), 'findSub.en', i.findSub.en, { dir: 'ltr' }))}
+      ${pair(field(esc(t('addressAr')), 'address.ar', i.address.ar, { dir: 'rtl', textarea: true }), field(esc(t('addressEn')), 'address.en', i.address.en, { textarea: true, dir: 'ltr' }))}
     </div>
-    ${field('رابط خرائط جوجل', 'maps', i.maps || '', { dir: 'ltr', type: 'url', placeholder: 'https://maps.app.goo.gl/…', hint: 'افتح موقع المطعم في خرائط جوجل، اضغط «مشاركة» وانسخ الرابط.' })}
+    ${field(esc(t('maps')), 'maps', i.maps || '', { dir: 'ltr', type: 'url', placeholder: 'https://maps.app.goo.gl/…', hint: esc(t('mapsHint')) })}
   </div>
   <div class="card">
-    <h2>ساعات العمل</h2>
+    <h2>${esc(t('hoursCard'))}</h2>
     <div class="grid-2">
-      ${field('ساعات العمل (عربي)', 'hours.ar', (i.hours && i.hours.ar) || '', { textarea: true, placeholder: 'يومياً من 12 ظهراً إلى 12 منتصف الليل' })}
-      ${field('Opening hours (English)', 'hours.en', (i.hours && i.hours.en) || '', { textarea: true, dir: 'ltr', placeholder: 'Daily 12:00 – 00:00' })}
+      ${pair(field(esc(t('hoursAr')), 'hours.ar', (i.hours && i.hours.ar) || '', { dir: 'rtl', textarea: true, placeholder: 'يومياً من 12 ظهراً إلى 12 منتصف الليل' }), field(esc(t('hoursEn')), 'hours.en', (i.hours && i.hours.en) || '', { textarea: true, dir: 'ltr', placeholder: 'Daily 12:00 – 00:00' }))}
     </div>
   </div>
   <div class="card">
-    <h2>الشيف</h2>
-    ${field('اسم الشيف التنفيذي (اختياري، يظهر أعلى القائمة)', 'chef', i.chef || '', { dir: 'ltr' })}
+    <h2>${esc(t('chefCard'))}</h2>
+    ${field(esc(t('chef')), 'chef', i.chef || '', { dir: 'ltr' })}
   </div>`;
-  $('#panel').addEventListener('input', e => {
-    const el = e.target.closest('[data-info]'); if (!el) return;
-    const [a, b] = el.dataset.info.split('.');
-    if (b) { if (!state.info[a]) state.info[a] = {}; state.info[a][b] = el.value; } else state.info[a] = el.value.trim();
-    if (a === 'phone') $('#phone-preview').textContent = displayNumber(el.value);
-    updateSaveBar();
-  });
+}
+function onInfoInput(e) {
+  const el = e.target.closest('[data-info]'); if (!el) return;
+  const [a, b] = el.dataset.info.split('.');
+  if (b) { if (!state.info[a]) state.info[a] = {}; state.info[a][b] = el.value; } else state.info[a] = el.value.trim();
+  if (a === 'phone') $('#phone-preview').textContent = displayNumber(el.value);
+  updateSaveBar();
 }
 
 function renderMenu() {
@@ -297,72 +413,69 @@ function renderMenu() {
   const idx = state.menu.indexOf(cat);
   $('#panel').innerHTML = `
   <div class="card cat-head">
-    <h2>الأقسام</h2>
+    <h2>${esc(t('cats'))}</h2>
     <div class="chips">
-      ${state.menu.map(c => `<button class="chip${c === cat ? ' is-active' : ''}" type="button" data-cat="${c._uid}">${esc(c.ar)}</button>`).join('')}
-      <button class="chip chip-add" type="button" data-act="add-cat">+ إضافة قسم</button>
+      ${state.menu.map(c => `<button class="chip${c === cat ? ' is-active' : ''}" type="button" data-cat="${c._uid}">${esc(catName(c))}</button>`).join('')}
+      <button class="chip chip-add" type="button" data-act="add-cat">${esc(t('addCat'))}</button>
     </div>
   </div>
   ${cat ? `
   <div class="card">
     <div class="grid-2">
-      <div class="field"><label for="cat-ar">اسم القسم (عربي)</label><input id="cat-ar" data-cat-field="ar" value="${esc(cat.ar)}"></div>
-      <div class="field"><label for="cat-en">Category name (English)</label><input id="cat-en" data-cat-field="en" dir="ltr" value="${esc(cat.en)}"></div>
+      ${pair(`<div class="field"><label for="cat-ar">${esc(t('catAr'))}</label><input id="cat-ar" data-cat-field="ar" dir="rtl" value="${esc(cat.ar)}"></div>`, `<div class="field"><label for="cat-en">${esc(t('catEn'))}</label><input id="cat-en" data-cat-field="en" dir="ltr" value="${esc(cat.en)}"></div>`)}
     </div>
-    <div class="field"><label>صورة القسم (تظهر بجانب القائمة)</label>${dropZone(cat, 'cat')}</div>
+    <div class="field"><label>${esc(t('catPhoto'))}</label>${dropZone(cat, 'cat')}</div>
     <div class="cat-tools">
-      <span class="order"><button class="icon-btn" type="button" data-act="cat-up" ${idx === 0 ? 'disabled' : ''} title="تقديم القسم">▲</button><button class="icon-btn" type="button" data-act="cat-down" ${idx === state.menu.length - 1 ? 'disabled' : ''} title="تأخير القسم">▼</button></span>
+      <span class="order"><button class="icon-btn" type="button" data-act="cat-up" ${idx === 0 ? 'disabled' : ''} title="${esc(t('catUp'))}" aria-label="${esc(t('catUp'))}">▲</button><button class="icon-btn" type="button" data-act="cat-down" ${idx === state.menu.length - 1 ? 'disabled' : ''} title="${esc(t('catDown'))}" aria-label="${esc(t('catDown'))}">▼</button></span>
       <span class="spacer"></span>
-      <button class="btn btn-sm btn-danger" type="button" data-act="del-cat">حذف القسم</button>
+      <button class="btn btn-sm btn-danger" type="button" data-act="del-cat">${esc(t('delCat'))}</button>
     </div>
   </div>
   ${cat.groups
-    ? cat.groups.map(g => `<div class="group-head"><input data-group="${g._uid}" data-group-field="ar" value="${esc(g.ar)}" aria-label="اسم المجموعة بالعربية"><input data-group="${g._uid}" data-group-field="en" dir="ltr" value="${esc(g.en)}" aria-label="Group name in English"></div>
-      <div class="items">${g.items.map((it, i) => itemCard(it, i, g.items.length)).join('') || '<p class="empty">لا توجد أطباق في هذه المجموعة.</p>'}</div>
-      <button class="btn" type="button" data-act="add-item" data-group="${g._uid}">+ إضافة طبق إلى «${esc(g.ar)}»</button>`).join('')
-    : `<div class="items">${cat.items.map((it, i) => itemCard(it, i, cat.items.length)).join('') || '<p class="empty">لا توجد أطباق بعد. اضغط «إضافة طبق».</p>'}</div>
-      <button class="btn btn-lg" type="button" data-act="add-item">+ إضافة طبق</button>`}
-  ` : '<p class="empty">لا توجد أقسام بعد.</p>'}`;
+    ? cat.groups.map(g => `<div class="group-head">${pair(`<input data-group="${g._uid}" data-group-field="ar" dir="rtl" value="${esc(g.ar)}" aria-label="${esc(t('groupAr'))}">`, `<input data-group="${g._uid}" data-group-field="en" dir="ltr" value="${esc(g.en)}" aria-label="${esc(t('groupEn'))}">`)}</div>
+      <div class="items">${g.items.map((it, i) => itemCard(it, i, g.items.length)).join('') || `<p class="empty">${esc(t('noItemsGroup'))}</p>`}</div>
+      <button class="btn" type="button" data-act="add-item" data-group="${g._uid}">${esc(t('addToGroup', { g: lang === 'en' ? (g.en || g.ar) : (g.ar || g.en) }))}</button>`).join('')
+    : `<div class="items">${cat.items.map((it, i) => itemCard(it, i, cat.items.length)).join('') || `<p class="empty">${esc(t('noItems'))}</p>`}</div>
+      <button class="btn btn-lg" type="button" data-act="add-item">${esc(t('addItem'))}</button>`}
+  ` : `<p class="empty">${esc(t('noCats'))}</p>`}`;
 
-  const panel = $('#panel');
-  panel.addEventListener('click', onMenuClick);
-  panel.addEventListener('input', onMenuInput);
-  panel.addEventListener('change', onMenuInput);
-  initDropZones(panel);
+  initDropZones($('#panel'));
 }
 
 function itemCard(it, i, n) {
+  const arName = `<input name="ar" dir="rtl" value="${esc(it.ar)}" placeholder="${esc(t('dishAr'))}" aria-label="${esc(t('dishAr'))}">`;
+  const enName = `<input name="en" dir="ltr" value="${esc(it.en)}" placeholder="${esc(t('dishEn'))}" aria-label="${esc(t('dishEn'))}">`;
+  const arDesc = `<textarea name="dar" dir="rtl" placeholder="${esc(t('descAr'))}">${esc(it.dar)}</textarea>`;
+  const enDesc = `<textarea name="den" dir="ltr" placeholder="${esc(t('descEn'))}">${esc(it.den)}</textarea>`;
   return `<div class="item${it.hidden ? ' is-hidden' : ''}" data-item="${it._uid}">
     ${dropZone(it, 'item')}
     <div class="item-main">
       <div class="item-fields">
-        <input name="ar" value="${esc(it.ar)}" placeholder="اسم الطبق (عربي)" aria-label="اسم الطبق بالعربية">
-        <input name="en" value="${esc(it.en)}" placeholder="Dish name (English)" aria-label="Dish name in English">
-        <input name="price" inputmode="decimal" value="${it.price == null ? '' : it.price}" placeholder="السعر" aria-label="السعر بالدينار">
+        ${pair(arName, enName)}
+        <input name="price" inputmode="decimal" value="${it.price == null ? '' : it.price}" placeholder="${esc(t('price'))}" aria-label="${esc(t('priceLabel'))}">
       </div>
       <div class="item-row">
-        <label class="switch"><input type="checkbox" name="isNew" ${it.isNew ? 'checked' : ''}> <span>جديد</span></label>
-        <label class="switch"><input type="checkbox" name="hidden" ${it.hidden ? 'checked' : ''}> <span>إخفاء من القائمة</span></label>
-        <span class="order"><button class="icon-btn" type="button" data-act="item-up" ${i === 0 ? 'disabled' : ''} title="تقديم">▲</button><button class="icon-btn" type="button" data-act="item-down" ${i === n - 1 ? 'disabled' : ''} title="تأخير">▼</button><button class="icon-btn" type="button" data-act="del-item" title="حذف الطبق">🗑</button></span>
+        <label class="switch"><input type="checkbox" name="isNew" ${it.isNew ? 'checked' : ''}> <span>${esc(t('isNew'))}</span></label>
+        <label class="switch"><input type="checkbox" name="hidden" ${it.hidden ? 'checked' : ''}> <span>${esc(t('hide'))}</span></label>
+        <span class="order"><button class="icon-btn" type="button" data-act="item-up" ${i === 0 ? 'disabled' : ''} title="${esc(t('up'))}" aria-label="${esc(t('up'))}">▲</button><button class="icon-btn" type="button" data-act="item-down" ${i === n - 1 ? 'disabled' : ''} title="${esc(t('down'))}" aria-label="${esc(t('down'))}">▼</button><button class="icon-btn" type="button" data-act="del-item" title="${esc(t('delItem'))}" aria-label="${esc(t('delItem'))}">🗑</button></span>
       </div>
       <details class="desc">
-        <summary>الوصف (اختياري)</summary>
-        <textarea name="dar" placeholder="وصف الطبق بالعربية">${esc(it.dar)}</textarea>
-        <textarea name="den" dir="ltr" placeholder="Description in English">${esc(it.den)}</textarea>
+        <summary>${esc(t('desc'))}</summary>
+        ${pair(arDesc, enDesc)}
       </details>
     </div>
   </div>`;
 }
 function dropZone(obj, kind) {
   const src = previewSrc(obj.img);
-  return `<div class="drop${obj.img ? ' has-photo' : ''}${kind === 'cat' ? ' drop-lg' : ''}" data-drop="${obj._uid}" data-kind="${kind}" role="button" tabindex="0" aria-label="${obj.img ? 'تغيير الصورة' : 'إضافة صورة'}">
-    ${obj.img ? `<img src="${esc(src)}" alt=""><button class="remove" type="button" data-act="remove-photo" title="إزالة الصورة">×</button>` : `<span class="drop-label">اسحب صورة هنا<br>أو اضغط للاختيار</span><span class="drop-label-short">+ صورة</span>`}
+  return `<div class="drop${obj.img ? ' has-photo' : ''}${kind === 'cat' ? ' drop-lg' : ''}" data-drop="${obj._uid}" data-kind="${kind}" role="button" tabindex="0" aria-label="${esc(obj.img ? t('changePhoto') : t('addPhoto'))}">
+    ${obj.img ? `<img src="${esc(src)}" alt=""><button class="remove" type="button" data-act="remove-photo" title="${esc(t('removePhoto'))}" aria-label="${esc(t('removePhoto'))}">×</button>` : `<span class="drop-label">${t('dropHere')}</span><span class="drop-label-short">${esc(t('dropShort'))}</span>`}
   </div>`;
 }
 
 function onMenuInput(e) {
   const el = e.target;
-  if (el.dataset.catField) { const { cat } = findByUid(state.catUid); cat[el.dataset.catField] = el.value; if (el.dataset.catField === 'ar') { const chip = $(`.chip[data-cat="${cat._uid}"]`); if (chip) chip.textContent = el.value || '…'; } }
+  if (el.dataset.catField) { const { cat } = findByUid(state.catUid); cat[el.dataset.catField] = el.value; const chip = $(`.chip[data-cat="${cat._uid}"]`); if (chip) chip.textContent = catName(cat) || '…'; }
   else if (el.dataset.group) { const { group } = findByUid(el.dataset.group); group[el.dataset.groupField] = el.value; }
   else {
     const card = el.closest('[data-item]'); if (!card) return;
@@ -382,10 +495,10 @@ function onMenuClick(e) {
   const { cat } = findByUid(state.catUid);
   const card = btn.closest('[data-item]');
   if (act === 'add-cat') {
-    const c = { _uid: uid(), id: `c-${stamp()}`, en: 'New category', ar: 'قسم جديد', img: null, items: [] };
-    state.menu.push(c); state.catUid = c._uid; renderMenu(); $('#cat-ar').focus(); $('#cat-ar').select();
+    const c = { _uid: uid(), id: `c-${stamp()}`, en: 'New category', ar: L.ar.newCatAr, img: null, items: [] };
+    state.menu.push(c); state.catUid = c._uid; renderMenu(); const first = $(lang === 'en' ? '#cat-en' : '#cat-ar'); first.focus(); first.select();
   } else if (act === 'del-cat') {
-    if (!confirm(`حذف قسم «${cat.ar}» وكل أطباقه (${itemsOf(cat).length})؟`)) return;
+    if (!confirm(t('confirmDelCat', { c: catName(cat), n: itemsOf(cat).length }))) return;
     state.menu.splice(state.menu.indexOf(cat), 1); state.catUid = state.menu[0] && state.menu[0]._uid; renderMenu();
   } else if (act === 'cat-up' || act === 'cat-down') {
     const i = state.menu.indexOf(cat), j = act === 'cat-up' ? i - 1 : i + 1;
@@ -396,13 +509,13 @@ function onMenuClick(e) {
     list.push({ _uid: uid(), id: `d-${stamp()}`, en: '', ar: '', price: null, den: '', dar: '' });
     renderMenu();
     const cards = document.querySelectorAll('[data-item]'); const last = cards[cards.length - 1];
-    last.scrollIntoView({ block: 'center', behavior: 'smooth' }); last.querySelector('input[name="ar"]').focus();
+    last.scrollIntoView({ block: 'center', behavior: 'smooth' }); last.querySelector(lang === 'en' ? 'input[name="en"]' : 'input[name="ar"]').focus();
   } else if (card) {
     const { item } = findByUid(card.dataset.item);
     const list = cat.groups ? cat.groups.find(g => g.items.includes(item)).items : cat.items;
     const i = list.indexOf(item);
     if (act === 'del-item') {
-      if (!confirm(`حذف «${item.ar || item.en || 'هذا الطبق'}»؟`)) return;
+      if (!confirm(t('confirmDelItem', { d: dishName(item) || t('thisDish') }))) return;
       if (item.img && item.img.startsWith('content/')) forgetPhoto(item.img);
       list.splice(i, 1); renderMenu();
     } else if (act === 'item-up' || act === 'item-down') {
@@ -439,12 +552,12 @@ function initDropZones(root) {
   });
 }
 async function acceptPhoto(zone, file) {
-  if (!/^image\//.test(file.type)) { toast('الملف ليس صورة. اختر صورة JPG أو PNG.', true); return; }
+  if (!/^image\//.test(file.type)) { toast(t('notImage'), true); return; }
   const found = findByUid(zone.dataset.drop);
   const target = zone.dataset.kind === 'cat' ? found.cat : found.item;
   if (!target) return;
   try {
-    zone.innerHTML = '<span>جارٍ تجهيز الصورة…</span>';
+    zone.innerHTML = `<span>${esc(t('preparing'))}</span>`;
     const key = zone.dataset.kind === 'cat' ? `cat-${target.id}` : target.id;
     const base = `content/photos/${state.branch.id}/${key}-${stamp()}`;
     const [full, thumb] = await Promise.all([resizeImage(file, 1200, false), resizeImage(file, 400, true)]);
@@ -456,7 +569,7 @@ async function acceptPhoto(zone, file) {
     renderMenu();
     updateSaveBar();
   } catch (err) {
-    toast('تعذّر قراءة الصورة. جرّب صورة أخرى.', true);
+    toast(t('badImage'), true);
     renderMenu();
   }
 }
@@ -480,18 +593,18 @@ async function save() {
   const list = changes();
   if (!list.length || state.busy) return;
   // Every dish needs at least one name.
-  for (const c of state.menu) for (const it of itemsOf(c)) if (!it.ar.trim() && !it.en.trim()) { toast('يوجد طبق بدون اسم. اكتب اسمه أو احذفه.', true); return; }
+  for (const c of state.menu) for (const it of itemsOf(c)) if (!it.ar.trim() && !it.en.trim()) { toast(t('noName'), true); return; }
   state.busy = true;
   const st = $('#save-status'), btn = $('#save-btn'); btn.disabled = true; $('#discard-btn').hidden = true;
-  const setStatus = (html, cls) => { st.className = 'savebar-status ' + cls; st.innerHTML = html; };
+  const setStatus = (text, cls) => { st.className = 'savebar-status ' + cls; st.textContent = text; };
   try {
-    setStatus('جارٍ الحفظ…', 'is-busy');
+    setStatus(t('saving'), 'is-busy');
     // Someone else may have saved since we loaded: accept if our files are unchanged, otherwise ask to reload.
     const ref = await gh(`/repos/${cfg.repo}/git/ref/heads/${cfg.branch}`);
     if (ref.object.sha !== state.head) {
       for (const p of Object.keys(state.files)) {
         const f = await gh(`/repos/${cfg.repo}/contents/${p}?ref=${ref.object.sha}`);
-        if (f.sha !== state.files[p].sha) throw new Error('تم تعديل هذا الفرع من جهاز آخر. أعد تحميل الصفحة ثم كرّر تعديلاتك.');
+        if (f.sha !== state.files[p].sha) throw Object.assign(new Error(t('conflict')), { key: 'conflict' });
       }
       state.head = ref.object.sha;
       state.treeSha = (await gh(`/repos/${cfg.repo}/git/commits/${state.head}`)).tree.sha;
@@ -505,12 +618,12 @@ async function save() {
     const menuText = JSON.stringify(cleanMenu(state.menu), null, 2) + '\n';
     if (menuText !== state.files[menuPath].text) await put(menuPath, textToB64(menuText));
     let n = 0;
-    for (const [path, blob] of state.pending) { n++; setStatus(`جارٍ رفع الصور… (${n}/${state.pending.size})`, 'is-busy'); await put(path, await blobToB64(blob)); }
+    for (const [path, blob] of state.pending) { n++; setStatus(t('uploading', { i: n, n: state.pending.size }), 'is-busy'); await put(path, await blobToB64(blob)); }
     for (const path of state.removed) if (!state.pending.has(path)) tree.push({ path, mode: '100644', type: 'blob', sha: null });
-    if (!tree.length) throw new Error('لا يوجد ما يُحفظ.');
-    setStatus('جارٍ النشر…', 'is-busy');
+    if (!tree.length) throw Object.assign(new Error(t('nothing')), { key: 'nothing' });
+    setStatus(t('publishing'), 'is-busy');
     const newTree = await gh(`/repos/${cfg.repo}/git/trees`, { method: 'POST', body: { base_tree: state.treeSha, tree } });
-    const message = `تحديث فرع ${state.branch.ar} (${list.length} ${list.length === 1 ? 'تعديل' : 'تعديلات'})\n\n${list.slice(0, 20).map(s => '- ' + s).join('\n')}`;
+    const message = `تحديث فرع ${state.branch.ar} / Update ${state.branch.en} (${list.length})\n\n${list.slice(0, 20).map(s => '- ' + s).join('\n')}`;
     const commit = await gh(`/repos/${cfg.repo}/git/commits`, { method: 'POST', body: { message, tree: newTree.sha, parents: [state.head] } });
     await gh(`/repos/${cfg.repo}/git/refs/heads/${cfg.branch}`, { method: 'PATCH', body: { sha: commit.sha } });
     // Saved. Refresh our baseline so the next save builds on this commit.
@@ -522,16 +635,16 @@ async function save() {
     state.origItems = new Map(state.menu.flatMap(c => itemsOf(c).map(it => [it._uid, serializeItem(it)])));
     state.pending.clear(); state.removed.clear();
     state.busy = false;
-    const siteLink = `${cfg.siteUrl}${state.branch.id}/ar/${state.tab === 'menu' ? 'menu.html' : ''}`;
-    state.status = { cls: 'is-busy', html: 'تم الحفظ ✓ جارٍ تحديث الموقع… (نحو دقيقة)' };
+    const siteLink = `${cfg.siteUrl}${state.branch.id}/${lang === 'en' ? '' : 'ar/'}${state.tab === 'menu' ? 'menu.html' : ''}`;
+    state.status = { cls: 'is-busy', key: 'savedBuilding' };
     updateSaveBar();
-    toast('تم الحفظ. الموقع يتحدث خلال دقيقة تقريباً.');
+    toast(t('savedToast'));
     watchDeploy(commit.sha, siteLink);
   } catch (err) {
     state.busy = false;
-    state.status = { cls: 'is-error', html: esc(err.message || 'تعذّر الحفظ. حاول مرة أخرى.') };
+    state.status = err.key ? { cls: 'is-error', key: err.key } : { cls: 'is-error', key: 'saveFailed' };
     updateSaveBar();
-    toast(err.message || 'تعذّر الحفظ.', true, 6000);
+    toast(err.key ? t(err.key) : t('saveFailed'), true, 6000);
   }
 }
 async function watchDeploy(sha, siteLink) {
@@ -543,21 +656,23 @@ async function watchDeploy(sha, siteLink) {
       const run = runs.workflow_runs && runs.workflow_runs[0];
       if (run && run.status === 'completed') {
         state.status = run.conclusion === 'success'
-          ? { cls: 'is-ok', html: `أصبح مباشراً على الموقع ✓ <a href="${esc(siteLink)}?v=${Date.now()}" target="_blank" rel="noopener">افتح الصفحة</a>` }
-          : { cls: 'is-error', html: 'تم الحفظ لكن النشر تعثّر. أعد المحاولة أو تواصل مع مسؤول الموقع.' };
+          ? { cls: 'is-ok', key: 'live', link: `${siteLink}?v=${Date.now()}` }
+          : { cls: 'is-error', key: 'deployFailed' };
         updateSaveBar();
         return;
       }
     } catch (e) { /* keep polling */ }
   }
-  state.status = { cls: 'is-ok', html: `تم الحفظ ✓ <a href="${esc(siteLink)}" target="_blank" rel="noopener">افتح الصفحة</a>` };
+  state.status = { cls: 'is-ok', key: 'saved', link: siteLink };
   updateSaveBar();
 }
 
 /* ---------- boot ---------- */
+applyLang();
+$('#lang-btn').addEventListener('click', () => setLang(lang === 'ar' ? 'en' : 'ar'));
 $('#save-btn').addEventListener('click', save);
-$('#discard-btn').addEventListener('click', () => { if (confirm('التراجع عن كل التغييرات غير المحفوظة؟')) loadBranch(state.branch.id); });
+$('#discard-btn').addEventListener('click', () => { if (confirm(t('confirmDiscard'))) loadBranch(state.branch.id); });
 state.token = localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY);
 if (state.token) {
-  gh(`/repos/${cfg.repo}`).then(repo => (repo.permissions && repo.permissions.push ? renderPicker() : logout())).catch(err => { if (err.status === 401 || err.status === 404) logout(); else { renderPicker(); toast('تعذّر التحقق من الاتصال. تحقق من الإنترنت.', true); } });
+  gh(`/repos/${cfg.repo}`).then(repo => (repo.permissions && repo.permissions.push ? renderPicker() : logout())).catch(err => { if (err.status === 401 || err.status === 404) logout(); else { renderPicker(); toast(t('netCheck'), true); } });
 } else renderLogin();
