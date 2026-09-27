@@ -319,12 +319,12 @@ async function fetchLock() {
   }
   return null;
 }
-// Can this key write to the site? (Tokens that don't report permissions are accepted; a failed save would still stop them.)
+// Is this a working key for the site's repository? Write access is enforced by GitHub itself
+// on every save; a refused write is reported as "no permission" (see asWriteError).
 async function checkKey() {
-  const repo = await gh(`/repos/${cfg.repo}`);
-  if (repo.permissions && !repo.permissions.push) throw Object.assign(new Error('errNoPush'), { key: 'errNoPush' });
-  return repo;
+  return gh(`/repos/${cfg.repo}`);
 }
+const asWriteError = err => ((err.status === 403 || err.status === 404) && !err.key ? Object.assign(err, { key: 'errNoPush' }) : err);
 function keepToken(token) {
   try { (state.remember ? localStorage : sessionStorage).setItem(TOKEN_KEY, token); } catch (e) { /* storage blocked: stay signed in for this page only */ }
 }
@@ -428,7 +428,7 @@ function renderSetup(error = '') {
       renderSetupDone(password);
     } catch (err) {
       if (!hadToken) state.token = null;
-      renderSetup(err.status === 401 ? 'err401' : err.status === 404 ? 'err404' : err.key || 'saveFailed');
+      renderSetup(err.status === 401 ? 'err401' : err.key || (err.status === 404 ? 'err404' : 'saveFailed'));
     }
   });
 }
@@ -456,7 +456,8 @@ function renderSetupDone(password) {
 async function putFile(path, text, message) {
   let sha;
   try { sha = (await gh(`/repos/${cfg.repo}/contents/${path}?ref=${encodeURIComponent(cfg.branch)}`)).sha; } catch (e) { if (e.status !== 404) throw e; }
-  return gh(`/repos/${cfg.repo}/contents/${path}`, { method: 'PUT', body: { message, content: textToB64(text), branch: cfg.branch, ...(sha ? { sha } : {}) } });
+  try { return await gh(`/repos/${cfg.repo}/contents/${path}`, { method: 'PUT', body: { message, content: textToB64(text), branch: cfg.branch, ...(sha ? { sha } : {}) } }); }
+  catch (e) { throw asWriteError(e); }
 }
 function logout() {
   localStorage.removeItem(TOKEN_KEY); sessionStorage.removeItem(TOKEN_KEY);
@@ -812,6 +813,7 @@ async function save() {
     toast(t('savedToast'));
     watchDeploy(commit.sha, siteLink);
   } catch (err) {
+    asWriteError(err);
     state.busy = false;
     state.status = err.key ? { cls: 'is-error', key: err.key } : { cls: 'is-error', key: 'saveFailed' };
     updateSaveBar();
