@@ -65,6 +65,7 @@ const L = {
     changeTitle: 'تغيير كلمة المرور', changeLead: 'اختر كلمة مرور جديدة. كلمة المرور القديمة تتوقف عن العمل فوراً على كل الأجهزة.',
     setupKey: 'مفتاح GitHub (يبدأ بـ github_pat_)', newPw: 'كلمة المرور الجديدة', suggest: 'اقتراح آخر',
     pwRule: 'ثلاث كلمات على الأقل أو 14 حرفاً. الاقتراح سهل الكتابة وقوي بما يكفي.', pwWeak: 'كلمة المرور قصيرة أو سهلة التخمين. استخدم ثلاث كلمات على الأقل أو 14 حرفاً.',
+    weakOk: 'استخدام كلمة مرور ضعيفة على مسؤوليتي (يمكن تخمينها، والأفضل تغييرها لاحقاً)', pwWeakTick: 'كلمة المرور ضعيفة. للاستمرار بها ضع علامة على «على مسؤوليتي».',
     setupSave: 'حفظ كلمة المرور', setupSaving: 'جارٍ التشفير والحفظ…', setupDone: 'تم تعيين كلمة المرور ✓', setupDoneLead: 'سلّم هذين للمسؤول عن القائمة:',
     linkLabel: 'الرابط', continue: 'متابعة إلى لوحة التحكم', copy: 'نسخ', copied: 'تم النسخ ✓', back: 'رجوع',
   },
@@ -109,6 +110,7 @@ const L = {
     changeTitle: 'Change the password', changeLead: 'Choose a new password. The old one stops working immediately on every device.',
     setupKey: 'GitHub key (starts with github_pat_)', newPw: 'New password', suggest: 'Suggest another',
     pwRule: 'At least three words or 14 characters. The suggestion is easy to type and strong enough.', pwWeak: 'That password is too short or easy to guess. Use at least three words or 14 characters.',
+    weakOk: 'Use a weak password at my own risk (it can be guessed; change it later if you can)', pwWeakTick: 'That password is weak. To keep it anyway, tick “at my own risk”.',
     setupSave: 'Save password', setupSaving: 'Encrypting and saving…', setupDone: 'Password set ✓', setupDoneLead: 'Give these two things to whoever manages the menu:',
     linkLabel: 'Link', continue: 'Continue to the admin', copy: 'Copy', copied: 'Copied ✓', back: 'Back',
   },
@@ -402,6 +404,7 @@ function renderSetup(error = '') {
         <div class="pw-row"><input id="setup-pw" type="text" autocomplete="new-password" dir="ltr" value="${esc(pw)}" required><button class="btn btn-sm" type="button" id="suggest-btn">${esc(t('suggest'))}</button></div>
         <span class="hint">${esc(t('pwRule'))}</span>
       </div>
+      <label class="check" id="weak-row" ${strongEnough(pw) ? 'hidden' : ''}><input type="checkbox" id="weak-ok" ${state.weakOk ? 'checked' : ''}> <span>${esc(t('weakOk'))}</span></label>
       ${error ? `<p class="error" role="alert">${esc(t(error))}</p>` : ''}
       <button class="btn btn-primary btn-lg" type="submit">${esc(t('setupSave'))}</button>
       <button class="linklike" type="button" id="setup-back">${esc(t('back'))}</button>
@@ -409,14 +412,15 @@ function renderSetup(error = '') {
   </section>`;
   const keyInput = $('#setup-key');
   if (keyInput && state.setupKey) keyInput.value = state.setupKey;
-  $('#setup-pw').addEventListener('input', e => { state.setupPw = e.target.value; });
+  $('#setup-pw').addEventListener('input', e => { state.setupPw = e.target.value; $('#weak-row').hidden = strongEnough(e.target.value); });
+  $('#weak-ok').addEventListener('change', e => { state.weakOk = e.target.checked; });
   if (keyInput) keyInput.addEventListener('input', e => { state.setupKey = e.target.value; });
-  $('#suggest-btn').addEventListener('click', () => { state.setupPw = suggestPassword(); $('#setup-pw').value = state.setupPw; });
+  $('#suggest-btn').addEventListener('click', () => { state.setupPw = suggestPassword(); $('#setup-pw').value = state.setupPw; $('#weak-row').hidden = true; });
   $('#setup-back').addEventListener('click', () => { history.replaceState(null, '', location.pathname); state.setupPw = ''; state.setupKey = ''; state.token ? renderPicker() : renderLogin(); });
   $('#setup-form').addEventListener('submit', async e => {
     e.preventDefault();
     const password = $('#setup-pw').value.trim();
-    if (!strongEnough(password)) { renderSetup('pwWeak'); return; }
+    if (!strongEnough(password) && !state.weakOk) { renderSetup('pwWeakTick'); return; }
     const btn = e.target.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = t('setupSaving');
     const hadToken = !!state.token;
     if (!hadToken) state.token = (keyInput.value || '').trim();
