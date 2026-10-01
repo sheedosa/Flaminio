@@ -125,6 +125,14 @@
         "den": "",
         "dar": "",
         "isNew": true
+      },
+      {
+        "id": "spicy-potatoes",
+        "en": "Spicy Potatoes",
+        "ar": "بطاطا حارة",
+        "price": 35,
+        "den": "",
+        "dar": ""
       }
     ]
   },
@@ -228,8 +236,8 @@
         "en": "Seafood Risotto",
         "ar": "ريزوتو فواكه البحر",
         "price": 55,
-        "den": "Creamy rice with mixed seafood, tomato sauce, pesto, and Parmesan cheese.",
-        "dar": "أرز كريمي مع فواكه البحر المشكلة، صوص الطماطم، صوص البيستو، وجبنة بارميزان."
+        "den": "Rice with mixed seafood, tomato sauce, pesto, and Parmesan cheese.",
+        "dar": "أرز مع فواكه البحر المشكلة، صوص الطماطم، صوص البيستو، وجبنة بارميزان."
       },
       {
         "id": "chicken-mushroom-risotto",
@@ -292,7 +300,7 @@
         "id": "italian-style-tomahawk",
         "en": "Italian Style Tomahawk",
         "ar": "توماهوك على الطريقة الإيطالية",
-        "price": 99,
+        "price": 110,
         "den": "Tomahawk steak served with pasta in Italian tomato sauce, mixed vegetables, and mashed potatoes.",
         "dar": "ستيك التوماهوك يقدم مع باستا بصلصة الطماطم الإيطالية، خضار مشكلة، وبطاطا مهروسة."
       },
@@ -325,8 +333,8 @@
         "en": "Grilled Chicken with Rice",
         "ar": "دجاج مشوي مع الأرز",
         "price": 47,
-        "den": "Grilled chicken breast marinated in Flaminio’s special seasoning, served with mixed vegetables and white rice.",
-        "dar": "صدر دجاج مشوي بتتبيلة فلامينيو الخاصة، يقدم مع خضار مشكلة وأرز أبيض."
+        "den": "Grilled chicken breast marinated in Flaminio’s special seasoning, served with mixed vegetables and basmati rice.",
+        "dar": "صدر دجاج مشوي بتتبيلة فلامينيو الخاصة، يقدم مع خضار مشكلة وأرز بسمتي."
       },
       {
         "id": "chicken-with-mushroom-sauce",
@@ -497,6 +505,505 @@
         "price": null,
         "den": "",
         "dar": ""
+      }
+    ]
+  },
+  {
+    "id": "desserts",
+    "en": "Desserts",
+    "ar": "الحلويات",
+    "img": null,
+    "items": [
+      {
+        "id": "vanilla-cr-me-br-l-e",
+        "en": "Vanilla Crème Brûlée",
+        "ar": "كريم برولي فانيلا",
+        "price": 15,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "large-cr-me-br-l-e",
+        "en": "Large Crème Brûlée",
+        "ar": "كريم برولي كبير",
+        "price": 20,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "small-cr-me-br-l-e",
+        "en": "Small Crème Brûlée",
+        "ar": "كريم برولي صغير",
+        "price": 15,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "lemon-tiramisu",
+        "en": "Lemon Tiramisu",
+        "ar": "تيراميسو ليمون",
+        "price": 25,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "small-tiramisu",
+        "en": "Small Tiramisu",
+        "ar": "تيراميسو كلاسيك صغير",
+        "price": 20,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "large-tiramisu",
+        "en": "Large Tiramisu",
+        "ar": "تيراميسو كبير",
+        "price": 25,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "cake",
+        "en": "Cake",
+        "ar": "كيكة",
+        "price": 20,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "san-sebastian-cake",
+        "en": "San Sebastian Cake",
+        "ar": "كيكة سان سيباستيان",
+        "price": 25,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "nutella-nut-pancakes",
+        "en": "Nutella Nut Pancakes",
+        "ar": "بان كيك نوتيلا",
+        "price": 20,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "lotus-pancakes",
+        "en": "Lotus Pancakes",
+        "ar": "بان كيك لوتس",
+        "price": 20,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "mix-pancakes",
+        "en": "Mix Pancakes",
+        "ar": "بان كيك ميكس",
+        "price": 25,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "nutella-banana-crepe",
+        "en": "Nutella Banana Crepe",
+        "ar": "كريب نوتيلا",
+        "price": 20,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "lotus-crepe",
+        "en": "Lotus Crepe",
+        "ar": "كريب لوتس",
+        "price": 20,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "mix-crepe",
+        "en": "Mix Crepe",
+        "ar": "كريب ميكس",
+        "price": 25,
+        "den": "",
+        "dar": ""
+      }
+    ]
+  },
+  {
+    "id": "hot-coffee",
+    "en": "Hot Coffee",
+    "ar": "مشروبات ساخنة",
+    "img": null,
+    "drinks": true,
+    "items": [
+      {
+        "id": "espresso",
+        "en": "Espresso",
+        "ar": "اسبريسو",
+        "price": 4,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "double-espresso",
+        "en": "Double Espresso",
+        "ar": "دبل اسبريسو",
+        "price": 5,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "macchiato",
+        "en": "Macchiato",
+        "ar": "مكياتو",
+        "price": 4,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "double-macchiato",
+        "en": "Double Macchiato",
+        "ar": "دبل مكياتو",
+        "price": 4,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "special",
+        "en": "Special",
+        "ar": "اسبسيال",
+        "price": 6,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "cappuccino",
+        "en": "Cappuccino",
+        "ar": "كابتشينو",
+        "price": 8,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "cappuccino-2",
+        "en": "Cappuccino",
+        "ar": "كابتشينو",
+        "price": 3,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "nescafe",
+        "en": "Nescafe",
+        "ar": "نسكافيه",
+        "price": 5,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "nescafe-2",
+        "en": "Nescafe",
+        "ar": "نسكافيه",
+        "price": 3,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "mocha",
+        "en": "Mocha",
+        "ar": "موكا",
+        "price": 12,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "latte",
+        "en": "Latte",
+        "ar": "لاتيه",
+        "price": 8,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "arabic-coffee",
+        "en": "Arabic Coffee",
+        "ar": "قهوة عربية",
+        "price": 6,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "tea-red-green",
+        "en": "Tea (Red/Green)",
+        "ar": "شاي (أحمر / أخضر)",
+        "price": 2,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "tunisian-tea-red-green",
+        "en": "Tunisian Tea (Red/Green)",
+        "ar": "شاي تونسي (أحمر / أخضر)",
+        "price": 3,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "turkish-coffee",
+        "en": "Turkish Coffee",
+        "ar": "قهوة تركية",
+        "price": 6,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "hot-chocolate",
+        "en": "Hot Chocolate",
+        "ar": "هوت شوكلت",
+        "price": 15,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "american-coffee",
+        "en": "American Coffee",
+        "ar": "أميريكان كافي",
+        "price": 4,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "nesquik",
+        "en": "Nesquik",
+        "ar": "نسكويك",
+        "price": 5,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "ovaltine",
+        "en": "Ovaltine",
+        "ar": "أوفلتين",
+        "price": 5,
+        "den": "",
+        "dar": ""
+      }
+    ]
+  },
+  {
+    "id": "cold-drinks",
+    "en": "Cold Coffee & Drinks",
+    "ar": "قهوة ومشروبات باردة",
+    "img": null,
+    "drinks": true,
+    "groups": [
+      {
+        "en": "Cold Coffee",
+        "ar": "قهوة باردة",
+        "items": [
+          {
+            "id": "flavored-latte",
+            "en": "Flavored Latte",
+            "ar": "لاتيه نكهات",
+            "price": 12,
+            "den": "Mocha - Caramel - Hazelnut - Vanilla",
+            "dar": "موكا، كراميل، بندق، فانيليا."
+          },
+          {
+            "id": "iced-macchiato",
+            "en": "Iced Macchiato",
+            "ar": "ايس مكياطة",
+            "price": 10,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "iced-caf",
+            "en": "Iced Café",
+            "ar": "ايس كافي",
+            "price": 10,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "frappuccino",
+            "en": "Frappuccino",
+            "ar": "فرابتشينو",
+            "price": 15,
+            "den": "Mocha - Caramel - Hazelnut - Vanilla",
+            "dar": "موكا، كراميل، بندق، فانيليا."
+          }
+        ]
+      },
+      {
+        "en": "Cold Drinks",
+        "ar": "مشروبات باردة",
+        "items": [
+          {
+            "id": "milkshakes",
+            "en": "Milkshakes",
+            "ar": "ميلك شيك",
+            "price": 12,
+            "den": "Nutella - Lotus - Kinder - Milka - Strawberry - Mango - Vanilla - Raspberry - Blueberry",
+            "dar": "نوتيلا، لوتس، كيندر، ميلكا، فراولة، منجا، فانيليا، توت أحمر، توت أزرق."
+          },
+          {
+            "id": "mojito",
+            "en": "Mojito",
+            "ar": "موهيتو",
+            "price": 10,
+            "den": "Classic - Pineapple - Strawberry - Kiwi",
+            "dar": "كلاسيك، أناناس، فراولة، كيوي."
+          },
+          {
+            "id": "smoothies",
+            "en": "Smoothies",
+            "ar": "سموثي",
+            "price": 10,
+            "den": "Depending on available flavors",
+            "dar": "حسب النكهات المتوفرة."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "soft-drinks",
+    "en": "Soft Drinks & Juices",
+    "ar": "مشروبات غازية وعصائر",
+    "img": null,
+    "drinks": true,
+    "groups": [
+      {
+        "en": "Soft Drinks",
+        "ar": "المشروبات الغازية",
+        "items": [
+          {
+            "id": "sparkling-water",
+            "en": "Sparkling Water",
+            "ar": "مياه غازية",
+            "price": 8,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "soft-drink",
+            "en": "Soft Drink",
+            "ar": "مشروب غازي",
+            "price": 5,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "mineral-water-1-l",
+            "en": "Mineral Water 1 L",
+            "ar": "مياه معدنية 1 ل",
+            "price": 5,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "mineral-water",
+            "en": "Mineral Water",
+            "ar": "مياه معدنية",
+            "price": 1,
+            "den": "",
+            "dar": ""
+          }
+        ]
+      },
+      {
+        "en": "Natural Juices",
+        "ar": "عصائر طبيعية",
+        "items": [
+          {
+            "id": "orange",
+            "en": "Orange",
+            "ar": "برتقال",
+            "price": 10,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "strawberry",
+            "en": "Strawberry",
+            "ar": "فراولة",
+            "price": 12,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "mango",
+            "en": "Mango",
+            "ar": "مانجو",
+            "price": 10,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "lemon-with-mint",
+            "en": "Lemon with Mint",
+            "ar": "ليمون بالنعناع",
+            "price": 10,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "guava",
+            "en": "Guava",
+            "ar": "جوافة",
+            "price": 10,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "kiwi",
+            "en": "Kiwi",
+            "ar": "كيوي",
+            "price": 17,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "yogurt",
+            "en": "Yogurt",
+            "ar": "زبادو",
+            "price": 16,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "dates-and-almonds",
+            "en": "Dates and Almonds",
+            "ar": "تمر ولوز",
+            "price": 13,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "avocado",
+            "en": "Avocado",
+            "ar": "أفوكادو",
+            "price": 17,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "cocktail",
+            "en": "Cocktail",
+            "ar": "كوكتيل",
+            "price": 15,
+            "den": "",
+            "dar": ""
+          },
+          {
+            "id": "banana-milk",
+            "en": "Banana Milk",
+            "ar": "حليب بالموز",
+            "price": 9,
+            "den": "",
+            "dar": ""
+          }
+        ]
       }
     ]
   }
