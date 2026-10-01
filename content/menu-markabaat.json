@@ -322,8 +322,8 @@
         "en": "Seafood Risotto",
         "ar": "ريزوتو فواكه البحر",
         "price": 52,
-        "den": "Creamy rice with mixed seafood, tomato sauce, pesto, and Parmesan cheese.",
-        "dar": "أرز كريمي مع فواكه البحر المشكلة، صوص الطماطم، صوص البيستو، وجبنة بارميزان."
+        "den": "Rice with mixed seafood, tomato sauce, pesto, and Parmesan cheese.",
+        "dar": "أرز مع فواكه البحر المشكلة، صوص الطماطم، صوص البيستو، وجبنة بارميزان."
       },
       {
         "id": "chicken-mushroom-risotto",
@@ -490,8 +490,8 @@
         "en": "Grilled Chicken with Rice",
         "ar": "دجاج مشوي مع الأرز",
         "price": 45,
-        "den": "Grilled chicken breast marinated in Flaminio’s special seasoning, served with mixed vegetables and white rice.",
-        "dar": "صدر دجاج مشوي بتتبيلة فلامينيو الخاصة، يقدم مع خضار مشكلة وأرز أبيض."
+        "den": "Grilled chicken breast marinated in Flaminio’s special seasoning, served with mixed vegetables and basmati rice.",
+        "dar": "صدر دجاج مشوي بتتبيلة فلامينيو الخاصة، يقدم مع خضار مشكلة وأرز بسمتي."
       },
       {
         "id": "chicken-diet",
