@@ -29,6 +29,7 @@ try {
   let { ctx, page } = await open(390);
   await page.goto(HOST + 'admin/#setup', { waitUntil: 'networkidle' });
   await page.waitForSelector('#setup-key');
+  await page.click('#suggest-btn');
   const password = await page.inputValue('#setup-pw');
   await page.fill('#setup-key', TOKEN);
   await page.click('#setup-form button[type=submit]');

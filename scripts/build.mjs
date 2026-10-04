@@ -340,6 +340,8 @@ fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
 for (const item of STATIC) copy(path.join(ROOT, item), path.join(OUT, item));
 if (fs.existsSync(path.join(ROOT, 'content/photos'))) copy(path.join(ROOT, 'content/photos'), path.join(OUT, 'content/photos'));
+// The admin's password lock is public data (encrypted key); publish it so the admin can read it from the site itself too.
+if (fs.existsSync(path.join(ROOT, 'content/admin-lock.json'))) { fs.mkdirSync(path.join(OUT, 'content'), { recursive: true }); fs.copyFileSync(path.join(ROOT, 'content/admin-lock.json'), path.join(OUT, 'content/admin-lock.json')); }
 const tpl = name => fs.readFileSync(path.join(ROOT, `src/${name}.html`), 'utf8');
 for (const branch of branches) {
   for (const lang of Object.keys(LANGS)) {

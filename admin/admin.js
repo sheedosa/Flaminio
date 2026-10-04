@@ -52,7 +52,7 @@ const L = {
     confirmDelCat: 'حذف قسم «{c}» وكل أطباقه ({n})؟', confirmDelItem: 'حذف «{d}»؟', thisDish: 'هذا الطبق',
     chInfo: 'معلومات الفرع', chCats: 'الأقسام', chAdd: 'إضافة «{d}»', chEdit: 'تعديل «{d}»', chDel: 'حذف طبق',
     none: 'لا توجد تغييرات', unsaved1: 'تغيير واحد غير محفوظ', unsaved2: 'تغييران غير محفوظين', unsavedN: '{n} تغييرات غير محفوظة',
-    discard: 'تراجع عن التغييرات', save: 'حفظ ونشر', confirmDiscard: 'التراجع عن كل التغييرات غير المحفوظة؟',
+    discard: 'تراجع', save: 'حفظ ونشر', confirmDiscard: 'التراجع عن كل التغييرات غير المحفوظة؟',
     noName: 'يوجد طبق بدون اسم. اكتب اسمه أو احذفه.', saving: 'جارٍ الحفظ…', uploading: 'جارٍ رفع الصور… ({i}/{n})', publishing: 'جارٍ النشر…',
     conflict: 'تم تعديل هذا الفرع من جهاز آخر. أعد تحميل الصفحة ثم كرّر تعديلاتك.', nothing: 'لا يوجد ما يُحفظ.',
     savedBuilding: 'تم الحفظ ✓ جارٍ تحديث الموقع… (نحو دقيقة)', savedToast: 'تم الحفظ. الموقع يتحدث خلال دقيقة تقريباً.',
@@ -60,6 +60,8 @@ const L = {
     saved: 'تم الحفظ ✓', saveFailed: 'تعذّر الحفظ. حاول مرة أخرى.', netCheck: 'تعذّر التحقق من الاتصال. تحقق من الإنترنت.',
     pwLabel: 'كلمة المرور', pwLogin: 'دخول', pwWrong: 'كلمة المرور غير صحيحة.', pwUnlocking: 'جارٍ فتح القفل…',
     useKey: 'الدخول بمفتاح GitHub بدلاً من ذلك', usePw: 'الدخول بكلمة المرور', noLock: 'لم تُعيَّن كلمة مرور بعد. ادخل بمفتاح GitHub ثم اضغط «كلمة المرور» لتعيينها.',
+    firstTitle: 'الإعداد لأول مرة', firstLead: 'لم تُعيَّن كلمة مرور للوحة بعد. مرة واحدة فقط: يلصق المالك مفتاح GitHub (موجود في دليل المالك) ويختار كلمة المرور. بعد ذلك يكفي الرابط وكلمة المرور للدخول من أي هاتف.',
+    firstBtn: 'ابدأ الإعداد', keyOnly: 'الدخول بمفتاح GitHub فقط (بدون كلمة مرور)', pwPlaceholder: 'مثال: Admin123 أو كلمة أقوى',
     keyStale: 'كلمة المرور صحيحة لكن مفتاح GitHub المرتبط بها لم يعد يعمل (انتهى أو حُذف). يجب إعداد كلمة المرور من جديد بمفتاح جديد.',
     pwMenu: 'كلمة المرور', setupTitle: 'إعداد كلمة المرور', setupLead: 'مرة واحدة: الصق مفتاح GitHub واختر كلمة مرور. بعدها يكفي الرابط وكلمة المرور للدخول من أي جهاز.',
     changeTitle: 'تغيير كلمة المرور', changeLead: 'اختر كلمة مرور جديدة. كلمة المرور القديمة تتوقف عن العمل فوراً على كل الأجهزة.',
@@ -97,7 +99,7 @@ const L = {
     confirmDelCat: 'Delete the “{c}” category and all its dishes ({n})?', confirmDelItem: 'Delete “{d}”?', thisDish: 'this dish',
     chInfo: 'branch details', chCats: 'categories', chAdd: 'added “{d}”', chEdit: 'edited “{d}”', chDel: 'deleted a dish',
     none: 'No changes', unsaved1: '1 unsaved change', unsaved2: '2 unsaved changes', unsavedN: '{n} unsaved changes',
-    discard: 'Undo changes', save: 'Save & publish', confirmDiscard: 'Undo all unsaved changes?',
+    discard: 'Undo', save: 'Save & publish', confirmDiscard: 'Undo all unsaved changes?',
     noName: 'A dish has no name. Add a name or delete it.', saving: 'Saving…', uploading: 'Uploading photos… ({i}/{n})', publishing: 'Publishing…',
     conflict: 'This branch was changed from another device. Reload the page, then make your changes again.', nothing: 'Nothing to save.',
     savedBuilding: 'Saved ✓ Updating the website… (about a minute)', savedToast: 'Saved. The website updates in about a minute.',
@@ -105,6 +107,8 @@ const L = {
     saved: 'Saved ✓', saveFailed: 'Couldn’t save. Please try again.', netCheck: 'Couldn’t check the connection. Check your internet.',
     pwLabel: 'Password', pwLogin: 'Sign in', pwWrong: 'Wrong password.', pwUnlocking: 'Unlocking…',
     useKey: 'Sign in with a GitHub key instead', usePw: 'Sign in with the password', noLock: 'No password has been set yet. Sign in with the GitHub key, then tap “Password” to set one.',
+    firstTitle: 'First-time setup', firstLead: 'No password has been set for the admin yet. One time only: the owner pastes the GitHub key (it is in the owner guide) and chooses the password. After that, the link and the password are all anyone needs, on any phone.',
+    firstBtn: 'Start setup', keyOnly: 'Sign in with the GitHub key only (no password)', pwPlaceholder: 'e.g. Admin123 or something stronger',
     keyStale: 'The password is right, but the GitHub key behind it no longer works (expired or deleted). Set the password up again with a new key.',
     pwMenu: 'Password', setupTitle: 'Set up the password', setupLead: 'One time only: paste the GitHub key and choose a password. After that, the link and the password are all anyone needs.',
     changeTitle: 'Change the password', changeLead: 'Choose a new password. The old one stops working immediately on every device.',
@@ -241,8 +245,9 @@ function changes() {
 }
 function updateSaveBar() {
   const bar = $('#savebar'), st = $('#save-status'), btn = $('#save-btn'), discard = $('#discard-btn');
-  if (!state.branch || !state.menu) { bar.hidden = true; return; }
+  if (!state.branch || !state.menu) { bar.hidden = true; requestAnimationFrame(fitBars); return; }
   bar.hidden = false;
+  requestAnimationFrame(fitBars);
   if (state.busy) return;
   const n = changes().length;
   st.className = 'savebar-status';
@@ -260,13 +265,12 @@ function renderTop() {
   $('#top-branch').textContent = state.branch ? t('branchOf', { b: bname(state.branch) }) : '';
   if (state.screen === 'login' || state.screen === 'setup' || state.screen === 'setup-done') { $('#top-actions').innerHTML = ''; return; }
   if (state.screen === 'picker') {
-    $('#top-actions').innerHTML = `<button class="btn btn-ghost" id="pw-btn" type="button">${esc(t('pwMenu'))}</button><button class="btn btn-ghost" id="logout-btn" type="button">${esc(t('logout'))}</button>`;
+    $('#top-actions').innerHTML = `<button class="btn btn-ghost btn-sm" id="pw-btn" type="button">${esc(t('pwMenu'))}</button><button class="btn btn-ghost btn-sm" id="logout-btn" type="button">${esc(t('logoutShort'))}</button>`;
     $('#pw-btn').addEventListener('click', () => renderSetup());
     $('#logout-btn').addEventListener('click', logout);
     return;
   }
-  $('#top-actions').innerHTML = `<button class="btn btn-ghost" id="switch-btn" type="button">${esc(t('switchBranch'))}</button><button class="btn btn-ghost" id="logout-btn" type="button">${esc(t('logoutShort'))}</button>`;
-  $('#switch-btn').addEventListener('click', () => { if (!changes().length || confirm(t('confirmSwitch'))) renderPicker(); });
+  $('#top-actions').innerHTML = `<button class="btn btn-ghost btn-sm" id="logout-btn" type="button">${esc(t('logoutShort'))}</button>`;
   $('#logout-btn').addEventListener('click', () => { if (!changes().length || confirm(t('confirmLogout'))) logout(); });
 }
 window.addEventListener('beforeunload', e => { if (state.menu && changes().length && !state.busy) { e.preventDefault(); e.returnValue = ''; } });
@@ -338,6 +342,23 @@ function renderLogin(error = '') {
   renderTop();
   $('#savebar').hidden = true;
   const usePw = state.lock && state.loginMode !== 'key';
+  // No password yet (the lock file is missing): explain the one-time setup instead of showing a key form.
+  if (!state.lock && state.loginMode !== 'key') {
+    $('#app').innerHTML = `
+    <section class="login">
+      <img class="logo" src="../img/logo-burgundy.png" alt="">
+      <h1>${esc(t('firstTitle'))}</h1>
+      <div class="card" style="margin-top:18px">
+        <p>${esc(t('firstLead'))}</p>
+        ${error ? `<p class="error" role="alert">${esc(t(error))}</p>` : ''}
+        <button class="btn btn-primary btn-lg" type="button" id="first-btn">${esc(t('firstBtn'))}</button>
+        <button class="linklike" type="button" id="mode-btn">${esc(t('keyOnly'))}</button>
+      </div>
+    </section>`;
+    $('#first-btn').addEventListener('click', () => { history.replaceState(null, '', location.pathname + '#setup'); renderSetup(); });
+    $('#mode-btn').addEventListener('click', () => { state.loginMode = 'key'; renderLogin(); });
+    return;
+  }
   $('#app').innerHTML = `
   <section class="login">
     <img class="logo" src="../img/logo-burgundy.png" alt="">
@@ -358,11 +379,13 @@ function renderLogin(error = '') {
       <label class="check"><input type="checkbox" id="remember" checked> <span>${esc(t('remember'))}</span></label>
       ${error ? `<p class="error" role="alert">${esc(t(error))}</p>` : ''}
       <button class="btn btn-primary btn-lg" type="submit">${esc(usePw ? t('pwLogin') : t('login'))}</button>
-      ${state.lock ? `<button class="linklike" type="button" id="mode-btn">${esc(usePw ? t('useKey') : t('usePw'))}</button>` : ''}
+      <button class="linklike" type="button" id="mode-btn">${esc(usePw ? t('useKey') : state.lock ? t('usePw') : t('back'))}</button>
     </form>
   </section>`;
   const modeBtn = $('#mode-btn');
   if (modeBtn) modeBtn.addEventListener('click', () => { state.loginMode = usePw ? 'key' : 'pw'; renderLogin(); });
+  // The key form is the fallback for both modes: never leave the only sign-in path hidden.
+  if (!state.lock) state.loginMode = 'key';
   $('#login-form').addEventListener('submit', async e => {
     e.preventDefault();
     state.remember = $('#remember').checked;
@@ -392,7 +415,7 @@ function renderSetup(error = '') {
   renderTop();
   $('#savebar').hidden = true;
   const needKey = !state.token;
-  const pw = state.setupPw || (state.setupPw = suggestPassword());
+  const pw = state.setupPw || '';
   $('#app').innerHTML = `
   <section class="login">
     <h1>${esc(needKey ? t('setupTitle') : t('changeTitle'))}</h1>
@@ -401,10 +424,10 @@ function renderSetup(error = '') {
       ${needKey ? `<div class="field"><label for="setup-key">${esc(t('setupKey'))}</label><input id="setup-key" type="password" autocomplete="off" dir="ltr" placeholder="github_pat_…" required></div>` : ''}
       <div class="field">
         <label for="setup-pw">${esc(t('newPw'))}</label>
-        <div class="pw-row"><input id="setup-pw" type="text" autocomplete="new-password" dir="ltr" value="${esc(pw)}" required><button class="btn btn-sm" type="button" id="suggest-btn">${esc(t('suggest'))}</button></div>
+        <div class="pw-row"><input id="setup-pw" type="text" autocomplete="new-password" autocapitalize="off" spellcheck="false" dir="ltr" value="${esc(pw)}" placeholder="${esc(t('pwPlaceholder'))}" required><button class="btn btn-sm" type="button" id="suggest-btn">${esc(t('suggest'))}</button></div>
         <span class="hint">${esc(t('pwRule'))}</span>
       </div>
-      <label class="check" id="weak-row" ${strongEnough(pw) ? 'hidden' : ''}><input type="checkbox" id="weak-ok" ${state.weakOk ? 'checked' : ''}> <span>${esc(t('weakOk'))}</span></label>
+      <label class="check" id="weak-row" ${!pw || strongEnough(pw) ? 'hidden' : ''}><input type="checkbox" id="weak-ok" ${state.weakOk ? 'checked' : ''}> <span>${esc(t('weakOk'))}</span></label>
       ${error ? `<p class="error" role="alert">${esc(t(error))}</p>` : ''}
       <button class="btn btn-primary btn-lg" type="submit">${esc(t('setupSave'))}</button>
       <button class="linklike" type="button" id="setup-back">${esc(t('back'))}</button>
@@ -412,7 +435,7 @@ function renderSetup(error = '') {
   </section>`;
   const keyInput = $('#setup-key');
   if (keyInput && state.setupKey) keyInput.value = state.setupKey;
-  $('#setup-pw').addEventListener('input', e => { state.setupPw = e.target.value; $('#weak-row').hidden = strongEnough(e.target.value); });
+  $('#setup-pw').addEventListener('input', e => { state.setupPw = e.target.value; $('#weak-row').hidden = !e.target.value || strongEnough(e.target.value); });
   $('#weak-ok').addEventListener('change', e => { state.weakOk = e.target.checked; });
   if (keyInput) keyInput.addEventListener('input', e => { state.setupKey = e.target.value; });
   $('#suggest-btn').addEventListener('click', () => { state.setupPw = suggestPassword(); $('#setup-pw').value = state.setupPw; $('#weak-row').hidden = true; });
@@ -525,12 +548,14 @@ async function loadBranch(id) {
 /* ---------- editor ---------- */
 function renderEditor() {
   $('#app').innerHTML = `
+  <div class="editor-bar"><button class="linklike" type="button" id="switch-btn">‹ ${esc(t('switchBranch'))}</button><span class="editor-branch">${esc(t('branchOf', { b: bname(state.branch) }))}</span></div>
   <div class="tabs" role="tablist">
     <button class="tab${state.tab === 'info' ? ' is-active' : ''}" type="button" data-tab="info" role="tab">${esc(t('tabInfo'))}</button>
     <button class="tab${state.tab === 'menu' ? ' is-active' : ''}" type="button" data-tab="menu" role="tab">${esc(t('tabMenu'))}</button>
   </div>
   <div id="panel"></div>`;
   document.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => { state.tab = b.dataset.tab; renderEditor(); }));
+  $('#switch-btn').addEventListener('click', () => { if (!changes().length || confirm(t('confirmSwitch'))) renderPicker(); });
   // One set of listeners per panel element; redrawing the panel's contents never adds more.
   const panel = $('#panel');
   panel.addEventListener('input', e => (state.tab === 'info' ? onInfoInput(e) : onMenuInput(e)));
@@ -617,11 +642,13 @@ function renderMenu() {
   ` : `<p class="empty">${esc(t('noCats'))}</p>`}`;
 
   initDropZones($('#panel'));
+  const active = $('.chip.is-active');
+  if (active && active.scrollIntoView) active.scrollIntoView({ block: 'nearest', inline: 'center' });
 }
 
 function itemCard(it, i, n) {
   const arName = `<input name="ar" dir="rtl" value="${esc(it.ar)}" placeholder="${esc(t('dishAr'))}" aria-label="${esc(t('dishAr'))}">`;
-  const enName = `<input name="en" dir="ltr" value="${esc(it.en)}" placeholder="${esc(t('dishEn'))}" aria-label="${esc(t('dishEn'))}">`;
+  const enName = `<input name="en" dir="ltr" autocapitalize="words" value="${esc(it.en)}" placeholder="${esc(t('dishEn'))}" aria-label="${esc(t('dishEn'))}">`;
   const arDesc = `<textarea name="dar" dir="rtl" placeholder="${esc(t('descAr'))}">${esc(it.dar)}</textarea>`;
   const enDesc = `<textarea name="den" dir="ltr" placeholder="${esc(t('descEn'))}">${esc(it.den)}</textarea>`;
   return `<div class="item${it.hidden ? ' is-hidden' : ''}" data-item="${it._uid}">
@@ -629,7 +656,7 @@ function itemCard(it, i, n) {
     <div class="item-main">
       <div class="item-fields">
         ${pair(arName, enName)}
-        <input name="price" inputmode="decimal" value="${it.price == null ? '' : it.price}" placeholder="${esc(t('price'))}" aria-label="${esc(t('priceLabel'))}">
+        <input name="price" inputmode="decimal" enterkeyhint="done" value="${it.price == null ? '' : it.price}" placeholder="${esc(t('price'))}" aria-label="${esc(t('priceLabel'))}">
       </div>
       <div class="item-row">
         <label class="switch"><input type="checkbox" name="isNew" ${it.isNew ? 'checked' : ''}> <span>${esc(t('isNew'))}</span></label>
@@ -830,7 +857,9 @@ async function watchDeploy(sha, siteLink) {
     await new Promise(r => setTimeout(r, i < 3 ? 6000 : 9000));
     if (state.head !== sha) return; // a newer save is being watched
     try {
-      const runs = await gh(`/repos/${cfg.repo}/actions/runs?head_sha=${sha}&per_page=1`);
+      let runs;
+      try { runs = await gh(`/repos/${cfg.repo}/actions/runs?head_sha=${sha}&per_page=1`); }
+      catch (e) { if (i === 0 && (e.status === 403 || e.status === 404)) break; throw e; } // key has no Actions access: skip the wait
       const run = runs.workflow_runs && runs.workflow_runs[0];
       if (run && run.status === 'completed') {
         state.status = run.conclusion === 'success'
@@ -847,6 +876,14 @@ async function watchDeploy(sha, siteLink) {
 
 /* ---------- boot ---------- */
 applyLang();
+// The header and save bar are fixed: tell the page how tall they are so nothing hides behind them.
+const fitBars = () => {
+  const r = document.documentElement.style;
+  r.setProperty('--top-h', `${Math.round($('.top').getBoundingClientRect().height)}px`);
+  r.setProperty('--bar-h', `${$('#savebar').hidden ? 0 : Math.round($('#savebar').getBoundingClientRect().height)}px`);
+};
+if (window.ResizeObserver) { const ro = new ResizeObserver(fitBars); ro.observe($('.top')); ro.observe($('#savebar')); }
+window.addEventListener('resize', fitBars); fitBars();
 $('#lang-btn').addEventListener('click', () => setLang(lang === 'ar' ? 'en' : 'ar'));
 $('#save-btn').addEventListener('click', save);
 $('#discard-btn').addEventListener('click', () => { if (confirm(t('confirmDiscard'))) loadBranch(state.branch.id); });
