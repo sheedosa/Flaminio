@@ -65,9 +65,12 @@ assets/              downloadable menu PDF
 `/admin/` is a static page that talks to the GitHub API from the browser. Day to day it opens
 with a **password**. Behind it is a fine-grained personal access token limited to this
 repository (**Contents: read and write**, **Actions: read**), stored only in encrypted form in
-`content/admin-lock.json` (PBKDF2-SHA256 with 1,000,000 rounds → AES-256-GCM). To set or
-reset the password, open `/admin/#setup`, paste the token and choose a password (three words
-or 14+ characters are required). Deleting the token on GitHub locks everyone out at once.
+`content/admin-lock.json` (PBKDF2-SHA256 with 1,000,000 rounds → AES-256-GCM). While that file
+does not exist, `/admin/` shows a "first-time setup" screen (the notice "no password has been
+set yet" means exactly that, not an error); it leads to `/admin/#setup`, where the owner pastes
+the token and chooses a password. Three words or 14+ characters are recommended; a shorter
+password is accepted only with the "at my own risk" box ticked. The same `#setup` page resets
+the password later. Deleting the token on GitHub locks everyone out at once.
 `site.config.json` holds the repository and branch it writes to. The page is excluded from
 the sitemap and blocked in robots.txt.
 
