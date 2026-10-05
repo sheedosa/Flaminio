@@ -65,6 +65,11 @@ const L = {
     firstTitle: 'الإعداد لأول مرة', firstLead: 'لم تُعيَّن كلمة مرور للوحة بعد. مرة واحدة فقط: يلصق المالك مفتاح GitHub (موجود في دليل المالك) ويختار كلمة المرور. بعد ذلك يكفي الرابط وكلمة المرور للدخول من أي هاتف.',
     firstBtn: 'ابدأ الإعداد', keyOnly: 'الدخول بمفتاح GitHub فقط (بدون كلمة مرور)', pwPlaceholder: 'مثال: Admin123 أو كلمة أقوى',
     keyStale: 'كلمة المرور صحيحة، لكن مفتاح GitHub المرتبط بها انتهى أو حُذف. الصق مفتاحاً جديداً هنا، وتبقى كلمة المرور كما هي للجميع.',
+    diagOwner: 'هذا المفتاح من حساب GitHub آخر ({u}). الموقع في حساب {o}، لذلك يجب إنشاء المفتاح وأنت داخل بحساب {o}.',
+    diagRepo: 'المفتاح لا يصل إلى مستودع Flaminio. عند إنشاء المفتاح، في «Repository access» اختر «Only select repositories» ثم Flaminio. الخيار الافتراضي «Public repositories» يسمح بالقراءة فقط.',
+    diagContents: 'المفتاح لا يستطيع الحفظ. في «Repository permissions» اجعل Contents = Read and write، وتأكد أن «Repository access» = «Only select repositories» مع اختيار Flaminio. ثم اضغط Update أو أنشئ مفتاحاً جديداً.',
+    diagBlocked: 'رفض GitHub الحفظ: {m}',
+    keyHow: 'إنشاء المفتاح: افتح الرابط وأنت داخل بحساب {o}. في «Repository access» اختر «Only select repositories» ثم Flaminio، وتأكد أن Contents = Read and write، ثم اضغط Generate token وانسخه.', keyLink: 'افتح صفحة إنشاء المفتاح',
     newKey: 'مفتاح GitHub الجديد', rekey: 'حفظ المفتاح الجديد', rekeying: 'جارٍ الحفظ…', keyUpdated: 'تم تحديث المفتاح ✓ كلمة المرور لم تتغير.',
     quickTitle: 'عيّن كلمة مرور اللوحة (مرة واحدة)', quickLead: 'بعدها يدخل أي شخص تعطيه الرابط وكلمة المرور، دون مفتاح GitHub. لن يُطلب هذا مرة أخرى.', quickSave: 'حفظ كلمة المرور', quickDone: 'تم تعيين كلمة المرور ✓ أعطِ الرابط وكلمة المرور لمن سيعدّل القائمة.',
     homeHint: 'لتبقى مسجّلاً على الآيفون: اضغط زر المشاركة ثم «إضافة إلى الشاشة الرئيسية»، وافتح اللوحة من أيقونتها.', ok: 'حسناً',
@@ -116,6 +121,11 @@ const L = {
     firstTitle: 'First-time setup', firstLead: 'No password has been set for the admin yet. One time only: the owner pastes the GitHub key (it is in the owner guide) and chooses the password. After that, the link and the password are all anyone needs, on any phone.',
     firstBtn: 'Start setup', keyOnly: 'Sign in with the GitHub key only (no password)', pwPlaceholder: 'e.g. Admin123 or something stronger',
     keyStale: 'The password is right, but the GitHub key behind it has expired or was deleted. Paste a new key here; the password stays the same for everyone.',
+    diagOwner: 'This key belongs to another GitHub account ({u}). The website is in the {o} account, so create the key while signed in as {o}.',
+    diagRepo: 'This key can’t reach the Flaminio repository. When creating it, under “Repository access” choose “Only select repositories” and pick Flaminio. The default, “Public repositories”, is read-only.',
+    diagContents: 'This key can’t save. Under “Repository permissions” set Contents to Read and write, and make sure “Repository access” is “Only select repositories” with Flaminio picked. Then press Update, or create a new key.',
+    diagBlocked: 'GitHub refused to save: {m}',
+    keyHow: 'To create the key: open the link while signed in as {o}. Under “Repository access” choose “Only select repositories” and pick Flaminio, check that Contents is Read and write, then press Generate token and copy it.', keyLink: 'Open the key page',
     newKey: 'New GitHub key', rekey: 'Save the new key', rekeying: 'Saving…', keyUpdated: 'Key updated ✓ The password has not changed.',
     quickTitle: 'Set the admin password (one time)', quickLead: 'After this, anyone you give the link and password to can sign in without a GitHub key. You won’t be asked again.', quickSave: 'Save password', quickDone: 'Password set ✓ Give the link and password to whoever edits the menu.',
     homeHint: 'To stay signed in on iPhone: tap Share, then “Add to Home Screen”, and open the admin from its icon.', ok: 'OK',
@@ -303,7 +313,7 @@ function updateSaveBar() {
   saveDraft();
   const count = n === 1 ? t('unsaved1') : n === 2 ? t('unsaved2') : t('unsavedN', { n });
   // A failed save stays on screen (not only in the pop-up) until the next save succeeds.
-  if (n && state.status && state.status.cls === 'is-error') { st.className += ' is-error'; st.textContent = `${t(state.status.key)} (${count})`; }
+  if (n && state.status && state.status.cls === 'is-error') { st.className += ' is-error'; st.textContent = `${t(state.status.key, state.status.vars || {})} (${count})`; }
   else if (n) st.textContent = count;
   else if (state.status) { st.className += ' ' + state.status.cls; st.innerHTML = statusHtml(state.status); }
   else st.textContent = t('none');
@@ -384,6 +394,25 @@ async function fetchLock() {
 async function checkKey() {
   return gh(`/repos/${cfg.repo}`);
 }
+// Can this key actually save? Creating a blob needs Contents: write but changes nothing on the site
+// (an unreferenced blob is invisible and cleaned up by GitHub). A refusal is turned into a precise message.
+async function verifyWrite() {
+  const owner = cfg.repo.split('/')[0];
+  let login = '';
+  try { login = (await gh('/user')).login || ''; } catch (e) { if (e.status === 401) throw e; }
+  try { await gh(`/repos/${cfg.repo}/git/blobs`, { method: 'POST', body: { content: 'flaminio admin key check', encoding: 'utf-8' } }); }
+  catch (e) {
+    if (e.status === 401) throw e;
+    state.errVars = { u: login, o: owner, m: e.message };
+    if (login && login.toLowerCase() !== owner.toLowerCase() && String(state.token).startsWith('github_pat_')) e.key = 'diagOwner';
+    else if (e.status === 404) e.key = 'diagRepo';
+    else if (e.status === 403 && /not accessible|permission/i.test(e.message)) e.key = 'diagContents';
+    else if (e.status === 403 || e.status === 422) e.key = 'diagBlocked';
+    throw e;
+  }
+}
+const KEY_URL = () => `https://github.com/settings/personal-access-tokens/new?name=Flaminio+admin&description=Flaminio+website+admin&target_name=${encodeURIComponent(cfg.repo.split('/')[0])}&expires_in=365&contents=write&actions=read`;
+const keyHelp = () => `<p class="hint-box">${esc(t('keyHow', { o: cfg.repo.split('/')[0] }))} <a href="${esc(KEY_URL())}" target="_blank" rel="noopener">${esc(t('keyLink'))}</a></p>`;
 const asWriteError = err => ((err.status === 403 || err.status === 404) && !err.key ? Object.assign(err, { key: 'errNoPush' }) : err);
 function keepToken(token) {
   try { (state.remember ? localStorage : sessionStorage).setItem(TOKEN_KEY, token); } catch (e) { /* storage blocked: stay signed in for this page only */ }
@@ -403,7 +432,7 @@ function renderLogin(error = '') {
       <h1>${esc(t('firstTitle'))}</h1>
       <div class="card" style="margin-top:18px">
         <p>${esc(t('firstLead'))}</p>
-        ${error ? `<p class="error" role="alert">${esc(t(error))}</p>` : ''}
+        ${error ? `<p class="error" role="alert">${esc(t(error, state.errVars || {}))}</p>` : ''}
         <button class="btn btn-primary btn-lg" type="button" id="first-btn">${esc(t('firstBtn'))}</button>
         <button class="linklike" type="button" id="mode-btn">${esc(t('keyOnly'))}</button>
       </div>
@@ -428,9 +457,10 @@ function renderLogin(error = '') {
         <input id="token" name="token" type="password" autocomplete="off" dir="ltr" placeholder="github_pat_…" required>
         <span class="hint">${esc(t('keyHint'))}</span>
       </div>
+      ${keyHelp()}
       ${state.lock ? '' : `<p class="hint-box">${esc(t('noLock'))}</p>`}`}
       <label class="check"><input type="checkbox" id="remember" checked> <span>${esc(t('remember'))}</span></label>
-      ${error ? `<p class="error" role="alert">${esc(t(error))}</p>` : ''}
+      ${error ? `<p class="error" role="alert">${esc(t(error, state.errVars || {}))}</p>` : ''}
       ${error === 'keyStale' && state.stalePw ? `<div class="field"><label for="new-key">${esc(t('newKey'))}</label><input id="new-key" type="password" autocomplete="off" dir="ltr" placeholder="github_pat_…"></div>
       <button class="btn btn-primary btn-lg" type="button" id="rekey-btn">${esc(t('rekey'))}</button>` : `
       <button class="btn btn-primary btn-lg" type="submit">${esc(usePw ? t('pwLogin') : t('login'))}</button>`}
@@ -445,14 +475,14 @@ function renderLogin(error = '') {
     rekeyBtn.disabled = true; rekeyBtn.textContent = t('rekeying');
     state.token = key;
     try {
-      await checkKey();
+      await checkKey(); await verifyWrite();
       const lock = await sealToken(key, state.stalePw);
       await putFile(LOCK_PATH, JSON.stringify(lock, null, 2) + '\n', 'Update admin key, same password / تحديث مفتاح لوحة التحكم');
       state.lock = lock; state.remember = true; keepToken(key); state.stalePw = '';
       renderPicker(); toast(t('keyUpdated'), false, 5000);
     } catch (err) {
       state.token = null; rekeyBtn.disabled = false; rekeyBtn.textContent = t('rekey');
-      toast(t(err.status === 401 ? 'err401' : err.key || (err.status === 404 ? 'err404' : 'saveFailed')), true, 6000);
+      toast(t(err.status === 401 ? 'err401' : err.key || (err.status === 404 ? 'err404' : 'saveFailed'), state.errVars || {}), true, 9000);
     }
   });
   // The key form is the fallback for both modes: never leave the only sign-in path hidden.
@@ -480,8 +510,8 @@ function renderLogin(error = '') {
     if (!token) { btn.disabled = false; return; }
     btn.textContent = t('checking');
     state.token = token;
-    try { await checkKey(); keepToken(token); renderPicker(); }
-    catch (err) { state.token = null; renderLogin(err.status === 401 ? 'err401' : err.status === 404 ? 'err404' : err.key || 'errNet'); }
+    try { await checkKey(); await verifyWrite(); keepToken(token); renderPicker(); }
+    catch (err) { state.token = null; renderLogin(err.status === 401 ? 'err401' : err.key || (err.status === 404 ? 'err404' : 'errNet')); }
   });
 }
 /* ---------- password setup / change ---------- */
@@ -496,14 +526,14 @@ function renderSetup(error = '') {
     <h1>${esc(needKey ? t('setupTitle') : t('changeTitle'))}</h1>
     <p class="muted">${esc(needKey ? t('setupLead') : t('changeLead'))}</p>
     <form class="card" id="setup-form" style="margin-top:18px">
-      ${needKey ? `<div class="field"><label for="setup-key">${esc(t('setupKey'))}</label><input id="setup-key" type="password" autocomplete="off" dir="ltr" placeholder="github_pat_…" required></div>` : ''}
+      ${needKey ? `<div class="field"><label for="setup-key">${esc(t('setupKey'))}</label><input id="setup-key" type="password" autocomplete="off" dir="ltr" placeholder="github_pat_…" required></div>${keyHelp()}` : ''}
       <div class="field">
         <label for="setup-pw">${esc(t('newPw'))}</label>
         <div class="pw-row"><input id="setup-pw" type="text" autocomplete="new-password" autocapitalize="off" spellcheck="false" dir="ltr" value="${esc(pw)}" placeholder="${esc(t('pwPlaceholder'))}" required><button class="btn btn-sm" type="button" id="suggest-btn">${esc(t('suggest'))}</button></div>
         <span class="hint">${esc(t('pwRule'))}</span>
       </div>
       <label class="check" id="weak-row" ${!pw || strongEnough(pw) ? 'hidden' : ''}><input type="checkbox" id="weak-ok" ${state.weakOk ? 'checked' : ''}> <span>${esc(t('weakOk'))}</span></label>
-      ${error ? `<p class="error" role="alert">${esc(t(error))}</p>` : ''}
+      ${error ? `<p class="error" role="alert">${esc(t(error, state.errVars || {}))}</p>` : ''}
       <button class="btn btn-primary btn-lg" type="submit">${esc(t('setupSave'))}</button>
       <button class="linklike" type="button" id="setup-back">${esc(t('back'))}</button>
     </form>
@@ -523,7 +553,7 @@ function renderSetup(error = '') {
     const hadToken = !!state.token;
     if (!hadToken) state.token = (keyInput.value || '').trim();
     try {
-      await checkKey();
+      await checkKey(); await verifyWrite();
       const lock = await sealToken(state.token, password);
       await putFile(LOCK_PATH, JSON.stringify(lock, null, 2) + '\n', hadToken ? 'Change admin password / تغيير كلمة مرور لوحة التحكم' : 'Set admin password / تعيين كلمة مرور لوحة التحكم');
       state.lock = lock; state.remember = true; keepToken(state.token);
@@ -584,7 +614,7 @@ function renderPicker() {
     <p class="muted">${esc(t('quickLead'))}</p>
     <div class="field"><label for="quick-pw">${esc(t('newPw'))}</label><input id="quick-pw" type="text" autocomplete="new-password" autocapitalize="off" spellcheck="false" dir="ltr" placeholder="${esc(t('pwPlaceholder'))}" value="${esc(quickPw)}" required></div>
     <label class="check" id="quick-weak-row" ${!quickPw || strongEnough(quickPw) ? 'hidden' : ''}><input type="checkbox" id="quick-weak" ${state.weakOk ? 'checked' : ''}> <span>${esc(t('weakOk'))}</span></label>
-    ${state.quickError ? `<p class="error" role="alert">${esc(t(state.quickError))}</p>` : ''}
+    ${state.quickError ? `<p class="error" role="alert">${esc(t(state.quickError, state.errVars || {}))}</p>` : ''}
     <button class="btn btn-primary" type="submit">${esc(t('quickSave'))}</button>
   </form>`}
   ${ios && !standalone && !hintSeen ? `<p class="notice home-hint">${esc(t('homeHint'))} <button class="linklike" type="button" id="hint-ok">${esc(t('ok'))}</button></p>` : ''}
@@ -607,6 +637,7 @@ function renderPicker() {
     if (!strongEnough(password) && !state.weakOk) { state.quickError = 'pwWeakTick'; renderPicker(); return; }
     const btn = quick.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = t('setupSaving');
     try {
+      await verifyWrite();
       const lock = await sealToken(state.token, password);
       await putFile(LOCK_PATH, JSON.stringify(lock, null, 2) + '\n', 'Set admin password / تعيين كلمة مرور لوحة التحكم');
       state.lock = lock; state.quickPw = ''; state.quickError = '';
@@ -960,10 +991,11 @@ async function save() {
     watchDeploy(commit.sha, siteLink);
   } catch (err) {
     asWriteError(err);
+    if (err.key === 'errNoPush') { try { await verifyWrite(); } catch (d) { if (d.key) { err.key = d.key; } } }
     state.busy = false;
-    state.status = err.key ? { cls: 'is-error', key: err.key } : { cls: 'is-error', key: 'saveFailed' };
+    state.status = err.key ? { cls: 'is-error', key: err.key, vars: state.errVars } : { cls: 'is-error', key: 'saveFailed' };
     updateSaveBar();
-    toast(err.key ? t(err.key) : t('saveFailed'), true, 6000);
+    toast(err.key ? t(err.key, state.errVars || {}) : t('saveFailed'), true, 9000);
   }
 }
 async function watchDeploy(sha, siteLink) {
