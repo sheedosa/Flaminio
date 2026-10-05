@@ -919,7 +919,7 @@
             "id": "orange",
             "en": "Orange",
             "ar": "برتقال",
-            "price": 10,
+            "price": 20,
             "den": "",
             "dar": ""
           },
@@ -927,7 +927,7 @@
             "id": "strawberry",
             "en": "Strawberry",
             "ar": "فراولة",
-            "price": 12,
+            "price": 18,
             "den": "",
             "dar": ""
           },
