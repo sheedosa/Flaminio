@@ -631,7 +631,7 @@
         "id": "espresso",
         "en": "Espresso",
         "ar": "اسبريسو",
-        "price": 4,
+        "price": 5,
         "den": "",
         "dar": ""
       },
@@ -639,7 +639,7 @@
         "id": "double-espresso",
         "en": "Double Espresso",
         "ar": "دبل اسبريسو",
-        "price": 5,
+        "price": 8,
         "den": "",
         "dar": ""
       },
@@ -647,7 +647,7 @@
         "id": "macchiato",
         "en": "Macchiato",
         "ar": "مكياتو",
-        "price": 4,
+        "price": 5,
         "den": "",
         "dar": ""
       },
@@ -655,7 +655,7 @@
         "id": "double-macchiato",
         "en": "Double Macchiato",
         "ar": "دبل مكياتو",
-        "price": 4,
+        "price": 8,
         "den": "",
         "dar": ""
       },
@@ -663,7 +663,7 @@
         "id": "special",
         "en": "Special",
         "ar": "اسبسيال",
-        "price": 6,
+        "price": 10,
         "den": "",
         "dar": ""
       },
@@ -671,23 +671,7 @@
         "id": "cappuccino",
         "en": "Cappuccino",
         "ar": "كابتشينو",
-        "price": 8,
-        "den": "",
-        "dar": ""
-      },
-      {
-        "id": "cappuccino-2",
-        "en": "Cappuccino",
-        "ar": "كابتشينو",
-        "price": 3,
-        "den": "",
-        "dar": ""
-      },
-      {
-        "id": "nescafe",
-        "en": "Nescafe",
-        "ar": "نسكافيه",
-        "price": 5,
+        "price": 15,
         "den": "",
         "dar": ""
       },
@@ -695,7 +679,7 @@
         "id": "nescafe-2",
         "en": "Nescafe",
         "ar": "نسكافيه",
-        "price": 3,
+        "price": 15,
         "den": "",
         "dar": ""
       },
@@ -703,7 +687,7 @@
         "id": "mocha",
         "en": "Mocha",
         "ar": "موكا",
-        "price": 12,
+        "price": 15,
         "den": "",
         "dar": ""
       },
@@ -711,7 +695,15 @@
         "id": "latte",
         "en": "Latte",
         "ar": "لاتيه",
-        "price": 8,
+        "price": 13,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "american-coffee",
+        "en": "American Coffee",
+        "ar": "أميريكان كافي",
+        "price": 10,
         "den": "",
         "dar": ""
       },
@@ -719,23 +711,7 @@
         "id": "arabic-coffee",
         "en": "Arabic Coffee",
         "ar": "قهوة عربية",
-        "price": 6,
-        "den": "",
-        "dar": ""
-      },
-      {
-        "id": "tea-red-green",
-        "en": "Tea (Red/Green)",
-        "ar": "شاي (أحمر / أخضر)",
-        "price": 2,
-        "den": "",
-        "dar": ""
-      },
-      {
-        "id": "tunisian-tea-red-green",
-        "en": "Tunisian Tea (Red/Green)",
-        "ar": "شاي تونسي (أحمر / أخضر)",
-        "price": 3,
+        "price": 8,
         "den": "",
         "dar": ""
       },
@@ -743,6 +719,22 @@
         "id": "turkish-coffee",
         "en": "Turkish Coffee",
         "ar": "قهوة تركية",
+        "price": 8,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "tea-red-green",
+        "en": "Tea (Red/Green)",
+        "ar": "شاي (أحمر / أخضر)",
+        "price": 5,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "tunisian-tea-red-green",
+        "en": "Tunisian Tea (Red/Green)",
+        "ar": "شاي تونسي (أحمر / أخضر)",
         "price": 6,
         "den": "",
         "dar": ""
@@ -751,15 +743,7 @@
         "id": "hot-chocolate",
         "en": "Hot Chocolate",
         "ar": "هوت شوكلت",
-        "price": 15,
-        "den": "",
-        "dar": ""
-      },
-      {
-        "id": "american-coffee",
-        "en": "American Coffee",
-        "ar": "أميريكان كافي",
-        "price": 4,
+        "price": 20,
         "den": "",
         "dar": ""
       },
@@ -767,7 +751,7 @@
         "id": "nesquik",
         "en": "Nesquik",
         "ar": "نسكويك",
-        "price": 5,
+        "price": 10,
         "den": "",
         "dar": ""
       },
@@ -775,7 +759,7 @@
         "id": "ovaltine",
         "en": "Ovaltine",
         "ar": "أوفلتين",
-        "price": 5,
+        "price": 15,
         "den": "",
         "dar": ""
       }
