@@ -186,3 +186,10 @@ html[lang="en"] [dir="rtl"], html[lang="en"] input[name="ar"] { font-family: Taj
 #password, #setup-pw, #done-pw { letter-spacing: .04em; }
 .linklike { background: none; border: 0; padding: 6px; min-height: 40px; color: var(--burgundy); text-decoration: underline; text-underline-offset: 3px; font-size: 15px; justify-self: center; }
 .hint-box { background: var(--cream); border-inline-start: 3px solid var(--gold); padding: 10px 12px; font-size: 14px; color: var(--muted); }
+
+/* one-time password card + home screen hint */
+.quick-pw { border-color: var(--gold); border-width: 2px; }
+.quick-pw .check { display: flex; gap: 10px; align-items: center; font-size: 15px; }
+.quick-pw .check input { width: 22px; height: 22px; accent-color: var(--burgundy); flex-shrink: 0; }
+.quick-pw .error { color: var(--danger); font-weight: 700; }
+.home-hint { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }

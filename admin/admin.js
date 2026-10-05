@@ -3,6 +3,8 @@
 const cfg = window.FLAMINIO_ADMIN;
 const API = 'https://api.github.com';
 const TOKEN_KEY = 'flaminio-admin-token';
+const DRAFT_KEY = id => `flaminio-admin-draft-${id}`;
+const HINT_KEY = 'flaminio-admin-home-hint';
 const $ = (sel, root = document) => root.querySelector(sel);
 const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -30,7 +32,7 @@ const L = {
     loginLead: 'من هنا تُعدَّل قائمة الطعام والأسعار ومعلومات كل فرع، وتظهر التغييرات على الموقع خلال دقيقة.',
     keyLabel: 'مفتاح الدخول', keyHint: 'المفتاح موجود في دليل المالك. لا تشاركه مع أحد.', remember: 'تذكرني على هذا الجهاز',
     login: 'دخول', checking: 'جارٍ التحقق…',
-    errNoPush: 'المفتاح صحيح لكنه لا يملك صلاحية الكتابة على الموقع.', err401: 'المفتاح غير صحيح أو منتهي الصلاحية.',
+    errNoPush: 'المفتاح لا يملك صلاحية الحفظ. فعّل للمفتاح على GitHub صلاحية Contents: Read and write، ثم اضغط «حفظ ونشر» مرة أخرى. تعديلاتك باقية في الصفحة.', err401: 'المفتاح غير صحيح أو منتهي الصلاحية.',
     err404: 'المفتاح لا يصل إلى موقع فلامينيو. تأكد من اختيار المستودع الصحيح عند إنشائه.', errNet: 'تعذّر الاتصال. تحقق من الإنترنت.',
     logout: 'تسجيل الخروج', logoutShort: 'خروج', switchBranch: 'تغيير الفرع',
     pickTitle: 'أي فرع تريد تعديله؟', pickNote: 'التغييرات تُحفظ لكل فرع على حدة. بعد الضغط على «حفظ ونشر» يتحدّث موقع الفرع خلال دقيقة تقريباً.',
@@ -62,7 +64,11 @@ const L = {
     useKey: 'الدخول بمفتاح GitHub بدلاً من ذلك', usePw: 'الدخول بكلمة المرور', noLock: 'لم تُعيَّن كلمة مرور بعد. ادخل بمفتاح GitHub ثم اضغط «كلمة المرور» لتعيينها.',
     firstTitle: 'الإعداد لأول مرة', firstLead: 'لم تُعيَّن كلمة مرور للوحة بعد. مرة واحدة فقط: يلصق المالك مفتاح GitHub (موجود في دليل المالك) ويختار كلمة المرور. بعد ذلك يكفي الرابط وكلمة المرور للدخول من أي هاتف.',
     firstBtn: 'ابدأ الإعداد', keyOnly: 'الدخول بمفتاح GitHub فقط (بدون كلمة مرور)', pwPlaceholder: 'مثال: Admin123 أو كلمة أقوى',
-    keyStale: 'كلمة المرور صحيحة لكن مفتاح GitHub المرتبط بها لم يعد يعمل (انتهى أو حُذف). يجب إعداد كلمة المرور من جديد بمفتاح جديد.',
+    keyStale: 'كلمة المرور صحيحة، لكن مفتاح GitHub المرتبط بها انتهى أو حُذف. الصق مفتاحاً جديداً هنا، وتبقى كلمة المرور كما هي للجميع.',
+    newKey: 'مفتاح GitHub الجديد', rekey: 'حفظ المفتاح الجديد', rekeying: 'جارٍ الحفظ…', keyUpdated: 'تم تحديث المفتاح ✓ كلمة المرور لم تتغير.',
+    quickTitle: 'عيّن كلمة مرور اللوحة (مرة واحدة)', quickLead: 'بعدها يدخل أي شخص تعطيه الرابط وكلمة المرور، دون مفتاح GitHub. لن يُطلب هذا مرة أخرى.', quickSave: 'حفظ كلمة المرور', quickDone: 'تم تعيين كلمة المرور ✓ أعطِ الرابط وكلمة المرور لمن سيعدّل القائمة.',
+    homeHint: 'لتبقى مسجّلاً على الآيفون: اضغط زر المشاركة ثم «إضافة إلى الشاشة الرئيسية»، وافتح اللوحة من أيقونتها.', ok: 'حسناً',
+    draftRestored: 'تم استرجاع تعديلاتك غير المحفوظة.', draftDropped: 'تغيّر هذا الفرع من جهاز آخر، فلم تُسترجع تعديلاتك القديمة غير المحفوظة.',
     pwMenu: 'كلمة المرور', setupTitle: 'إعداد كلمة المرور', setupLead: 'مرة واحدة: الصق مفتاح GitHub واختر كلمة مرور. بعدها يكفي الرابط وكلمة المرور للدخول من أي جهاز.',
     changeTitle: 'تغيير كلمة المرور', changeLead: 'اختر كلمة مرور جديدة. كلمة المرور القديمة تتوقف عن العمل فوراً على كل الأجهزة.',
     setupKey: 'مفتاح GitHub (يبدأ بـ github_pat_)', newPw: 'كلمة المرور الجديدة', suggest: 'اقتراح آخر',
@@ -77,7 +83,7 @@ const L = {
     loginLead: 'Edit the menu, prices and each branch’s details here. Changes appear on the website within about a minute.',
     keyLabel: 'Access key', keyHint: 'The key is in the owner’s guide. Don’t share it with anyone.', remember: 'Remember me on this device',
     login: 'Sign in', checking: 'Checking…',
-    errNoPush: 'The key is valid but it can’t make changes to the website.', err401: 'The key is wrong or has expired.',
+    errNoPush: 'This key can’t save. On GitHub, give the key Contents: Read and write, then press “Save & publish” again. Your edits are still here.', err401: 'The key is wrong or has expired.',
     err404: 'The key can’t reach the Flaminio website. Make sure you picked the right repository when creating it.', errNet: 'Couldn’t connect. Check your internet.',
     logout: 'Sign out', logoutShort: 'Sign out', switchBranch: 'Switch branch',
     pickTitle: 'Which branch do you want to edit?', pickNote: 'Each branch is saved separately. After “Save & publish”, that branch’s site updates within about a minute.',
@@ -109,7 +115,11 @@ const L = {
     useKey: 'Sign in with a GitHub key instead', usePw: 'Sign in with the password', noLock: 'No password has been set yet. Sign in with the GitHub key, then tap “Password” to set one.',
     firstTitle: 'First-time setup', firstLead: 'No password has been set for the admin yet. One time only: the owner pastes the GitHub key (it is in the owner guide) and chooses the password. After that, the link and the password are all anyone needs, on any phone.',
     firstBtn: 'Start setup', keyOnly: 'Sign in with the GitHub key only (no password)', pwPlaceholder: 'e.g. Admin123 or something stronger',
-    keyStale: 'The password is right, but the GitHub key behind it no longer works (expired or deleted). Set the password up again with a new key.',
+    keyStale: 'The password is right, but the GitHub key behind it has expired or was deleted. Paste a new key here; the password stays the same for everyone.',
+    newKey: 'New GitHub key', rekey: 'Save the new key', rekeying: 'Saving…', keyUpdated: 'Key updated ✓ The password has not changed.',
+    quickTitle: 'Set the admin password (one time)', quickLead: 'After this, anyone you give the link and password to can sign in without a GitHub key. You won’t be asked again.', quickSave: 'Save password', quickDone: 'Password set ✓ Give the link and password to whoever edits the menu.',
+    homeHint: 'To stay signed in on iPhone: tap Share, then “Add to Home Screen”, and open the admin from its icon.', ok: 'OK',
+    draftRestored: 'Your unsaved edits were restored.', draftDropped: 'This branch was changed from another device, so your old unsaved edits were not restored.',
     pwMenu: 'Password', setupTitle: 'Set up the password', setupLead: 'One time only: paste the GitHub key and choose a password. After that, the link and the password are all anyone needs.',
     changeTitle: 'Change the password', changeLead: 'Choose a new password. The old one stops working immediately on every device.',
     setupKey: 'GitHub key (starts with github_pat_)', newPw: 'New password', suggest: 'Suggest another',
@@ -243,6 +253,45 @@ function changes() {
   for (const u of state.origItems.keys()) if (!seen.has(u)) list.push(t('chDel'));
   return list;
 }
+// Unsaved edits are kept on this device, so a reload or a failed save never loses them.
+// Photos waiting to upload can't be kept; their dishes fall back to the photo they had before.
+function saveDraft() {
+  if (!state.branch || !state.menu || state.screen !== 'editor') return;
+  const key = DRAFT_KEY(state.branch.id);
+  try {
+    if (!changes().length) { localStorage.removeItem(key); return; }
+    const menu = cleanMenu(state.menu);
+    const origMenu = JSON.parse(state.files[`content/menu-${state.branch.id}.json`].text);
+    const origImg = new Map();
+    for (const c of origMenu) { origImg.set('c:' + c.id, c.img || null); for (const it of (c.items || c.groups.flatMap(g => g.items))) origImg.set(it.id, it.img || null); }
+    const fix = (o, k) => { if (o.img && state.pending.has(o.img)) o.img = origImg.has(k) ? origImg.get(k) : null; };
+    for (const c of menu) { fix(c, 'c:' + c.id); for (const it of (c.items || c.groups.flatMap(g => g.items))) fix(it, it.id); }
+    localStorage.setItem(key, JSON.stringify({
+      shas: Object.fromEntries(Object.entries(state.files).map(([p, f]) => [p, f.sha])),
+      info: state.info, menu, removed: [...state.removed].filter(p => !state.pending.has(p)),
+    }));
+  } catch (e) { /* storage full or blocked: nothing to do */ }
+}
+const dropDraft = id => { try { localStorage.removeItem(DRAFT_KEY(id)); } catch (e) { /* ignore */ } };
+// Put a saved draft back on top of freshly loaded files, keeping each dish's identity (by id) so
+// the change counter only counts real edits.
+function restoreDraft(id) {
+  let d = null;
+  try { d = JSON.parse(localStorage.getItem(DRAFT_KEY(id)) || 'null'); } catch (e) { d = null; }
+  if (!d) return;
+  const same = Object.keys(state.files).every(p => d.shas && d.shas[p] === state.files[p].sha);
+  if (!same) { dropDraft(id); toast(t('draftDropped'), true, 6000); return; }
+  const uidOf = new Map();
+  for (const c of state.menu) { uidOf.set('c:' + c.id, c._uid); for (const it of itemsOf(c)) uidOf.set(it.id, it._uid); }
+  for (const c of d.menu) {
+    c._uid = uidOf.get('c:' + c.id) || uid();
+    if (c.groups) for (const g of c.groups) { g._uid = uid(); for (const it of g.items) it._uid = uidOf.get(it.id) || uid(); }
+    else for (const it of c.items) it._uid = uidOf.get(it.id) || uid();
+  }
+  state.info = d.info; state.menu = d.menu;
+  for (const p of d.removed || []) state.removed.add(p);
+  toast(t('draftRestored'), false, 4000);
+}
 function updateSaveBar() {
   const bar = $('#savebar'), st = $('#save-status'), btn = $('#save-btn'), discard = $('#discard-btn');
   if (!state.branch || !state.menu) { bar.hidden = true; requestAnimationFrame(fitBars); return; }
@@ -251,7 +300,11 @@ function updateSaveBar() {
   if (state.busy) return;
   const n = changes().length;
   st.className = 'savebar-status';
-  if (n) st.textContent = n === 1 ? t('unsaved1') : n === 2 ? t('unsaved2') : t('unsavedN', { n });
+  saveDraft();
+  const count = n === 1 ? t('unsaved1') : n === 2 ? t('unsaved2') : t('unsavedN', { n });
+  // A failed save stays on screen (not only in the pop-up) until the next save succeeds.
+  if (n && state.status && state.status.cls === 'is-error') { st.className += ' is-error'; st.textContent = `${t(state.status.key)} (${count})`; }
+  else if (n) st.textContent = count;
   else if (state.status) { st.className += ' ' + state.status.cls; st.innerHTML = statusHtml(state.status); }
   else st.textContent = t('none');
   btn.disabled = !n;
@@ -378,12 +431,30 @@ function renderLogin(error = '') {
       ${state.lock ? '' : `<p class="hint-box">${esc(t('noLock'))}</p>`}`}
       <label class="check"><input type="checkbox" id="remember" checked> <span>${esc(t('remember'))}</span></label>
       ${error ? `<p class="error" role="alert">${esc(t(error))}</p>` : ''}
-      <button class="btn btn-primary btn-lg" type="submit">${esc(usePw ? t('pwLogin') : t('login'))}</button>
+      ${error === 'keyStale' && state.stalePw ? `<div class="field"><label for="new-key">${esc(t('newKey'))}</label><input id="new-key" type="password" autocomplete="off" dir="ltr" placeholder="github_pat_…"></div>
+      <button class="btn btn-primary btn-lg" type="button" id="rekey-btn">${esc(t('rekey'))}</button>` : `
+      <button class="btn btn-primary btn-lg" type="submit">${esc(usePw ? t('pwLogin') : t('login'))}</button>`}
       <button class="linklike" type="button" id="mode-btn">${esc(usePw ? t('useKey') : state.lock ? t('usePw') : t('back'))}</button>
     </form>
   </section>`;
   const modeBtn = $('#mode-btn');
   if (modeBtn) modeBtn.addEventListener('click', () => { state.loginMode = usePw ? 'key' : 'pw'; renderLogin(); });
+  const rekeyBtn = $('#rekey-btn');
+  if (rekeyBtn) rekeyBtn.addEventListener('click', async () => {
+    const key = $('#new-key').value.trim(); if (!key) { $('#new-key').focus(); return; }
+    rekeyBtn.disabled = true; rekeyBtn.textContent = t('rekeying');
+    state.token = key;
+    try {
+      await checkKey();
+      const lock = await sealToken(key, state.stalePw);
+      await putFile(LOCK_PATH, JSON.stringify(lock, null, 2) + '\n', 'Update admin key, same password / تحديث مفتاح لوحة التحكم');
+      state.lock = lock; state.remember = true; keepToken(key); state.stalePw = '';
+      renderPicker(); toast(t('keyUpdated'), false, 5000);
+    } catch (err) {
+      state.token = null; rekeyBtn.disabled = false; rekeyBtn.textContent = t('rekey');
+      toast(t(err.status === 401 ? 'err401' : err.key || (err.status === 404 ? 'err404' : 'saveFailed')), true, 6000);
+    }
+  });
   // The key form is the fallback for both modes: never leave the only sign-in path hidden.
   if (!state.lock) state.loginMode = 'key';
   $('#login-form').addEventListener('submit', async e => {
@@ -397,8 +468,12 @@ function renderLogin(error = '') {
       let token;
       try { token = await openToken(state.lock, pw); } catch (err) { renderLogin('pwWrong'); $('#password').focus(); return; }
       state.token = token;
-      try { await checkKey(); keepToken(token); renderPicker(); }
-      catch (err) { state.token = null; renderLogin(err.status === 401 || err.status === 404 ? 'keyStale' : err.key || 'errNet'); }
+      try { await checkKey(); keepToken(token); state.stalePw = ''; renderPicker(); }
+      catch (err) {
+        state.token = null;
+        if (err.status === 401 || err.status === 404) state.stalePw = pw;
+        renderLogin(err.status === 401 || err.status === 404 ? 'keyStale' : err.key || 'errNet');
+      }
       return;
     }
     const token = $('#token').value.trim();
@@ -498,13 +573,49 @@ function renderPicker() {
   state.branch = null; state.menu = null; state.status = null; state.screen = 'picker';
   renderTop();
   updateSaveBar();
+  const ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const standalone = navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+  let hintSeen = false; try { hintSeen = localStorage.getItem(HINT_KEY) === '1'; } catch (e) { /* ignore */ }
+  const quickPw = state.quickPw || '';
   $('#app').innerHTML = `
+  ${state.lock ? '' : `
+  <form class="card quick-pw" id="quick-form">
+    <h2>${esc(t('quickTitle'))}</h2>
+    <p class="muted">${esc(t('quickLead'))}</p>
+    <div class="field"><label for="quick-pw">${esc(t('newPw'))}</label><input id="quick-pw" type="text" autocomplete="new-password" autocapitalize="off" spellcheck="false" dir="ltr" placeholder="${esc(t('pwPlaceholder'))}" value="${esc(quickPw)}" required></div>
+    <label class="check" id="quick-weak-row" ${!quickPw || strongEnough(quickPw) ? 'hidden' : ''}><input type="checkbox" id="quick-weak" ${state.weakOk ? 'checked' : ''}> <span>${esc(t('weakOk'))}</span></label>
+    ${state.quickError ? `<p class="error" role="alert">${esc(t(state.quickError))}</p>` : ''}
+    <button class="btn btn-primary" type="submit">${esc(t('quickSave'))}</button>
+  </form>`}
+  ${ios && !standalone && !hintSeen ? `<p class="notice home-hint">${esc(t('homeHint'))} <button class="linklike" type="button" id="hint-ok">${esc(t('ok'))}</button></p>` : ''}
   <h1>${esc(t('pickTitle'))}</h1>
   <div class="picker">
     ${cfg.branches.map(b => `<button class="pick" type="button" data-branch="${b.id}">${esc(bname(b))}<small>${esc(lang === 'en' ? (b.placeEn || '') : b.placeAr)}</small></button>`).join('')}
   </div>
   <p class="notice">${esc(t('pickNote'))}</p>`;
   document.querySelectorAll('[data-branch]').forEach(btn => btn.addEventListener('click', () => loadBranch(btn.dataset.branch)));
+  const hintOk = $('#hint-ok');
+  if (hintOk) hintOk.addEventListener('click', () => { try { localStorage.setItem(HINT_KEY, '1'); } catch (e) { /* ignore */ } hintOk.parentElement.remove(); });
+  const quick = $('#quick-form');
+  if (!quick) return;
+  $('#quick-pw').addEventListener('input', e => { state.quickPw = e.target.value; $('#quick-weak-row').hidden = !e.target.value || strongEnough(e.target.value); });
+  $('#quick-weak').addEventListener('change', e => { state.weakOk = e.target.checked; });
+  quick.addEventListener('submit', async e => {
+    e.preventDefault();
+    const password = $('#quick-pw').value.trim();
+    if (!password) return;
+    if (!strongEnough(password) && !state.weakOk) { state.quickError = 'pwWeakTick'; renderPicker(); return; }
+    const btn = quick.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = t('setupSaving');
+    try {
+      const lock = await sealToken(state.token, password);
+      await putFile(LOCK_PATH, JSON.stringify(lock, null, 2) + '\n', 'Set admin password / تعيين كلمة مرور لوحة التحكم');
+      state.lock = lock; state.quickPw = ''; state.quickError = '';
+      renderPicker(); toast(t('quickDone'), false, 6000);
+    } catch (err) {
+      state.quickError = err.status === 401 ? 'err401' : err.key || 'saveFailed';
+      renderPicker();
+    }
+  });
 }
 
 /* ---------- loading content ---------- */
@@ -536,6 +647,8 @@ async function loadBranch(id) {
     state.origCats = catSignature(state.menu);
     state.origItems = new Map(state.menu.flatMap(c => itemsOf(c).map(it => [it._uid, serializeItem(it)])));
     state.pending.clear(); state.removed.clear(); state.status = null;
+    state.screen = 'editor';
+    restoreDraft(id);
     state.tab = 'info'; state.catUid = state.menu[0] && state.menu[0]._uid;
     state.screen = 'editor';
     renderEditor();
@@ -838,6 +951,7 @@ async function save() {
     state.origInfo = JSON.stringify(state.info); state.origCats = catSignature(state.menu);
     state.origItems = new Map(state.menu.flatMap(c => itemsOf(c).map(it => [it._uid, serializeItem(it)])));
     state.pending.clear(); state.removed.clear();
+    dropDraft(state.branch.id);
     state.busy = false;
     const siteLink = `${cfg.siteUrl}${state.branch.id}/${lang === 'en' ? '' : 'ar/'}${state.tab === 'menu' ? 'menu.html' : ''}`;
     state.status = { cls: 'is-busy', key: 'savedBuilding' };
@@ -886,7 +1000,7 @@ if (window.ResizeObserver) { const ro = new ResizeObserver(fitBars); ro.observe(
 window.addEventListener('resize', fitBars); fitBars();
 $('#lang-btn').addEventListener('click', () => setLang(lang === 'ar' ? 'en' : 'ar'));
 $('#save-btn').addEventListener('click', save);
-$('#discard-btn').addEventListener('click', () => { if (confirm(t('confirmDiscard'))) loadBranch(state.branch.id); });
+$('#discard-btn').addEventListener('click', () => { if (confirm(t('confirmDiscard'))) { dropDraft(state.branch.id); loadBranch(state.branch.id); } });
 try { state.token = localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY); } catch (e) { state.token = null; }
 (async () => {
   state.lock = await fetchLock();
