@@ -515,26 +515,10 @@
     "img": null,
     "items": [
       {
-        "id": "vanilla-cr-me-br-l-e",
-        "en": "Vanilla Crème Brûlée",
-        "ar": "كريم برولي فانيلا",
-        "price": 15,
-        "den": "",
-        "dar": ""
-      },
-      {
-        "id": "large-cr-me-br-l-e",
-        "en": "Large Crème Brûlée",
-        "ar": "كريم برولي كبير",
-        "price": 20,
-        "den": "",
-        "dar": ""
-      },
-      {
-        "id": "small-cr-me-br-l-e",
-        "en": "Small Crème Brûlée",
-        "ar": "كريم برولي صغير",
-        "price": 15,
+        "id": "large-tiramisu",
+        "en": "Tiramisu",
+        "ar": "تيراميسو",
+        "price": 25,
         "den": "",
         "dar": ""
       },
@@ -547,26 +531,10 @@
         "dar": ""
       },
       {
-        "id": "small-tiramisu",
-        "en": "Small Tiramisu",
-        "ar": "تيراميسو كلاسيك صغير",
-        "price": 20,
-        "den": "",
-        "dar": ""
-      },
-      {
-        "id": "large-tiramisu",
-        "en": "Large Tiramisu",
-        "ar": "تيراميسو كبير",
-        "price": 25,
-        "den": "",
-        "dar": ""
-      },
-      {
         "id": "cake",
-        "en": "Cake",
-        "ar": "كيكة",
-        "price": 20,
+        "en": "Cheese Cake",
+        "ar": "تشيز كيك",
+        "price": 30,
         "den": "",
         "dar": ""
       },
@@ -582,7 +550,7 @@
         "id": "nutella-nut-pancakes",
         "en": "Nutella Nut Pancakes",
         "ar": "بان كيك نوتيلا",
-        "price": 20,
+        "price": 25,
         "den": "",
         "dar": ""
       },
@@ -590,23 +558,23 @@
         "id": "lotus-pancakes",
         "en": "Lotus Pancakes",
         "ar": "بان كيك لوتس",
-        "price": 20,
+        "price": 25,
         "den": "",
         "dar": ""
       },
       {
         "id": "mix-pancakes",
         "en": "Mix Pancakes",
-        "ar": "بان كيك ميكس",
-        "price": 25,
+        "ar": "بان كيك مكس",
+        "price": 30,
         "den": "",
         "dar": ""
       },
       {
         "id": "nutella-banana-crepe",
-        "en": "Nutella Banana Crepe",
+        "en": "Nutella Crepe",
         "ar": "كريب نوتيلا",
-        "price": 20,
+        "price": 25,
         "den": "",
         "dar": ""
       },
@@ -614,14 +582,38 @@
         "id": "lotus-crepe",
         "en": "Lotus Crepe",
         "ar": "كريب لوتس",
-        "price": 20,
+        "price": 25,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "d-muv57j0c",
+        "en": "Kinder Crepe ",
+        "ar": "كريب كيندر  ",
+        "price": 30,
         "den": "",
         "dar": ""
       },
       {
         "id": "mix-crepe",
         "en": "Mix Crepe",
-        "ar": "كريب ميكس",
+        "ar": "كريب مكس",
+        "price": 30,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "d-muv50oo5",
+        "en": "Mousse Cake ",
+        "ar": "الموس كيك ",
+        "price": 30,
+        "den": "",
+        "dar": ""
+      },
+      {
+        "id": "d-muv59l78",
+        "en": "Creme Brûlée ",
+        "ar": "كريم برولي ",
         "price": 25,
         "den": "",
         "dar": ""
