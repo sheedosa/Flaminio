@@ -70,6 +70,7 @@ const L = {
     diagContents: 'المفتاح لا يستطيع الحفظ. في «Repository permissions» اجعل Contents = Read and write، وتأكد أن «Repository access» = «Only select repositories» مع اختيار Flaminio. ثم اضغط Update أو أنشئ مفتاحاً جديداً.',
     diagBlocked: 'رفض GitHub الحفظ: {m}',
     keyHow: 'إنشاء المفتاح: افتح الرابط وأنت داخل بحساب {o}. في «Repository access» اختر «Only select repositories» ثم Flaminio، وتأكد أن Contents = Read and write، ثم اضغط Generate token وانسخه.', keyLink: 'افتح صفحة إنشاء المفتاح',
+    demoBtn: 'عرض اللوحة بدون مفتاح (عرض تجريبي، لا يحفظ)', demoNote: 'عرض تجريبي: يمكنك تجربة كل شيء، لكن «حفظ ونشر» لا يغيّر الموقع.', demoSave: 'هذا عرض تجريبي، لم يُحفظ شيء. للحفظ ادخل بمفتاح GitHub.',
     newKey: 'مفتاح GitHub الجديد', rekey: 'حفظ المفتاح الجديد', rekeying: 'جارٍ الحفظ…', keyUpdated: 'تم تحديث المفتاح ✓ كلمة المرور لم تتغير.',
     quickTitle: 'عيّن كلمة مرور اللوحة (مرة واحدة)', quickLead: 'بعدها يدخل أي شخص تعطيه الرابط وكلمة المرور، دون مفتاح GitHub. لن يُطلب هذا مرة أخرى.', quickSave: 'حفظ كلمة المرور', quickDone: 'تم تعيين كلمة المرور ✓ أعطِ الرابط وكلمة المرور لمن سيعدّل القائمة.',
     homeHint: 'لتبقى مسجّلاً على الآيفون: اضغط زر المشاركة ثم «إضافة إلى الشاشة الرئيسية»، وافتح اللوحة من أيقونتها.', ok: 'حسناً',
@@ -126,6 +127,7 @@ const L = {
     diagContents: 'This key can’t save. Under “Repository permissions” set Contents to Read and write, and make sure “Repository access” is “Only select repositories” with Flaminio picked. Then press Update, or create a new key.',
     diagBlocked: 'GitHub refused to save: {m}',
     keyHow: 'To create the key: open the link while signed in as {o}. Under “Repository access” choose “Only select repositories” and pick Flaminio, check that Contents is Read and write, then press Generate token and copy it.', keyLink: 'Open the key page',
+    demoBtn: 'Open the admin without a key (demo, nothing is saved)', demoNote: 'Demo: try everything, but “Save & publish” does not change the website.', demoSave: 'Demo only, nothing was saved. Sign in with a GitHub key to save.',
     newKey: 'New GitHub key', rekey: 'Save the new key', rekeying: 'Saving…', keyUpdated: 'Key updated ✓ The password has not changed.',
     quickTitle: 'Set the admin password (one time)', quickLead: 'After this, anyone you give the link and password to can sign in without a GitHub key. You won’t be asked again.', quickSave: 'Save password', quickDone: 'Password set ✓ Give the link and password to whoever edits the menu.',
     homeHint: 'To stay signed in on iPhone: tap Share, then “Add to Home Screen”, and open the admin from its icon.', ok: 'OK',
@@ -172,7 +174,7 @@ async function gh(path, opts = {}) {
   const res = await fetch(API + path, {
     method: opts.method || 'GET',
     headers: {
-      Authorization: `Bearer ${state.token}`,
+      ...(state.token ? { Authorization: `Bearer ${state.token}` } : {}),
       Accept: 'application/vnd.github+json',
       ...(opts.body ? { 'Content-Type': 'application/json' } : {}),
     },
@@ -330,6 +332,7 @@ function renderTop() {
   if (state.screen === 'picker') {
     $('#top-actions').innerHTML = `<button class="btn btn-ghost btn-sm" id="pw-btn" type="button">${esc(t('pwMenu'))}</button><button class="btn btn-ghost btn-sm" id="logout-btn" type="button">${esc(t('logoutShort'))}</button>`;
     $('#pw-btn').addEventListener('click', () => renderSetup());
+    if (state.demo) $('#pw-btn').hidden = true;
     $('#logout-btn').addEventListener('click', logout);
     return;
   }
@@ -435,10 +438,12 @@ function renderLogin(error = '') {
         ${error ? `<p class="error" role="alert">${esc(t(error, state.errVars || {}))}</p>` : ''}
         <button class="btn btn-primary btn-lg" type="button" id="first-btn">${esc(t('firstBtn'))}</button>
         <button class="linklike" type="button" id="mode-btn">${esc(t('keyOnly'))}</button>
+        <button class="linklike" type="button" id="demo-btn">${esc(t('demoBtn'))}</button>
       </div>
     </section>`;
     $('#first-btn').addEventListener('click', () => { history.replaceState(null, '', location.pathname + '#setup'); renderSetup(); });
     $('#mode-btn').addEventListener('click', () => { state.loginMode = 'key'; renderLogin(); });
+    $('#demo-btn').addEventListener('click', startDemo);
     return;
   }
   $('#app').innerHTML = `
@@ -465,8 +470,10 @@ function renderLogin(error = '') {
       <button class="btn btn-primary btn-lg" type="button" id="rekey-btn">${esc(t('rekey'))}</button>` : `
       <button class="btn btn-primary btn-lg" type="submit">${esc(usePw ? t('pwLogin') : t('login'))}</button>`}
       <button class="linklike" type="button" id="mode-btn">${esc(usePw ? t('useKey') : state.lock ? t('usePw') : t('back'))}</button>
+      <button class="linklike" type="button" id="demo-btn">${esc(t('demoBtn'))}</button>
     </form>
   </section>`;
+  $('#demo-btn').addEventListener('click', startDemo);
   const modeBtn = $('#mode-btn');
   if (modeBtn) modeBtn.addEventListener('click', () => { state.loginMode = usePw ? 'key' : 'pw'; renderLogin(); });
   const rekeyBtn = $('#rekey-btn');
@@ -592,7 +599,9 @@ async function putFile(path, text, message) {
   try { return await gh(`/repos/${cfg.repo}/contents/${path}`, { method: 'PUT', body: { message, content: textToB64(text), branch: cfg.branch, ...(sha ? { sha } : {}) } }); }
   catch (e) { throw asWriteError(e); }
 }
+function startDemo() { state.demo = true; state.token = null; renderPicker(); toast(t('demoNote'), false, 6000); }
 function logout() {
+  state.demo = false;
   localStorage.removeItem(TOKEN_KEY); sessionStorage.removeItem(TOKEN_KEY);
   state.token = null; state.branch = null; state.menu = null; state.status = null; state.loginMode = 'pw';
   renderLogin();
@@ -608,7 +617,8 @@ function renderPicker() {
   let hintSeen = false; try { hintSeen = localStorage.getItem(HINT_KEY) === '1'; } catch (e) { /* ignore */ }
   const quickPw = state.quickPw || '';
   $('#app').innerHTML = `
-  ${state.lock ? '' : `
+  ${state.demo ? `<p class="notice">${esc(t('demoNote'))}</p>` : ''}
+  ${state.lock || state.demo ? '' : `
   <form class="card quick-pw" id="quick-form">
     <h2>${esc(t('quickTitle'))}</h2>
     <p class="muted">${esc(t('quickLead'))}</p>
@@ -627,7 +637,7 @@ function renderPicker() {
   const hintOk = $('#hint-ok');
   if (hintOk) hintOk.addEventListener('click', () => { try { localStorage.setItem(HINT_KEY, '1'); } catch (e) { /* ignore */ } hintOk.parentElement.remove(); });
   const quick = $('#quick-form');
-  if (!quick) return;
+  if (!quick || state.demo) return;
   $('#quick-pw').addEventListener('input', e => { state.quickPw = e.target.value; $('#quick-weak-row').hidden = !e.target.value || strongEnough(e.target.value); });
   $('#quick-weak').addEventListener('change', e => { state.weakOk = e.target.checked; });
   quick.addEventListener('submit', async e => {
@@ -940,6 +950,7 @@ const loadViaImg = file => new Promise((resolve, reject) => { const img = new Im
 async function save() {
   const list = changes();
   if (!list.length || state.busy) return;
+  if (state.demo) { toast(t('demoSave'), true, 6000); return; }
   // Every dish needs at least one name.
   for (const c of state.menu) for (const it of itemsOf(c)) if (!it.ar.trim() && !it.en.trim()) { toast(t('noName'), true); return; }
   state.busy = true;
