@@ -935,7 +935,7 @@
             "id": "mango",
             "en": "Mango",
             "ar": "مانجو",
-            "price": 10,
+            "price": 20,
             "den": "",
             "dar": ""
           },
@@ -943,7 +943,7 @@
             "id": "lemon-with-mint",
             "en": "Lemon with Mint",
             "ar": "ليمون بالنعناع",
-            "price": 10,
+            "price": 15,
             "den": "",
             "dar": ""
           },
@@ -951,7 +951,7 @@
             "id": "guava",
             "en": "Guava",
             "ar": "جوافة",
-            "price": 10,
+            "price": 16,
             "den": "",
             "dar": ""
           },
@@ -959,7 +959,7 @@
             "id": "kiwi",
             "en": "Kiwi",
             "ar": "كيوي",
-            "price": 17,
+            "price": 25,
             "den": "",
             "dar": ""
           },
@@ -975,7 +975,7 @@
             "id": "dates-and-almonds",
             "en": "Dates and Almonds",
             "ar": "تمر ولوز",
-            "price": 13,
+            "price": 17,
             "den": "",
             "dar": ""
           },
@@ -983,7 +983,7 @@
             "id": "avocado",
             "en": "Avocado",
             "ar": "أفوكادو",
-            "price": 17,
+            "price": 30,
             "den": "",
             "dar": ""
           },
@@ -999,7 +999,7 @@
             "id": "banana-milk",
             "en": "Banana Milk",
             "ar": "حليب بالموز",
-            "price": 9,
+            "price": 20,
             "den": "",
             "dar": ""
           }
