@@ -804,7 +804,7 @@
             "id": "iced-macchiato",
             "en": "Iced Macchiato",
             "ar": "ايس مكياطة",
-            "price": 10,
+            "price": 15,
             "den": "",
             "dar": ""
           },
@@ -820,7 +820,7 @@
             "id": "frappuccino",
             "en": "Frappuccino",
             "ar": "فرابتشينو",
-            "price": 15,
+            "price": 25,
             "den": "Mocha - Caramel - Hazelnut - Vanilla",
             "dar": "موكا، كراميل، بندق، فانيليا."
           }
@@ -834,7 +834,7 @@
             "id": "milkshakes",
             "en": "Milkshakes",
             "ar": "ميلك شيك",
-            "price": 12,
+            "price": 30,
             "den": "Nutella - Lotus - Kinder - Milka - Strawberry - Mango - Vanilla - Raspberry - Blueberry",
             "dar": "نوتيلا، لوتس، كيندر، ميلكا، فراولة، منجا، فانيليا، توت أحمر، توت أزرق."
           },
@@ -850,7 +850,7 @@
             "id": "smoothies",
             "en": "Smoothies",
             "ar": "سموثي",
-            "price": 10,
+            "price": 20,
             "den": "Depending on available flavors",
             "dar": "حسب النكهات المتوفرة."
           }
