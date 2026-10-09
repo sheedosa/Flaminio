@@ -1,0 +1,120 @@
+{
+  "hero": [
+    "fillet-cheese",
+    "caprese-pour",
+    "spaghetti-seafood",
+    "interior-table"
+  ],
+  "story": {
+    "img": "interior-booth",
+    "title": {
+      "en": "A family table in Al-Hawari",
+      "ar": "مائدة عائلية في الهواري"
+    },
+    "text": {
+      "en": "Flaminio is a family-run Italian restaurant in Al-Hawari, Benghazi. Our kitchen works with imported Italian ingredients, pasta made by hand each morning and a wood-fired oven that never quite cools down. What we care about most is simple: warm hospitality and food we would happily serve our own family.",
+      "ar": "فلامينيو مطعم إيطالي عائلي في الهواري، بنغازي. يعمل مطبخنا بمكونات إيطالية مستوردة، وباستا نصنعها بأيدينا كل صباح، وفرن حطب لا يهدأ. ما يهمنا بسيط: ضيافة دافئة وطعام نقدّمه بكل سرور لعائلتنا."
+    }
+  },
+  "gallery": [
+    {
+      "img": "caprese-pour",
+      "en": "Caprese, dressed at the table",
+      "ar": "سلطة كابريزي تُتبّل على المائدة"
+    },
+    {
+      "img": "greek-salad",
+      "en": "Greek salad",
+      "ar": "سلطة يونانية"
+    },
+    {
+      "img": "mussels-prawns",
+      "en": "Mussels and prawns in tomato sauce",
+      "ar": "محار وجمبري بصلصة الطماطم"
+    },
+    {
+      "img": "pizza-chicken",
+      "en": "Chicken & arugula pizza",
+      "ar": "بيتزا دجاج مع جرجير"
+    },
+    {
+      "img": "avocado-shrimp",
+      "en": "Avocado salad",
+      "ar": "سلطة الأفوكادو"
+    },
+    {
+      "img": "skillet-burger",
+      "en": "Skillet burger",
+      "ar": "برغر سكيليت"
+    },
+    {
+      "img": "skillet-burger-fries",
+      "en": "Skillet burger with fries",
+      "ar": "برغر سكيليت مع بطاطا مقلية"
+    },
+    {
+      "img": "king-prawns",
+      "en": "King prawns",
+      "ar": "جمبري ملكي"
+    },
+    {
+      "img": "mushroom-soup",
+      "en": "Mushroom soup",
+      "ar": "شوربة الماشروم"
+    },
+    {
+      "img": "rigatoni-beef",
+      "en": "Rigatoni with beef strips",
+      "ar": "ريغاتوني بشرائح اللحمة"
+    },
+    {
+      "img": "pizza-wood-fired",
+      "en": "From the wood-fired oven",
+      "ar": "من فرن الحطب"
+    },
+    {
+      "img": "interior-table",
+      "en": "Our dining room",
+      "ar": "صالة الطعام"
+    },
+    {
+      "img": "seafood-pan",
+      "en": "Flaminio Seafood",
+      "ar": "فلامينيو فواكه البحر"
+    },
+    {
+      "img": "tomahawk",
+      "en": "Tomahawk steak",
+      "ar": "طبق التوماهوك"
+    },
+    {
+      "img": "spaghetti-seafood",
+      "en": "Spaghetti seafood",
+      "ar": "سباغيتي فواكه البحر"
+    },
+    {
+      "img": "tropical-salad",
+      "en": "Tropical salad",
+      "ar": "السلطة الاستوائية"
+    },
+    {
+      "img": "fillet-cheese",
+      "en": "Fillet with cheese sauce",
+      "ar": "فليه بصوص الجبن"
+    },
+    {
+      "img": "pizza-chicken-arugula",
+      "en": "Wood-fired pizza",
+      "ar": "بيتزا على الحطب"
+    },
+    {
+      "img": "interior-booth",
+      "en": "Booth seating",
+      "ar": "جلسات الصالة"
+    }
+  ],
+  "social": {
+    "facebook": "https://www.facebook.com/flaminio.ly/",
+    "instagram": ""
+  }
+}

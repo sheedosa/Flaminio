@@ -28,13 +28,21 @@ const branchUrl = (branch, lang) => SITE + branch.id + '/' + LANGS[lang];
 
 // ---------- content (edited in /admin/, stored in content/) ----------
 const readJson = f => JSON.parse(fs.readFileSync(path.join(ROOT, 'content', f), 'utf8'));
+// Site-wide content edited in the admin's «الموقع» section: hero photos, the story block, the gallery
+// and social links. Anything missing there falls back to the code-owned defaults in js/data.js.
+const SITE_CONTENT = fs.existsSync(path.join(ROOT, 'content/site.json')) ? readJson('site.json') : {};
+const heroList = (SITE_CONTENT.hero || []).filter(Boolean).length ? SITE_CONTENT.hero.filter(Boolean) : HERO;
+const galleryList = (SITE_CONTENT.gallery || []).filter(g => g && g.img).length ? SITE_CONTENT.gallery.filter(g => g && g.img) : GALLERY;
+const story = SITE_CONTENT.story || {};
+const social = { ...CONTACT, ...Object.fromEntries(Object.entries(SITE_CONTENT.social || {}).filter(([, v]) => v)) };
+const sameAs = [social.facebook, social.instagram].filter(Boolean);
 const itemsOf = cat => cat.items || cat.groups.flatMap(g => g.items);
 const localNumber = s => String(s || '').replace(/\D/g, '').replace(/^00/, '').replace(/^218/, '').replace(/^0/, '');
 // Phone digits as typed in the admin (e.g. 0935433335) → display, tel: and wa.me forms.
 function contactFor(info) {
   const local = localNumber(info.phone), wa = localNumber(info.whatsapp) || local;
   return {
-    ...CONTACT,
+    ...social,
     phoneDisplay: local ? `0${local.slice(0, 2)}-${local.slice(2)}` : '',
     phoneTel: local ? `+218${local}` : '',
     whatsapp: wa ? `https://wa.me/218${wa}` : '',
@@ -111,13 +119,27 @@ function nav(t, page) {
 }
 
 function heroSlides(base) {
-  return HERO.map((name, i) => i === 0
-    ? `<picture><source type="image/webp" srcset="${base}img/${name}.webp"><img class="hero-slide is-active" src="${base}img/${name}.jpg" alt="" width="1280" height="720" fetchpriority="high" decoding="async" data-hero-slide></picture>`
-    : `<picture><source type="image/webp" data-srcset="${base}img/${name}.webp"><img class="hero-slide" data-src="${base}img/${name}.jpg" alt="" width="1280" height="720" decoding="async" data-hero-slide></picture>`
-  ).join('\n  ');
+  return heroList.map((name, i) => {
+    if (isUpload(name)) return i === 0
+      ? `<img class="hero-slide is-active" src="${base}${name}" alt="" width="1280" height="720" fetchpriority="high" decoding="async" data-hero-slide>`
+      : `<img class="hero-slide" data-src="${base}${name}" alt="" width="1280" height="720" decoding="async" data-hero-slide>`;
+    return i === 0
+      ? `<picture><source type="image/webp" srcset="${base}img/${name}.webp"><img class="hero-slide is-active" src="${base}img/${name}.jpg" alt="" width="1280" height="720" fetchpriority="high" decoding="async" data-hero-slide></picture>`
+      : `<picture><source type="image/webp" data-srcset="${base}img/${name}.webp"><img class="hero-slide" data-src="${base}img/${name}.jpg" alt="" width="1280" height="720" decoding="async" data-hero-slide></picture>`;
+  }).join('\n  ');
 }
+const heroPreload = base => isUpload(heroList[0])
+  ? `<link rel="preload" as="image" href="${base}${heroList[0]}" fetchpriority="high">`
+  : `<link rel="preload" as="image" href="${base}img/${heroList[0]}.webp" type="image/webp" fetchpriority="high">`;
+// The «Our story» block: photo and copy come from content/site.json when set there.
+const aboutPhoto = (base, t) => photo(base, story.img || 'interior-booth', t.aboutAlt, 'loading="lazy" decoding="async"');
+const storyText = (lang, t) => ({ title: (story.title && story.title[lang]) || t.storyTitle, text: (story.text && story.text[lang]) || t.story });
+const socialLinks = t => [
+  `<a href="${esc(social.facebook)}" target="_blank" rel="noopener" aria-label="${esc(t.facebook)}" class="social-btn">f</a>`,
+  social.instagram ? `<a href="${esc(social.instagram)}" target="_blank" rel="noopener" aria-label="${esc(t.instagram)}" class="social-btn social-btn--ig"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>` : '',
+].join('\n    ');
 
-const heroDots = t => HERO.map((_, i) =>
+const heroDots = t => heroList.map((_, i) =>
   `<button type="button" class="hero-dot${i === 0 ? ' is-active' : ''}" aria-label="${esc(t.showSlide)} ${i + 1}" data-dot="${i}"></button>`).join('');
 
 const trust = t => t.trust.map(s => `<span>${esc(s)}</span>`).join('<span aria-hidden="true">·</span>');
@@ -151,8 +173,8 @@ function stats(branch, t) {
 const whyCards = t => t.why.map(([title, desc], i) =>
   `<div class="why-card"><div class="why-num" aria-hidden="true">${ROMAN[i]}</div><h3 class="serif">${esc(title)}</h3><p>${esc(desc)}</p></div>`).join('\n      ');
 
-const gallery = (lang, t, base) => GALLERY.map((g, i) =>
-  `<figure class="gallery-figure" data-index="${i}" role="button" tabindex="0" aria-label="${esc(t.viewPhoto + ' ' + g[lang])}">${pic(base, g.img, '', 'loading="lazy" decoding="async"', i % 8 === 0 ? '(min-width: 720px) 50vw, 50vw' : '(min-width: 720px) 25vw, 50vw')}<figcaption>${esc(g[lang])}</figcaption></figure>`).join('\n      ');
+const gallery = (lang, t, base) => galleryList.map((g, i) =>
+  `<figure class="gallery-figure" data-index="${i}" role="button" tabindex="0" aria-label="${esc(t.viewPhoto + ' ' + (g[lang] || g[otherLang(lang)] || ''))}">${photo(base, g.img, '', 'loading="lazy" decoding="async"', i % 8 === 0 ? '(min-width: 720px) 50vw, 50vw' : '(min-width: 720px) 25vw, 50vw')}<figcaption>${esc(g[lang] || g[otherLang(lang)] || '')}</figcaption></figure>`).join('\n      ');
 
 const menuTabs = (menu, lang) => menu.map(c => `<a class="menu-tab" href="#${c.id}" data-cat="${c.id}">${esc(c[lang])}</a>`).join('');
 
@@ -204,7 +226,7 @@ function restaurantLd(branch, lang) {
     telephone: c.phoneTel, servesCuisine: 'Italian', priceRange: '$$', acceptsReservations: 'True',
     hasMenu: branchUrl(branch, lang) + 'menu.html',
     address: { '@type': 'PostalAddress', streetAddress: branch.info.findTitle.en, addressLocality: 'Benghazi', addressCountry: 'LY' },
-    sameAs: [CONTACT.facebook],
+    sameAs,
   });
 }
 
@@ -264,7 +286,8 @@ function pageContext(branch, lang, page) {
     ogDescription: isMenu ? t.menuOgDesc : t.homeOgDesc,
     canonical: url(lang), ogImage: SITE + 'img/og-image.jpg', altLocale: STRINGS[otherLang(lang)].locale,
     hreflang: [`<link rel="alternate" hreflang="en" href="${url('en')}">`, `<link rel="alternate" hreflang="ar" href="${url('ar')}">`, `<link rel="alternate" hreflang="x-default" href="${url('en')}">`].join('\n'),
-    preload: isMenu ? '' : `<link rel="preload" as="image" href="${base}img/${HERO[0]}.webp" type="image/webp" fetchpriority="high">`,
+    preload: isMenu ? '' : heroPreload(base),
+    aboutPhoto: aboutPhoto(base, t), storyTitle: storyText(lang, t).title, storyText: storyText(lang, t).text, socialLinks: socialLinks(t),
     fontsHref: fontsHref(lang),
     jsonLd: isMenu ? menuLd(branch, lang, t) : restaurantLd(branch, lang),
     nav: nav(t, page),
@@ -297,7 +320,7 @@ function gateContext() {
     jsonLd: json({
       '@context': 'https://schema.org', '@type': 'Restaurant',
       name: en.siteName, alternateName: ar.siteName, url: SITE, image: SITE + 'img/og-image.jpg', logo: SITE + 'img/logo-burgundy.png',
-      servesCuisine: 'Italian', priceRange: '$$', sameAs: [CONTACT.facebook],
+      servesCuisine: 'Italian', priceRange: '$$', sameAs,
     }),
     branchesEn: choices('en'), branchesAr: choices('ar'),
   };

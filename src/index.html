@@ -46,13 +46,13 @@
 <section id="about" class="about" aria-labelledby="about-title">
   <div class="container about-grid" data-reveal>
     <div class="about-photo">
-      <picture><source type="image/webp" srcset="{{base}}img/interior-booth.webp"><img src="{{base}}img/interior-booth.jpg" alt="{{t.aboutAlt}}" width="720" height="1280" loading="lazy" decoding="async"></picture>
+      {{{aboutPhoto}}}
       <picture><source type="image/webp" srcset="{{base}}img/logo-gold.webp"><img src="{{base}}img/logo-gold.png" alt="" aria-hidden="true" class="watermark" loading="lazy" decoding="async"></picture>
     </div>
     <div class="about-copy">
       <div class="about-kicker"><span class="line"></span>{{t.storyKicker}}</div>
-      <h2 class="serif about-title" id="about-title">{{t.storyTitle}}</h2>
-      <p class="about-text">{{t.story}}</p>
+      <h2 class="serif about-title" id="about-title">{{storyTitle}}</h2>
+      <p class="about-text">{{storyText}}</p>
       <a href="menu.html" class="btn btn-outline-burgundy about-cta">{{t.viewMenu}}</a>
     </div>
   </div>

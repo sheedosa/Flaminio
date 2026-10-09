@@ -193,3 +193,10 @@ html[lang="en"] [dir="rtl"], html[lang="en"] input[name="ar"] { font-family: Taj
 .quick-pw .check input { width: 22px; height: 22px; accent-color: var(--burgundy); flex-shrink: 0; }
 .quick-pw .error { color: var(--danger); font-weight: 700; }
 .home-hint { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+
+/* website section */
+.pick--site { grid-column: 1 / -1; border-style: dashed; }
+.item-fields--2 { grid-template-columns: 1fr 1fr; }
+@media (max-width: 560px) { .item-fields--2 { grid-template-columns: 1fr; } }
+.item--photo .item-row { justify-content: flex-end; }
+.card > .muted { margin-top: -6px; }

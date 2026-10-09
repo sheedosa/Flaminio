@@ -99,7 +99,8 @@ let lightboxOpener = null;
 function showInLightbox() {
   const fig = visible[lightboxIndex];
   const img = fig.querySelector('img');
-  lightboxSrc.srcset = fig.querySelector('source').srcset;
+  const source = fig.querySelector('source'); // photos uploaded in the admin have no webp variant
+  if (source) lightboxSrc.srcset = source.srcset; else lightboxSrc.removeAttribute('srcset');
   lightboxImg.src = img.getAttribute('src');
   lightboxImg.alt = fig.querySelector('figcaption').textContent;
   lightboxCap.textContent = lightboxImg.alt;

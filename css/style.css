@@ -683,6 +683,7 @@ html:not(.js) .hero-arrow, html:not(.js) .hero-dots, html:not(.js) .gallery-togg
   font-size: 18px;
 }
 .social-btn:hover { background: var(--gold); color: var(--espresso); }
+.social-btn--ig svg { display: block; }
 .footer-copy { margin-top: 36px; font-size: 12px; letter-spacing: .06em; color: var(--cream); }
 
 /* ---------- lightbox ---------- */

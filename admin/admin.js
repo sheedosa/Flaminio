@@ -5,6 +5,8 @@ const API = 'https://api.github.com';
 const TOKEN_KEY = 'flaminio-admin-token';
 const DRAFT_KEY = id => `flaminio-admin-draft-${id}`;
 const HINT_KEY = 'flaminio-admin-home-hint';
+const FAIL_KEY = 'flaminio-admin-fails';
+const SITE_PATH = 'content/site.json';
 const $ = (sel, root = document) => root.querySelector(sel);
 const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -19,6 +21,7 @@ const state = {
   previews: new Map(),     // path -> object URL
   removed: new Set(),      // photo paths to delete
   tab: 'info', catUid: null, busy: false, status: null, screen: null,
+  site: null, origSite: '',   // the «website» section (content/site.json)
 };
 let uidSeq = 1;
 const uid = () => 'u' + (uidSeq++);
@@ -71,6 +74,18 @@ const L = {
     diagBlocked: 'رفض GitHub الحفظ: {m}',
     keyHow: 'إنشاء المفتاح: افتح الرابط وأنت داخل بحساب {o}. في «Repository access» اختر «Only select repositories» ثم Flaminio، وتأكد أن Contents = Read and write، ثم اضغط Generate token وانسخه.', keyLink: 'افتح صفحة إنشاء المفتاح',
     demoBtn: 'عرض اللوحة بدون مفتاح (عرض تجريبي، لا يحفظ)', demoNote: 'عرض تجريبي: يمكنك تجربة كل شيء، لكن «حفظ ونشر» لا يغيّر الموقع.', demoSave: 'هذا عرض تجريبي، لم يُحفظ شيء. للحفظ ادخل بمفتاح GitHub.',
+    siteCard: 'الموقع', siteSub: 'صور الواجهة والمعرض، قسم «قصتنا»، روابط التواصل', siteName: 'الموقع الإلكتروني', loadingSite: 'جارٍ تحميل بيانات الموقع…',
+    tabPhotos: 'الصور', tabSiteInfo: 'النصوص والروابط',
+    heroCard: 'صور الواجهة الكبيرة', heroHint: 'تتبدل تلقائياً أعلى الصفحة الرئيسية لكل الفروع. من صورة إلى 6 صور عرضية؛ الأولى تظهر أولاً.',
+    storyPhotoCard: 'صورة قسم «قصتنا»', storyPhotoHint: 'صورة طولية تظهر بجانب نص «قصتنا».',
+    galleryCard: 'معرض الصور', galleryHint: 'تظهر أول 8 صور، والباقي بعد الضغط على «عرض المزيد». لكل صورة تعليق قصير.',
+    addHero: '+ إضافة صورة للواجهة', addGallery: '+ إضافة صورة للمعرض', capAr: 'تعليق الصورة (عربي)', capEn: 'تعليق الصورة (إنجليزي)', delPhotoEntry: 'حذف الصورة', confirmDelPhoto: 'حذف هذه الصورة من الموقع؟',
+    storyCard: 'قسم «قصتنا»', storyTitleAr: 'العنوان (عربي)', storyTitleEn: 'العنوان (إنجليزي)', storyTextAr: 'النص (عربي)', storyTextEn: 'النص (إنجليزي)',
+    socialCard: 'روابط التواصل', facebook: 'رابط صفحة فيسبوك', instagram: 'رابط إنستغرام (اختياري)', socialHint: 'تظهر الأيقونات أسفل كل صفحة. اترك إنستغرام فارغاً إن لم يكن لديكم حساب.',
+    chHero: 'صور الواجهة', chStoryPhoto: 'صورة قصتنا', chGallery: 'معرض الصور', chStory: 'نص قصتنا', chSocial: 'روابط التواصل',
+    noHero: 'يجب أن تبقى صورة واحدة على الأقل في الواجهة.',
+    shareWa: 'إرسال الرابط وكلمة المرور عبر واتساب', shareText: 'لوحة تحكم فلامينيو\nالرابط: {link}\nكلمة المرور: {pw}',
+    tooMany: 'محاولات خاطئة كثيرة. انتظر {s} ثانية ثم حاول مجدداً.',
     newKey: 'مفتاح GitHub الجديد', rekey: 'حفظ المفتاح الجديد', rekeying: 'جارٍ الحفظ…', keyUpdated: 'تم تحديث المفتاح ✓ كلمة المرور لم تتغير.',
     quickTitle: 'عيّن كلمة مرور اللوحة (مرة واحدة)', quickLead: 'بعدها يدخل أي شخص تعطيه الرابط وكلمة المرور، دون مفتاح GitHub. لن يُطلب هذا مرة أخرى.', quickSave: 'حفظ كلمة المرور', quickDone: 'تم تعيين كلمة المرور ✓ أعطِ الرابط وكلمة المرور لمن سيعدّل القائمة.',
     homeHint: 'لتبقى مسجّلاً على الآيفون: اضغط زر المشاركة ثم «إضافة إلى الشاشة الرئيسية»، وافتح اللوحة من أيقونتها.', ok: 'حسناً',
@@ -78,7 +93,7 @@ const L = {
     pwMenu: 'كلمة المرور', setupTitle: 'إعداد كلمة المرور', setupLead: 'مرة واحدة: الصق مفتاح GitHub واختر كلمة مرور. بعدها يكفي الرابط وكلمة المرور للدخول من أي جهاز.',
     changeTitle: 'تغيير كلمة المرور', changeLead: 'اختر كلمة مرور جديدة. كلمة المرور القديمة تتوقف عن العمل فوراً على كل الأجهزة.',
     setupKey: 'مفتاح GitHub (يبدأ بـ github_pat_)', newPw: 'كلمة المرور الجديدة', suggest: 'اقتراح آخر',
-    pwRule: 'ثلاث كلمات على الأقل أو 14 حرفاً. الاقتراح سهل الكتابة وقوي بما يكفي.', pwWeak: 'كلمة المرور قصيرة أو سهلة التخمين. استخدم ثلاث كلمات على الأقل أو 14 حرفاً.',
+    pwRule: 'ثلاث كلمات أو 14 حرفاً على الأقل. الاقتراح سهل الكتابة، ويُكتب مرة واحدة فقط على كل جهاز.', pwWeak: 'كلمة المرور قصيرة أو سهلة التخمين. استخدم ثلاث كلمات على الأقل أو 14 حرفاً.',
     weakOk: 'استخدام كلمة مرور ضعيفة على مسؤوليتي (يمكن تخمينها، والأفضل تغييرها لاحقاً)', pwWeakTick: 'كلمة المرور ضعيفة. للاستمرار بها ضع علامة على «على مسؤوليتي».',
     setupSave: 'حفظ كلمة المرور', setupSaving: 'جارٍ التشفير والحفظ…', setupDone: 'تم تعيين كلمة المرور ✓', setupDoneLead: 'سلّم هذين للمسؤول عن القائمة:',
     linkLabel: 'الرابط', continue: 'متابعة إلى لوحة التحكم', copy: 'نسخ', copied: 'تم النسخ ✓', back: 'رجوع',
@@ -128,6 +143,18 @@ const L = {
     diagBlocked: 'GitHub refused to save: {m}',
     keyHow: 'To create the key: open the link while signed in as {o}. Under “Repository access” choose “Only select repositories” and pick Flaminio, check that Contents is Read and write, then press Generate token and copy it.', keyLink: 'Open the key page',
     demoBtn: 'Open the admin without a key (demo, nothing is saved)', demoNote: 'Demo: try everything, but “Save & publish” does not change the website.', demoSave: 'Demo only, nothing was saved. Sign in with a GitHub key to save.',
+    siteCard: 'Website', siteSub: 'Hero and gallery photos, the “Our story” block, social links', siteName: 'Website', loadingSite: 'Loading website details…',
+    tabPhotos: 'Photos', tabSiteInfo: 'Text & links',
+    heroCard: 'Big photos at the top', heroHint: 'They rotate at the top of the home page of every branch. 1 to 6 landscape photos; the first one shows first.',
+    storyPhotoCard: '“Our story” photo', storyPhotoHint: 'A portrait photo shown beside the story text.',
+    galleryCard: 'Photo gallery', galleryHint: 'The first 8 show at once, the rest after “Show more”. Each photo has a short caption.',
+    addHero: '+ Add a top photo', addGallery: '+ Add a gallery photo', capAr: 'Caption (Arabic)', capEn: 'Caption (English)', delPhotoEntry: 'Delete photo', confirmDelPhoto: 'Remove this photo from the website?',
+    storyCard: '“Our story” block', storyTitleAr: 'Title (Arabic)', storyTitleEn: 'Title (English)', storyTextAr: 'Text (Arabic)', storyTextEn: 'Text (English)',
+    socialCard: 'Social links', facebook: 'Facebook page link', instagram: 'Instagram link (optional)', socialHint: 'The icons appear at the bottom of every page. Leave Instagram empty if there is no account.',
+    chHero: 'top photos', chStoryPhoto: 'story photo', chGallery: 'gallery', chStory: 'story text', chSocial: 'social links',
+    noHero: 'At least one photo must stay at the top.',
+    shareWa: 'Send the link and password by WhatsApp', shareText: 'Flaminio admin\nLink: {link}\nPassword: {pw}',
+    tooMany: 'Too many wrong attempts. Wait {s} seconds and try again.',
     newKey: 'New GitHub key', rekey: 'Save the new key', rekeying: 'Saving…', keyUpdated: 'Key updated ✓ The password has not changed.',
     quickTitle: 'Set the admin password (one time)', quickLead: 'After this, anyone you give the link and password to can sign in without a GitHub key. You won’t be asked again.', quickSave: 'Save password', quickDone: 'Password set ✓ Give the link and password to whoever edits the menu.',
     homeHint: 'To stay signed in on iPhone: tap Share, then “Add to Home Screen”, and open the admin from its icon.', ok: 'OK',
@@ -238,6 +265,7 @@ function previewSrc(img) {
   return img.startsWith('content/') ? `../${img}` : `../img/${img}.jpg`;
 }
 function findByUid(u) {
+  if (state.site) { const item = [...state.site.hero, state.site.story, ...state.site.gallery].find(x => x._uid === u); return item ? { item } : {}; }
   for (const c of state.menu) {
     if (c._uid === u) return { cat: c };
     for (const it of itemsOf(c)) if (it._uid === u) return { cat: c, item: it };
@@ -253,6 +281,15 @@ function listOf(cat, groupUid) {
 /* ---------- change tracking ---------- */
 function changes() {
   const list = [];
+  if (state.site) {
+    const a = JSON.parse(state.origSite), b = cleanSite(state.site), same = (x, y) => JSON.stringify(x) === JSON.stringify(y);
+    if (!same(a.hero, b.hero)) list.push(t('chHero'));
+    if (a.story.img !== b.story.img) list.push(t('chStoryPhoto'));
+    if (!same(a.story.title, b.story.title) || !same(a.story.text, b.story.text)) list.push(t('chStory'));
+    if (!same(a.gallery, b.gallery)) list.push(t('chGallery'));
+    if (!same(a.social, b.social)) list.push(t('chSocial'));
+    return list;
+  }
   if (JSON.stringify(state.info) !== state.origInfo) list.push(t('chInfo'));
   if (catSignature(state.menu) !== state.origCats) list.push(t('chCats'));
   const seen = new Set();
@@ -306,7 +343,7 @@ function restoreDraft(id) {
 }
 function updateSaveBar() {
   const bar = $('#savebar'), st = $('#save-status'), btn = $('#save-btn'), discard = $('#discard-btn');
-  if (!state.branch || !state.menu) { bar.hidden = true; requestAnimationFrame(fitBars); return; }
+  if (!state.branch || !(state.menu || state.site)) { bar.hidden = true; requestAnimationFrame(fitBars); return; }
   bar.hidden = false;
   requestAnimationFrame(fitBars);
   if (state.busy) return;
@@ -326,8 +363,9 @@ function updateSaveBar() {
 function statusHtml(s) {
   return esc(t(s.key, s.vars)) + (s.link ? ` <a href="${esc(s.link)}" target="_blank" rel="noopener">${esc(t('openPage'))}</a>` : '');
 }
+const sectionName = () => (state.branch.id === 'site' ? t('siteName') : t('branchOf', { b: bname(state.branch) }));
 function renderTop() {
-  $('#top-branch').textContent = state.branch ? t('branchOf', { b: bname(state.branch) }) : '';
+  $('#top-branch').textContent = state.branch ? sectionName() : '';
   if (state.screen === 'login' || state.screen === 'setup' || state.screen === 'setup-done') { $('#top-actions').innerHTML = ''; return; }
   if (state.screen === 'picker') {
     $('#top-actions').innerHTML = `<button class="btn btn-ghost btn-sm" id="pw-btn" type="button">${esc(t('pwMenu'))}</button><button class="btn btn-ghost btn-sm" id="logout-btn" type="button">${esc(t('logoutShort'))}</button>`;
@@ -339,7 +377,7 @@ function renderTop() {
   $('#top-actions').innerHTML = `<button class="btn btn-ghost btn-sm" id="logout-btn" type="button">${esc(t('logoutShort'))}</button>`;
   $('#logout-btn').addEventListener('click', () => { if (!changes().length || confirm(t('confirmLogout'))) logout(); });
 }
-window.addEventListener('beforeunload', e => { if (state.menu && changes().length && !state.busy) { e.preventDefault(); e.returnValue = ''; } });
+window.addEventListener('beforeunload', e => { if ((state.menu || state.site) && changes().length && !state.busy) { e.preventDefault(); e.returnValue = ''; } });
 
 /* ---------- password lock ----------
    The GitHub key is stored in the repository only in encrypted form (content/admin-lock.json):
@@ -501,9 +539,16 @@ function renderLogin(error = '') {
     if (usePw) {
       const pw = $('#password').value;
       if (!pw.trim()) { btn.disabled = false; return; }
+      let fails = 0, until = 0; try { fails = Number(localStorage.getItem(FAIL_KEY) || 0); until = Number(localStorage.getItem(FAIL_KEY + '-until') || 0); } catch (e) { /* ignore */ }
+      if (Date.now() < until) { state.errVars = { s: Math.ceil((until - Date.now()) / 1000) }; renderLogin('tooMany'); return; }
       btn.textContent = t('pwUnlocking');
       let token;
-      try { token = await openToken(state.lock, pw); } catch (err) { renderLogin('pwWrong'); $('#password').focus(); return; }
+      try { token = await openToken(state.lock, pw); } catch (err) {
+        fails += 1;
+        try { if (fails >= 5) { localStorage.setItem(FAIL_KEY + '-until', String(Date.now() + 30000)); localStorage.setItem(FAIL_KEY, '0'); } else localStorage.setItem(FAIL_KEY, String(fails)); } catch (e) { /* ignore */ }
+        renderLogin('pwWrong'); $('#password').focus(); return;
+      }
+      try { localStorage.removeItem(FAIL_KEY); localStorage.removeItem(FAIL_KEY + '-until'); } catch (e) { /* ignore */ }
       state.token = token;
       try { await checkKey(); keepToken(token); state.stalePw = ''; renderPicker(); }
       catch (err) {
@@ -527,7 +572,7 @@ function renderSetup(error = '') {
   renderTop();
   $('#savebar').hidden = true;
   const needKey = !state.token;
-  const pw = state.setupPw || '';
+  const pw = state.setupPw || (state.setupPw = suggestPassword());
   $('#app').innerHTML = `
   <section class="login">
     <h1>${esc(needKey ? t('setupTitle') : t('changeTitle'))}</h1>
@@ -539,7 +584,6 @@ function renderSetup(error = '') {
         <div class="pw-row"><input id="setup-pw" type="text" autocomplete="new-password" autocapitalize="off" spellcheck="false" dir="ltr" value="${esc(pw)}" placeholder="${esc(t('pwPlaceholder'))}" required><button class="btn btn-sm" type="button" id="suggest-btn">${esc(t('suggest'))}</button></div>
         <span class="hint">${esc(t('pwRule'))}</span>
       </div>
-      <label class="check" id="weak-row" ${!pw || strongEnough(pw) ? 'hidden' : ''}><input type="checkbox" id="weak-ok" ${state.weakOk ? 'checked' : ''}> <span>${esc(t('weakOk'))}</span></label>
       ${error ? `<p class="error" role="alert">${esc(t(error, state.errVars || {}))}</p>` : ''}
       <button class="btn btn-primary btn-lg" type="submit">${esc(t('setupSave'))}</button>
       <button class="linklike" type="button" id="setup-back">${esc(t('back'))}</button>
@@ -547,15 +591,14 @@ function renderSetup(error = '') {
   </section>`;
   const keyInput = $('#setup-key');
   if (keyInput && state.setupKey) keyInput.value = state.setupKey;
-  $('#setup-pw').addEventListener('input', e => { state.setupPw = e.target.value; $('#weak-row').hidden = !e.target.value || strongEnough(e.target.value); });
-  $('#weak-ok').addEventListener('change', e => { state.weakOk = e.target.checked; });
+  $('#setup-pw').addEventListener('input', e => { state.setupPw = e.target.value; });
   if (keyInput) keyInput.addEventListener('input', e => { state.setupKey = e.target.value; });
-  $('#suggest-btn').addEventListener('click', () => { state.setupPw = suggestPassword(); $('#setup-pw').value = state.setupPw; $('#weak-row').hidden = true; });
+  $('#suggest-btn').addEventListener('click', () => { state.setupPw = suggestPassword(); $('#setup-pw').value = state.setupPw; });
   $('#setup-back').addEventListener('click', () => { history.replaceState(null, '', location.pathname); state.setupPw = ''; state.setupKey = ''; state.token ? renderPicker() : renderLogin(); });
   $('#setup-form').addEventListener('submit', async e => {
     e.preventDefault();
     const password = $('#setup-pw').value.trim();
-    if (!strongEnough(password) && !state.weakOk) { renderSetup('pwWeakTick'); return; }
+    if (!strongEnough(password)) { renderSetup('pwWeak'); return; }
     const btn = e.target.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = t('setupSaving');
     const hadToken = !!state.token;
     if (!hadToken) state.token = (keyInput.value || '').trim();
@@ -583,6 +626,7 @@ function renderSetupDone(password) {
       <p>${esc(t('setupDoneLead'))}</p>
       <div class="field"><label>${esc(t('linkLabel'))}</label><div class="pw-row"><input readonly dir="ltr" value="${esc(link)}" id="done-link"><button class="btn btn-sm" type="button" data-copy="done-link">${esc(t('copy'))}</button></div></div>
       <div class="field"><label>${esc(t('pwLabel'))}</label><div class="pw-row"><input readonly dir="ltr" value="${esc(password)}" id="done-pw"><button class="btn btn-sm" type="button" data-copy="done-pw">${esc(t('copy'))}</button></div></div>
+      <a class="btn btn-lg" href="https://wa.me/?text=${encodeURIComponent(t('shareText', { link, pw: password }))}" target="_blank" rel="noopener">${esc(t('shareWa'))}</a>
       <button class="btn btn-primary btn-lg" type="button" id="done-continue">${esc(t('continue'))}</button>
     </div>
   </section>`;
@@ -615,15 +659,14 @@ function renderPicker() {
   const ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const standalone = navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
   let hintSeen = false; try { hintSeen = localStorage.getItem(HINT_KEY) === '1'; } catch (e) { /* ignore */ }
-  const quickPw = state.quickPw || '';
+  const quickPw = state.quickPw || (state.quickPw = suggestPassword());
   $('#app').innerHTML = `
   ${state.demo ? `<p class="notice">${esc(t('demoNote'))}</p>` : ''}
   ${state.lock || state.demo ? '' : `
   <form class="card quick-pw" id="quick-form">
     <h2>${esc(t('quickTitle'))}</h2>
     <p class="muted">${esc(t('quickLead'))}</p>
-    <div class="field"><label for="quick-pw">${esc(t('newPw'))}</label><input id="quick-pw" type="text" autocomplete="new-password" autocapitalize="off" spellcheck="false" dir="ltr" placeholder="${esc(t('pwPlaceholder'))}" value="${esc(quickPw)}" required></div>
-    <label class="check" id="quick-weak-row" ${!quickPw || strongEnough(quickPw) ? 'hidden' : ''}><input type="checkbox" id="quick-weak" ${state.weakOk ? 'checked' : ''}> <span>${esc(t('weakOk'))}</span></label>
+    <div class="field"><label for="quick-pw">${esc(t('newPw'))}</label><div class="pw-row"><input id="quick-pw" type="text" autocomplete="new-password" autocapitalize="off" spellcheck="false" dir="ltr" value="${esc(quickPw)}" required><button class="btn btn-sm" type="button" id="quick-suggest">${esc(t('suggest'))}</button></div><span class="hint">${esc(t('pwRule'))}</span></div>
     ${state.quickError ? `<p class="error" role="alert">${esc(t(state.quickError, state.errVars || {}))}</p>` : ''}
     <button class="btn btn-primary" type="submit">${esc(t('quickSave'))}</button>
   </form>`}
@@ -631,20 +674,21 @@ function renderPicker() {
   <h1>${esc(t('pickTitle'))}</h1>
   <div class="picker">
     ${cfg.branches.map(b => `<button class="pick" type="button" data-branch="${b.id}">${esc(bname(b))}<small>${esc(lang === 'en' ? (b.placeEn || '') : b.placeAr)}</small></button>`).join('')}
+    <button class="pick pick--site" type="button" data-branch="site">${esc(t('siteCard'))}<small>${esc(t('siteSub'))}</small></button>
   </div>
   <p class="notice">${esc(t('pickNote'))}</p>`;
-  document.querySelectorAll('[data-branch]').forEach(btn => btn.addEventListener('click', () => loadBranch(btn.dataset.branch)));
+  document.querySelectorAll('[data-branch]').forEach(btn => btn.addEventListener('click', () => (btn.dataset.branch === 'site' ? loadSite() : loadBranch(btn.dataset.branch))));
   const hintOk = $('#hint-ok');
   if (hintOk) hintOk.addEventListener('click', () => { try { localStorage.setItem(HINT_KEY, '1'); } catch (e) { /* ignore */ } hintOk.parentElement.remove(); });
   const quick = $('#quick-form');
   if (!quick || state.demo) return;
-  $('#quick-pw').addEventListener('input', e => { state.quickPw = e.target.value; $('#quick-weak-row').hidden = !e.target.value || strongEnough(e.target.value); });
-  $('#quick-weak').addEventListener('change', e => { state.weakOk = e.target.checked; });
+  $('#quick-pw').addEventListener('input', e => { state.quickPw = e.target.value; });
+  $('#quick-suggest').addEventListener('click', () => { state.quickPw = suggestPassword(); $('#quick-pw').value = state.quickPw; });
   quick.addEventListener('submit', async e => {
     e.preventDefault();
     const password = $('#quick-pw').value.trim();
     if (!password) return;
-    if (!strongEnough(password) && !state.weakOk) { state.quickError = 'pwWeakTick'; renderPicker(); return; }
+    if (!strongEnough(password)) { state.quickError = 'pwWeak'; renderPicker(); return; }
     const btn = quick.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = t('setupSaving');
     try {
       await verifyWrite();
@@ -662,7 +706,7 @@ function renderPicker() {
 /* ---------- loading content ---------- */
 async function loadBranch(id) {
   state.branch = cfg.branches.find(b => b.id === id);
-  state.screen = 'loading'; state.menu = null;
+  state.screen = 'loading'; state.menu = null; state.site = null; state.files = {};
   $('#app').innerHTML = `<p class="loading">${esc(t('loadingBranch'))}</p>`;
   renderTop();
   try {
@@ -699,23 +743,146 @@ async function loadBranch(id) {
   }
 }
 
+/* ---------- the website section (content/site.json) ---------- */
+function cleanSite(s) {
+  return {
+    hero: s.hero.map(h => h.img).filter(Boolean),
+    story: { img: s.story.img || null, title: { en: s.story.title.en || '', ar: s.story.title.ar || '' }, text: { en: s.story.text.en || '', ar: s.story.text.ar || '' } },
+    gallery: s.gallery.filter(g => g.img).map(g => ({ img: g.img, en: g.en || '', ar: g.ar || '' })),
+    social: { facebook: (s.social.facebook || '').trim(), instagram: (s.social.instagram || '').trim() },
+  };
+}
+const siteSignature = s => JSON.stringify(cleanSite(s));
+async function loadSite() {
+  state.branch = { id: 'site', ar: L.ar.siteName, en: L.en.siteName };
+  state.screen = 'loading'; state.menu = null; state.info = null; state.site = null; state.files = {};
+  $('#app').innerHTML = `<p class="loading">${esc(t('loadingSite'))}</p>`;
+  renderTop();
+  try {
+    const ref = await gh(`/repos/${cfg.repo}/git/ref/heads/${cfg.branch}`);
+    state.head = ref.object.sha;
+    state.treeSha = (await gh(`/repos/${cfg.repo}/git/commits/${state.head}`)).tree.sha;
+    const f = await gh(`/repos/${cfg.repo}/contents/${SITE_PATH}?ref=${state.head}`);
+    state.files[SITE_PATH] = { sha: f.sha, text: b64ToText(f.content) };
+    const raw = JSON.parse(state.files[SITE_PATH].text);
+    const st = raw.story || {};
+    state.site = {
+      hero: (raw.hero || []).map(img => ({ _uid: uid(), key: 'hero', img })),
+      story: { _uid: uid(), key: 'story', img: st.img || null, title: { en: '', ar: '', ...(st.title || {}) }, text: { en: '', ar: '', ...(st.text || {}) } },
+      gallery: (raw.gallery || []).map(g => ({ _uid: uid(), key: 'gallery', img: g.img, en: g.en || '', ar: g.ar || '' })),
+      social: { facebook: '', instagram: '', ...(raw.social || {}) },
+    };
+    state.origSite = siteSignature(state.site);
+    state.pending.clear(); state.removed.clear(); state.status = null;
+    state.tab = 'photos'; state.screen = 'editor';
+    renderEditor();
+  } catch (err) {
+    $('#app').innerHTML = `<div class="card"><h2>${esc(t('loadFailed'))}</h2><p>${esc(err.message)}</p><button class="btn" id="retry" type="button">${esc(t('retry'))}</button></div>`;
+    $('#retry').addEventListener('click', loadSite);
+  }
+}
+// One card per photo: the drop zone, optional captions, and move/delete buttons.
+function photoCard(obj, i, n, captions) {
+  return `<div class="item item--photo" data-item="${obj._uid}">
+    ${dropZone(obj, obj.key)}
+    <div class="item-main">
+      ${captions ? `<div class="item-fields item-fields--2">${pair(`<input name="ar" dir="rtl" value="${esc(obj.ar)}" placeholder="${esc(t('capAr'))}" aria-label="${esc(t('capAr'))}">`, `<input name="en" dir="ltr" autocapitalize="sentences" value="${esc(obj.en)}" placeholder="${esc(t('capEn'))}" aria-label="${esc(t('capEn'))}">`)}</div>` : ''}
+      <div class="item-row"><span class="order"><button class="icon-btn" type="button" data-act="up" ${i === 0 ? 'disabled' : ''} title="${esc(t('up'))}" aria-label="${esc(t('up'))}">▲</button><button class="icon-btn" type="button" data-act="down" ${i === n - 1 ? 'disabled' : ''} title="${esc(t('down'))}" aria-label="${esc(t('down'))}">▼</button><button class="icon-btn" type="button" data-act="del" title="${esc(t('delPhotoEntry'))}" aria-label="${esc(t('delPhotoEntry'))}">🗑</button></span></div>
+    </div>
+  </div>`;
+}
+function renderSitePhotos() {
+  const s = state.site;
+  $('#panel').innerHTML = `
+  <div class="card"><h2>${esc(t('heroCard'))}</h2><p class="muted">${esc(t('heroHint'))}</p>
+    <div class="items" data-list="hero">${s.hero.map((h, i) => photoCard(h, i, s.hero.length, false)).join('')}</div>
+    ${s.hero.length < 6 ? `<button class="btn" type="button" data-act="add-hero">${esc(t('addHero'))}</button>` : ''}
+  </div>
+  <div class="card"><h2>${esc(t('storyPhotoCard'))}</h2><p class="muted">${esc(t('storyPhotoHint'))}</p>${dropZone(s.story, 'story')}</div>
+  <div class="card"><h2>${esc(t('galleryCard'))}</h2><p class="muted">${esc(t('galleryHint'))}</p>
+    <div class="items" data-list="gallery">${s.gallery.map((g, i) => photoCard(g, i, s.gallery.length, true)).join('')}</div>
+    <button class="btn" type="button" data-act="add-gallery">${esc(t('addGallery'))}</button>
+  </div>`;
+  initDropZones($('#panel'));
+}
+function renderSiteInfo() {
+  const s = state.site;
+  $('#panel').innerHTML = `
+  <div class="card"><h2>${esc(t('storyCard'))}</h2>
+    <div class="grid-2">${pair(field(esc(t('storyTitleAr')), 'story.title.ar', s.story.title.ar, { dir: 'rtl' }), field(esc(t('storyTitleEn')), 'story.title.en', s.story.title.en, { dir: 'ltr' }))}</div>
+    <div class="grid-2">${pair(field(esc(t('storyTextAr')), 'story.text.ar', s.story.text.ar, { dir: 'rtl', textarea: true }), field(esc(t('storyTextEn')), 'story.text.en', s.story.text.en, { dir: 'ltr', textarea: true }))}</div>
+  </div>
+  <div class="card"><h2>${esc(t('socialCard'))}</h2><p class="muted">${esc(t('socialHint'))}</p>
+    ${field(esc(t('facebook')), 'social.facebook', s.social.facebook, { dir: 'ltr', type: 'url', placeholder: 'https://www.facebook.com/…' })}
+    ${field(esc(t('instagram')), 'social.instagram', s.social.instagram, { dir: 'ltr', type: 'url', placeholder: 'https://www.instagram.com/…' })}
+  </div>`;
+}
+function onSiteInput(e) {
+  const el = e.target;
+  if (el.dataset.info) {
+    const keys = el.dataset.info.split('.'); let o = state.site;
+    for (const k of keys.slice(0, -1)) o = o[k];
+    o[keys[keys.length - 1]] = el.value;
+  } else {
+    const card = el.closest('[data-item]'); if (!card) return;
+    const { item } = findByUid(card.dataset.item);
+    if (item && (el.name === 'ar' || el.name === 'en')) item[el.name] = el.value;
+  }
+  updateSaveBar();
+}
+function onSiteClick(e) {
+  const btn = e.target.closest('[data-act]'); if (!btn) return;
+  const act = btn.dataset.act, s = state.site;
+  const addAndPick = (list, entry) => {
+    list.push(entry); renderSitePhotos();
+    const zone = $(`[data-drop="${entry._uid}"]`); zone.scrollIntoView({ block: 'center', behavior: 'smooth' }); zone.click();
+  };
+  if (act === 'add-hero') addAndPick(s.hero, { _uid: uid(), key: 'hero', img: null });
+  else if (act === 'add-gallery') addAndPick(s.gallery, { _uid: uid(), key: 'gallery', img: null, en: '', ar: '' });
+  else if (act === 'remove-photo') {
+    const { item } = findByUid(btn.closest('[data-drop]').dataset.drop);
+    if (item.img && item.img.startsWith('content/')) forgetPhoto(item.img);
+    item.img = null; renderSitePhotos();
+  } else {
+    const card = btn.closest('[data-item]'); if (!card) return;
+    const list = card.closest('[data-list]').dataset.list === 'hero' ? s.hero : s.gallery;
+    const i = list.findIndex(x => x._uid === card.dataset.item); if (i < 0) return;
+    if (act === 'del') {
+      if (list === s.hero && list[i].img && list.filter(h => h.img).length <= 1) { toast(t('noHero'), true); return; }
+      if (list[i].img && !confirm(t('confirmDelPhoto'))) return;
+      if (list[i].img && list[i].img.startsWith('content/')) forgetPhoto(list[i].img);
+      list.splice(i, 1); renderSitePhotos();
+    } else if (act === 'up' || act === 'down') {
+      const j = act === 'up' ? i - 1 : i + 1;
+      if (j < 0 || j >= list.length) return;
+      [list[i], list[j]] = [list[j], list[i]]; renderSitePhotos();
+    }
+  }
+  updateSaveBar();
+}
+
 /* ---------- editor ---------- */
+function renderPanel() {
+  if (state.site) { if (state.tab === 'photos') renderSitePhotos(); else renderSiteInfo(); }
+  else if (state.tab === 'info') renderInfo(); else renderMenu();
+}
+const redraw = () => (state.site ? renderSitePhotos() : renderMenu());
 function renderEditor() {
+  const tabs = state.site ? [['photos', 'tabPhotos'], ['siteinfo', 'tabSiteInfo']] : [['info', 'tabInfo'], ['menu', 'tabMenu']];
   $('#app').innerHTML = `
-  <div class="editor-bar"><button class="linklike" type="button" id="switch-btn">‹ ${esc(t('switchBranch'))}</button><span class="editor-branch">${esc(t('branchOf', { b: bname(state.branch) }))}</span></div>
+  <div class="editor-bar"><button class="linklike" type="button" id="switch-btn">‹ ${esc(t('switchBranch'))}</button><span class="editor-branch">${esc(sectionName())}</span></div>
   <div class="tabs" role="tablist">
-    <button class="tab${state.tab === 'info' ? ' is-active' : ''}" type="button" data-tab="info" role="tab">${esc(t('tabInfo'))}</button>
-    <button class="tab${state.tab === 'menu' ? ' is-active' : ''}" type="button" data-tab="menu" role="tab">${esc(t('tabMenu'))}</button>
+    ${tabs.map(([id, key]) => `<button class="tab${state.tab === id ? ' is-active' : ''}" type="button" data-tab="${id}" role="tab">${esc(t(key))}</button>`).join('')}
   </div>
   <div id="panel"></div>`;
   document.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => { state.tab = b.dataset.tab; renderEditor(); }));
   $('#switch-btn').addEventListener('click', () => { if (!changes().length || confirm(t('confirmSwitch'))) renderPicker(); });
   // One set of listeners per panel element; redrawing the panel's contents never adds more.
   const panel = $('#panel');
-  panel.addEventListener('input', e => (state.tab === 'info' ? onInfoInput(e) : onMenuInput(e)));
-  panel.addEventListener('change', e => { if (state.tab === 'menu') onMenuInput(e); });
-  panel.addEventListener('click', e => { if (state.tab === 'menu') onMenuClick(e); });
-  if (state.tab === 'info') renderInfo(); else renderMenu();
+  panel.addEventListener('input', e => (state.site ? onSiteInput(e) : state.tab === 'info' ? onInfoInput(e) : onMenuInput(e)));
+  panel.addEventListener('change', e => { if (state.site) onSiteInput(e); else if (state.tab === 'menu') onMenuInput(e); });
+  panel.addEventListener('click', e => { if (state.site) onSiteClick(e); else if (state.tab === 'menu') onMenuClick(e); });
+  renderPanel();
   updateSaveBar();
 }
 
@@ -826,7 +993,7 @@ function itemCard(it, i, n) {
 }
 function dropZone(obj, kind) {
   const src = previewSrc(obj.img);
-  return `<div class="drop${obj.img ? ' has-photo' : ''}${kind === 'cat' ? ' drop-lg' : ''}" data-drop="${obj._uid}" data-kind="${kind}" role="button" tabindex="0" aria-label="${esc(obj.img ? t('changePhoto') : t('addPhoto'))}">
+  return `<div class="drop${obj.img ? ' has-photo' : ''}${kind === 'cat' || kind === 'story' ? ' drop-lg' : ''}" data-drop="${obj._uid}" data-kind="${kind}" role="button" tabindex="0" aria-label="${esc(obj.img ? t('changePhoto') : t('addPhoto'))}">
     ${obj.img ? `<img src="${esc(src)}" alt=""><button class="remove" type="button" data-act="remove-photo" title="${esc(t('removePhoto'))}" aria-label="${esc(t('removePhoto'))}">×</button>` : `<span class="drop-label">${t('dropHere')}</span><span class="drop-label-short">${esc(t('dropShort'))}</span>`}
   </div>`;
 }
@@ -916,19 +1083,19 @@ async function acceptPhoto(zone, file) {
   if (!target) return;
   try {
     zone.innerHTML = `<span>${esc(t('preparing'))}</span>`;
-    const key = zone.dataset.kind === 'cat' ? `cat-${target.id}` : target.id;
+    const key = zone.dataset.kind === 'cat' ? `cat-${target.id}` : (target.key || target.id);
     const base = `content/photos/${state.branch.id}/${key}-${stamp()}`;
-    const [full, thumb] = await Promise.all([resizeImage(file, 1200, false), resizeImage(file, 400, true)]);
+    const [full, thumb] = await Promise.all([resizeImage(file, zone.dataset.kind === 'hero' ? 1600 : 1200, false), resizeImage(file, 400, true)]);
     if (target.img && target.img.startsWith('content/')) forgetPhoto(target.img);
     state.pending.set(`${base}.jpg`, full);
     state.pending.set(`${base}-thumb.jpg`, thumb);
     state.previews.set(`${base}.jpg`, URL.createObjectURL(full));
     target.img = `${base}.jpg`;
-    renderMenu();
+    redraw();
     updateSaveBar();
   } catch (err) {
     toast(t('badImage'), true);
-    renderMenu();
+    redraw();
   }
 }
 // Shrinks a photo in the browser: longest side ≤ max (or a centred square crop for thumbnails), JPEG.
@@ -951,8 +1118,9 @@ async function save() {
   const list = changes();
   if (!list.length || state.busy) return;
   if (state.demo) { toast(t('demoSave'), true, 6000); return; }
-  // Every dish needs at least one name.
-  for (const c of state.menu) for (const it of itemsOf(c)) if (!it.ar.trim() && !it.en.trim()) { toast(t('noName'), true); return; }
+  // Every dish needs at least one name; the home page needs at least one top photo.
+  if (state.site) { if (!cleanSite(state.site).hero.length) { toast(t('noHero'), true); return; } }
+  else for (const c of state.menu) for (const it of itemsOf(c)) if (!it.ar.trim() && !it.en.trim()) { toast(t('noName'), true); return; }
   state.busy = true;
   const st = $('#save-status'), btn = $('#save-btn'); btn.disabled = true; $('#discard-btn').hidden = true;
   const setStatus = (text, cls) => { st.className = 'savebar-status ' + cls; st.textContent = text; };
@@ -970,32 +1138,37 @@ async function save() {
     }
     const tree = [];
     const put = async (path, b64) => { const blob = await gh(`/repos/${cfg.repo}/git/blobs`, { method: 'POST', body: { content: b64, encoding: 'base64' } }); tree.push({ path, mode: '100644', type: 'blob', sha: blob.sha }); };
-    state.allInfo[state.branch.id] = state.info;
-    const infoText = JSON.stringify(state.allInfo, null, 2) + '\n';
-    if (infoText !== state.files['content/branches.json'].text) await put('content/branches.json', textToB64(infoText));
-    const menuPath = `content/menu-${state.branch.id}.json`;
-    const menuText = JSON.stringify(cleanMenu(state.menu), null, 2) + '\n';
-    if (menuText !== state.files[menuPath].text) await put(menuPath, textToB64(menuText));
+    const newTexts = {};
+    if (state.site) {
+      newTexts[SITE_PATH] = JSON.stringify(cleanSite(state.site), null, 2) + '\n';
+    } else {
+      state.allInfo[state.branch.id] = state.info;
+      newTexts['content/branches.json'] = JSON.stringify(state.allInfo, null, 2) + '\n';
+      newTexts[`content/menu-${state.branch.id}.json`] = JSON.stringify(cleanMenu(state.menu), null, 2) + '\n';
+    }
+    for (const [p, text] of Object.entries(newTexts)) if (text !== state.files[p].text) await put(p, textToB64(text));
     let n = 0;
     for (const [path, blob] of state.pending) { n++; setStatus(t('uploading', { i: n, n: state.pending.size }), 'is-busy'); await put(path, await blobToB64(blob)); }
     for (const path of state.removed) if (!state.pending.has(path)) tree.push({ path, mode: '100644', type: 'blob', sha: null });
     if (!tree.length) throw Object.assign(new Error(t('nothing')), { key: 'nothing' });
     setStatus(t('publishing'), 'is-busy');
     const newTree = await gh(`/repos/${cfg.repo}/git/trees`, { method: 'POST', body: { base_tree: state.treeSha, tree } });
-    const message = `تحديث فرع ${state.branch.ar} / Update ${state.branch.en} (${list.length})\n\n${list.slice(0, 20).map(s => '- ' + s).join('\n')}`;
+    const message = `${state.site ? 'تحديث الموقع / Update website' : `تحديث فرع ${state.branch.ar} / Update ${state.branch.en}`} (${list.length})\n\n${list.slice(0, 20).map(s => '- ' + s).join('\n')}`;
     const commit = await gh(`/repos/${cfg.repo}/git/commits`, { method: 'POST', body: { message, tree: newTree.sha, parents: [state.head] } });
     await gh(`/repos/${cfg.repo}/git/refs/heads/${cfg.branch}`, { method: 'PATCH', body: { sha: commit.sha } });
     // Saved. Refresh our baseline so the next save builds on this commit.
     state.head = commit.sha; state.treeSha = newTree.sha;
-    state.files['content/branches.json'].text = infoText;
-    state.files[menuPath].text = menuText;
+    for (const [p, text] of Object.entries(newTexts)) state.files[p].text = text;
     for (const p of Object.keys(state.files)) { const f = await gh(`/repos/${cfg.repo}/contents/${p}?ref=${commit.sha}`); state.files[p].sha = f.sha; }
-    state.origInfo = JSON.stringify(state.info); state.origCats = catSignature(state.menu);
-    state.origItems = new Map(state.menu.flatMap(c => itemsOf(c).map(it => [it._uid, serializeItem(it)])));
+    if (state.site) state.origSite = siteSignature(state.site);
+    else {
+      state.origInfo = JSON.stringify(state.info); state.origCats = catSignature(state.menu);
+      state.origItems = new Map(state.menu.flatMap(c => itemsOf(c).map(it => [it._uid, serializeItem(it)])));
+    }
     state.pending.clear(); state.removed.clear();
     dropDraft(state.branch.id);
     state.busy = false;
-    const siteLink = `${cfg.siteUrl}${state.branch.id}/${lang === 'en' ? '' : 'ar/'}${state.tab === 'menu' ? 'menu.html' : ''}`;
+    const siteLink = state.site ? `${cfg.siteUrl}${cfg.branches[0].id}/${lang === 'en' ? '' : 'ar/'}` : `${cfg.siteUrl}${state.branch.id}/${lang === 'en' ? '' : 'ar/'}${state.tab === 'menu' ? 'menu.html' : ''}`;
     state.status = { cls: 'is-busy', key: 'savedBuilding' };
     updateSaveBar();
     toast(t('savedToast'));
@@ -1043,7 +1216,7 @@ if (window.ResizeObserver) { const ro = new ResizeObserver(fitBars); ro.observe(
 window.addEventListener('resize', fitBars); fitBars();
 $('#lang-btn').addEventListener('click', () => setLang(lang === 'ar' ? 'en' : 'ar'));
 $('#save-btn').addEventListener('click', save);
-$('#discard-btn').addEventListener('click', () => { if (confirm(t('confirmDiscard'))) { dropDraft(state.branch.id); loadBranch(state.branch.id); } });
+$('#discard-btn').addEventListener('click', () => { if (confirm(t('confirmDiscard'))) { dropDraft(state.branch.id); state.site ? loadSite() : loadBranch(state.branch.id); } });
 try { state.token = localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY); } catch (e) { state.token = null; }
 (async () => {
   state.lock = await fetchLock();

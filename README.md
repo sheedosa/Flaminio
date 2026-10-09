@@ -68,9 +68,15 @@ repository (**Contents: read and write**, **Actions: read**), stored only in enc
 `content/admin-lock.json` (PBKDF2-SHA256 with 1,000,000 rounds → AES-256-GCM). While that file
 does not exist, `/admin/` shows a "first-time setup" screen (the notice "no password has been
 set yet" means exactly that, not an error); it leads to `/admin/#setup`, where the owner pastes
-the token and chooses a password. Three words or 14+ characters are recommended; a shorter
-password is accepted only with the "at my own risk" box ticked. The same `#setup` page resets
-the password later. Deleting the token on GitHub locks everyone out at once.
+the token and chooses a password (three words or 14+ characters; a passphrase is suggested).
+The same `#setup` page resets the password later, and when a key expires the next password
+sign-in asks for a new key and keeps the password. Five wrong passwords pause sign-in on that
+device for 30 seconds. Deleting the token on GitHub locks everyone out at once.
+
+Besides the two branches, the admin has a **Website** section that edits `content/site.json`:
+the hero photos, the "Our story" photo and text, the gallery (with captions) and the Facebook
+and Instagram links. Photos uploaded there go to `content/photos/site/`. Anything missing from
+`site.json` falls back to the code-owned defaults in `js/data.js` and `js/i18n.js`.
 `site.config.json` holds the repository and branch it writes to. The page is excluded from
 the sitemap and blocked in robots.txt.
 
