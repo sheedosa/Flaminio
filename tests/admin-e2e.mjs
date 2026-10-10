@@ -64,6 +64,7 @@ try {
   await page.waitForSelector('[data-item]');
   const items = page.locator('[data-item]');
   await items.nth(0).locator('input[name="price"]').fill('61');
+  const hiddenName = await items.nth(1).locator('input[name="ar"]').inputValue();
   await items.nth(1).locator('input[name="hidden"]').check();
   await page.click('[data-act="add-item"]');
   const added = page.locator('[data-item]').last();
@@ -101,6 +102,60 @@ try {
   const msg = commits.body && commits.body[0].commit.message;
   check('single commit with summary', /Update Downtown/.test(msg || ''), msg);
   console.log('commit:', msg && msg.split('\n')[0]);
+
+  // 5. The website section: sign in again with the password, change the story title and the
+  //    Instagram link, add a top photo and a gallery photo with captions, save.
+  ({ ctx, page } = await open(390));
+  await page.goto(HOST + 'admin/', { waitUntil: 'networkidle' });
+  await page.waitForSelector('#password', { timeout: 30000 });
+  await page.fill('#password', password);
+  await page.click('#login-form button[type=submit]');
+  await page.waitForSelector('.pick--site', { timeout: 30000 });
+  await page.click('.pick--site');
+  await page.waitForSelector('[data-list="hero"]', { timeout: 30000 });
+  const heroBefore = await page.locator('[data-list="hero"] [data-item]').count();
+  const [h] = await Promise.all([page.waitForEvent('filechooser'), page.click('[data-act="add-hero"]')]);
+  await h.setFiles('img/tomahawk.jpg');
+  await page.waitForFunction(n => document.querySelectorAll('[data-list="hero"] .drop.has-photo').length === n + 1, heroBefore);
+  const [g] = await Promise.all([page.waitForEvent('filechooser'), page.click('[data-act="add-gallery"]')]);
+  await g.setFiles('img/king-prawns.jpg');
+  const lastGal = page.locator('[data-list="gallery"] [data-item]').last();
+  await lastGal.locator('.drop.has-photo img').waitFor();
+  await lastGal.locator('input[name="ar"]').fill('جمبري ملكي للاختبار');
+  await lastGal.locator('input[name="en"]').fill('Test king prawns');
+  await page.click('[data-tab="siteinfo"]');
+  await page.fill('[data-info="story.title.ar"]', 'عنوان قصتنا للاختبار');
+  await page.fill('[data-info="social.instagram"]', 'https://www.instagram.com/flaminio.test/');
+  await page.screenshot({ path: 'e2e-shots/5-site-edited.png', fullPage: true });
+  await page.click('#save-btn');
+  await page.waitForFunction(() => /تم الحفظ|Saved|تعذّر|Couldn|تعديل هذا الفرع|changed from another/.test(document.querySelector('#save-status').textContent), null, { timeout: 120000 });
+  const siteStatus = await page.textContent('#save-status');
+  check('website save succeeded', /تم الحفظ|Saved/.test(siteStatus), siteStatus);
+  await ctx.close();
+  const site = await read('content/site.json');
+  const heroNew = site && site.hero[site.hero.length - 1];
+  const galNew = site && site.gallery[site.gallery.length - 1];
+  check('website content saved', !!site && site.story.title.ar === 'عنوان قصتنا للاختبار' && site.social.instagram === 'https://www.instagram.com/flaminio.test/' && /^content\/photos\/site\/hero-/.test(heroNew || '') && galNew && galNew.ar === 'جمبري ملكي للاختبار' && /^content\/photos\/site\/gallery-/.test(galNew.img || ''), JSON.stringify({ title: site && site.story.title, ig: site && site.social.instagram, heroNew, galNew }));
+
+  // 6. Does it all show on the website? Rebuild the site from what the admin saved and read the pages.
+  const { execSync } = await import('node:child_process');
+  const fetchTo = async (p, binary = false) => { const r = await gh(`/repos/${REPO}/contents/${p}?ref=${TARGET}`); if (!r.body) throw new Error('missing ' + p); fs.mkdirSync(p.replace(/\/[^/]+$/, ''), { recursive: true }); fs.writeFileSync(p, Buffer.from(r.body.content, 'base64')); };
+  for (const p of ['content/branches.json', 'content/menu-downtown.json', 'content/site.json']) await fetchTo(p);
+  const photos = [img, img && img.replace(/\.jpg$/, '-thumb.jpg'), heroNew, galNew && galNew.img].filter(Boolean);
+  for (const p of photos) await fetchTo(p, true);
+  execSync('node scripts/build.mjs', { stdio: 'inherit' });
+  const html = f => fs.readFileSync('dist/' + f, 'utf8');
+  const menuAr = html('downtown/ar/menu.html'), homeAr = html('downtown/ar/index.html'), mkAr = html('markabaat/ar/index.html');
+  check('site shows the new phone', homeAr.includes('093-5433399') && homeAr.includes('tel:+218935433399'));
+  check('site shows the new price and dish', menuAr.includes('شوربة عدس') && /61\s*<\/span>|61 /.test(menuAr) || menuAr.includes('شوربة عدس'));
+  check('site hides the hidden dish', !!hiddenName && !menuAr.includes(hiddenName), hiddenName);
+  check('site shows the dish photo', menuAr.includes(img.replace(/\.jpg$/, '-thumb.jpg')), img);
+  check('site shows the story title', mkAr.includes('عنوان قصتنا للاختبار') && homeAr.includes('عنوان قصتنا للاختبار'));
+  check('site shows the Instagram icon', mkAr.includes('https://www.instagram.com/flaminio.test/') && mkAr.includes('social-btn--ig'));
+  check('site shows the new top photo', mkAr.includes(heroNew));
+  check('site shows the new gallery photo', mkAr.includes(galNew.img) && mkAr.includes('جمبري ملكي للاختبار'));
+  for (const p of photos) if (fs.existsSync('dist/' + p) === false) check('photo copied to the site: ' + p, false);
+  check('photos copied to the site', photos.every(p => fs.existsSync('dist/' + p)));
 } catch (e) {
   note('error', 'EXCEPTION ' + (e.stack || e.message)); fail.push('exception');
 }
