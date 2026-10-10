@@ -10,7 +10,7 @@ const gh = async p => { const r = await fetch(API + p, { headers: { Authorizatio
 const results = {}; const fail = [];
 // Results are also printed as GitHub annotations so they can be read through the API.
 const note = (level, text) => console.log(`::${level} title=admin-e2e::${String(text).replace(/\r?\n/g, ' | ').slice(0, 900)}`);
-const check = (name, ok, detail = '') => { results[name] = ok ? 'ok' : `FAIL ${detail}`; if (!ok) fail.push(name); console.log(ok ? '✓' : '✗', name, ok ? '' : detail); note(ok ? 'notice' : 'error', `${ok ? 'PASS' : 'FAIL'} ${name}${ok ? '' : ' — ' + detail}`); };
+const check = (name, ok, detail = '') => { results[name] = ok ? 'ok' : `FAIL ${detail}`; if (!ok) fail.push(name); console.log(ok ? '✓' : '✗', name, ok ? '' : detail); if (!ok) note('error', `FAIL ${name} ${detail}`); };
 
 const browser = await chromium.launch();
 async function open(width = 1280) {
@@ -161,5 +161,5 @@ try {
 }
 await browser.close();
 fs.writeFileSync('e2e-shots/results.json', JSON.stringify({ results, fail }, null, 2));
-note(fail.length ? 'error' : 'notice', `${fail.length ? 'E2E FAILED: ' + fail.join(', ') : 'E2E PASSED'} || ${Object.entries(results).map(([k, v]) => `${k}: ${v}`).join(' || ')}`);
+note(fail.length ? 'error' : 'notice', `${fail.length ? 'E2E FAILED: ' + fail.join(', ') : 'E2E PASSED'} (${Object.keys(results).length} checks) || ${Object.entries(results).map(([k, v]) => `${k}: ${v}`).join(' || ')}`);
 process.exit(fail.length ? 1 : 0);
