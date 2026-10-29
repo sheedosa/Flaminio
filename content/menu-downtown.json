@@ -140,7 +140,7 @@
     "id": "pasta",
     "en": "Pasta",
     "ar": "الباستا",
-    "img": "rigatoni-beef",
+    "img": "content/photos/downtown/cat-pasta-mvttlogd.jpg",
     "items": [
       {
         "id": "seafood-pasta",
@@ -180,7 +180,8 @@
         "ar": "ريغاتوني شرائح اللحمة",
         "price": 55,
         "den": "Rigatoni pasta with tomato sauce, olives, grilled beef strips, and Parmesan cheese.",
-        "dar": "ريغاتوني مع صلصة الطماطم، زيتون، شرائح فيليه مشوي، وجبنة بارميزان."
+        "dar": "ريغاتوني مع صلصة الطماطم، زيتون، شرائح فيليه مشوي، وجبنة بارميزان.",
+        "img": "content/photos/downtown/rigatoni-beef-strips-mvttlja0.jpg"
       },
       {
         "id": "parma-ravioli",
