@@ -3,7 +3,7 @@
     "id": "soups",
     "en": "Soups",
     "ar": "الشوربات",
-    "img": "content/photos/downtown/cat-soups-mwduqpb7.jpg",
+    "img": "content/photos/downtown/cat-soups-mwdurvjy.jpg",
     "items": [
       {
         "id": "red-seafood-soup",
@@ -19,7 +19,8 @@
         "ar": "شربة بيضاء فواكه البحر",
         "price": 55,
         "den": "A rich creamy soup with a mix of fresh seafood, offering smooth and distinctive ocean flavors.",
-        "dar": "شوربة كريمية غنية بمزيج فواكه البحر الطازجة، تقدم بنكهات بحرية ناعمة ومميزة."
+        "dar": "شوربة كريمية غنية بمزيج فواكه البحر الطازجة، تقدم بنكهات بحرية ناعمة ومميزة.",
+        "img": "content/photos/downtown/white-seafood-soup-mwdurqn1.jpg"
       },
       {
         "id": "mushroom-soup",
