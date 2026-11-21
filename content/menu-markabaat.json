@@ -1151,7 +1151,8 @@
             "ar": "ميلك شيك",
             "price": 12,
             "den": "Nutella - Lotus - Kinder - Milka - Strawberry - Mango - Vanilla - Raspberry - Blueberry",
-            "dar": "نوتيلا، لوتس، كيندر، ميلكا، فراولة، منجا، فانيليا، توت أحمر، توت أزرق."
+            "dar": "نوتيلا، لوتس، كيندر، ميلكا، فراولة، منجا، فانيليا، توت أحمر، توت أزرق.",
+            "img": "content/photos/markabaat/milkshakes-mwqerns5.jpg"
           },
           {
             "id": "mojito",
