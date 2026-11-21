@@ -276,7 +276,7 @@
     "id": "meat",
     "en": "Meat Selections",
     "ar": "اللحوم",
-    "img": "tomahawk",
+    "img": "content/photos/downtown/cat-meat-mwqe0il5.jpg",
     "items": [
       {
         "id": "grilled-fillet-steak",
@@ -292,7 +292,8 @@
         "ar": "فيليه بصوص الجبنة",
         "price": 125,
         "den": "Beef fillet with cooking cream, blue cheese, Parmesan cheese, mashed potatoes, mixed vegetables, and rice.",
-        "dar": "فيليه لحم مع كريمة الطبخ، جبنة زرقاء، جبنة بارميزان، بطاطا مهروسة، خضار مشكلة، وأرز."
+        "dar": "فيليه لحم مع كريمة الطبخ، جبنة زرقاء، جبنة بارميزان، بطاطا مهروسة، خضار مشكلة، وأرز.",
+        "img": "content/photos/downtown/fillet-steak-with-cheese-sauce-mwqdvpcg.jpg"
       },
       {
         "id": "fillet-steak-with-parmesan-sauce",
