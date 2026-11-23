@@ -70,7 +70,8 @@
         "ar": "سلطة فلامينيو",
         "price": 55,
         "den": "Chicken, lettuce, avocado, sweet potatoes, raisins, and corn.",
-        "dar": "دجاج مشوي، خس، أفوكادو، بطاطا حلوة، ذرة، وزبيب."
+        "dar": "دجاج مشوي، خس، أفوكادو، بطاطا حلوة، ذرة، وزبيب.",
+        "img": "content/photos/downtown/flaminio-salad-mwtlibqz.jpg"
       },
       {
         "id": "quinoa-salad",
@@ -495,7 +496,8 @@
         "ar": "بيتزا أربع أجبان",
         "price": 57,
         "den": "Pizza with fresh cream and a mixture of Italian cheeses.",
-        "dar": "بيتزا مع كريمة طازجة وخليط من الأجبان الإيطالية."
+        "dar": "بيتزا مع كريمة طازجة وخليط من الأجبان الإيطالية.",
+        "img": "content/photos/downtown/four-cheese-pizza-mwtlxefq.jpg"
       },
       {
         "id": "truffle-pizza",
