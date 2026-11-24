@@ -659,7 +659,8 @@
         "ar": "برغر لحم",
         "price": 16,
         "den": "Grilled beef burger with lettuce, tomatoes, cheese, and special sauce.",
-        "dar": "برغر لحم بقري مشوي مع خس، طماطم، جبنة، وصوص خاص."
+        "dar": "برغر لحم بقري مشوي مع خس، طماطم، جبنة، وصوص خاص.",
+        "img": "content/photos/markabaat/beef-burger-mwuo20l7.jpg"
       },
       {
         "id": "skillet-burger",
