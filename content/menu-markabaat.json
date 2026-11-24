@@ -86,20 +86,20 @@
         "dar": "خس، أفوكادو، لانشون، وشرائح أناناس."
       },
       {
-        "id": "greek-salad",
-        "en": "Greek Salad",
-        "ar": "سلطة يونانية",
-        "price": 30,
-        "den": "Cucumbers, tomatoes, olives, feta cheese, and red onions.",
-        "dar": "خيار، طماطم، زيتون، جبنة فيتا، وبصل أحمر."
-      },
-      {
         "id": "flaminio-salad",
         "en": "Flaminio Salad",
         "ar": "سلطة فلامينيو",
         "price": 49,
         "den": "Chicken, lettuce, avocado, sweet potatoes, raisins, and corn.",
         "dar": "دجاج مشوي، خس، أفوكادو، بطاطا حلوة، ذرة، وزبيب."
+      },
+      {
+        "id": "greek-salad",
+        "en": "Greek Salad",
+        "ar": "سلطة يونانية",
+        "price": 30,
+        "den": "Cucumbers, tomatoes, olives, feta cheese, and red onions.",
+        "dar": "خيار، طماطم، زيتون، جبنة فيتا، وبصل أحمر."
       },
       {
         "id": "avocado-salad",
@@ -177,7 +177,7 @@
         "id": "flaminio-special",
         "en": "Flaminio Special",
         "ar": "فلامينيو سبيشال",
-        "price": 48,
+        "price": 55,
         "den": "A special platter of fried shrimp, mozzarella sticks, and breaded chicken with tartar sauce.",
         "dar": "تشكيلة مميزة من الجمبري المقلي، أصابع الموزاريلا، ودجاج بانيه مع صوص التارتار."
       }
@@ -217,7 +217,7 @@
         "id": "four-cheese-pasta",
         "en": "Four Cheese Pasta",
         "ar": "باستا أربع أجبان",
-        "price": 39,
+        "price": 42,
         "den": "Pasta with cooking cream and a mix of Italian cheeses.",
         "dar": "باستا مع كريمة الطبخ وتشكيلة من الأجبان الإيطالية."
       },
@@ -377,7 +377,7 @@
         "id": "grilled-fillet",
         "en": "Grilled Fillet",
         "ar": "فليه مشوي",
-        "price": 95,
+        "price": 125,
         "den": "Grilled beef fillet with mashed potatoes, mixed vegetables, and rice.",
         "dar": "فيليه لحم مشوي مع بطاطا مهروسة، خضار مشكلة، وأرز."
       },
@@ -393,7 +393,7 @@
         "id": "fillet-with-pepper-sauce",
         "en": "Fillet with Pepper Sauce",
         "ar": "فليه بصوص الفلفل",
-        "price": 98,
+        "price": 120,
         "den": "Beef fillet with pepper demi-glace sauce, mashed potatoes, mixed vegetables, and rice.",
         "dar": "فيليه لحم مع صوص الديمي جلاص بالفلفل، بطاطا مهروسة، خضار مشكلة، وأرز."
       },
@@ -401,7 +401,7 @@
         "id": "fillet-with-mushroom-sauce",
         "en": "Fillet with Mushroom Sauce",
         "ar": "فليه بالفطر",
-        "price": 98,
+        "price": 120,
         "den": "Beef fillet with mushroom demi-glace sauce, mashed potatoes, mixed vegetables, and rice.",
         "dar": "فيليه لحم مع صوص المشروم بالديمي جلاص، بطاطا مهروسة، خضار مشكلة، وأرز."
       },
@@ -417,7 +417,7 @@
         "id": "fillet-roma",
         "en": "Fillet Roma",
         "ar": "فيلي روما",
-        "price": 120,
+        "price": 132,
         "den": "Marinated beef fillet slices with Flaminio’s special seasoning, served with demi-glace mushroom sauce and creamy risotto.",
         "dar": "شرائح فيليه متبلة بتتبيلة فلامينيو الخاصة، تقدم مع صوص الديمي جلاص والفطر مع ريزوتو كريمي."
       },
@@ -425,7 +425,7 @@
         "id": "t-bone-steak",
         "en": "T-Bone Steak",
         "ar": "طبق تي بون",
-        "price": 110,
+        "price": 120,
         "den": "T-bone steak with mixed vegetables, mashed potatoes, BBQ sauce, and rice.",
         "dar": "تي بون مع خضار مشكلة، بطاطا مهروسة، صوص باربكيو، وأرز."
       },
@@ -433,7 +433,7 @@
         "id": "tomahawk-steak",
         "en": "Tomahawk Steak",
         "ar": "طبق التوماهوك",
-        "price": 98,
+        "price": 120,
         "den": "Tomahawk steak served with pasta in Italian tomato sauce, mixed vegetables, and mashed potatoes.",
         "dar": "ستيك التوماهوك يقدم مع باستا بصلصة الطماطم الإيطالية، خضار مشكلة، وبطاطا مهروسة."
       },
