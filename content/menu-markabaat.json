@@ -537,7 +537,7 @@
         "id": "creamy-king-prawns",
         "en": "Creamy King Prawns",
         "ar": "جمبري ملكي بالكريمة",
-        "price": 95,
+        "price": 100,
         "den": "A mix of king prawns and small prawns with rice, served in a rich creamy sauce.",
         "dar": "تتكون من جمبري صغير وجمبري ملكي مع أرز وصوص كريمي غني."
       },
@@ -633,7 +633,7 @@
         "id": "chicago-pizza",
         "en": "Chicago Pizza",
         "ar": "بيتزا شيكاغو",
-        "price": 65,
+        "price": 69,
         "den": "Double-crust pizza stuffed with chicken, minced beef, mushrooms, and a blend of cheeses.",
         "dar": "من طبقتين من العجينة محشوة بالدجاج، اللحم المفروم، الفطر، ومزيج من الأجبان."
       },
